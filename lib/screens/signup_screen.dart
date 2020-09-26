@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/providers/auth_provider.dart';
+import 'package:lol_rewarder/screens/connect_account_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -395,6 +396,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
     try {
       await _authProvider.signUpNewUser(_authData["email"].trim(), _authData["password"].trim());
+      Navigator.of(context).pushReplacementNamed(ConnectAccountScreen.routeName);
     } on PlatformException catch (error) {
       var errorMassage = "Authentication Error";
       if (error.toString().contains("ERROR_EMAIL_ALREADY_IN_USE")) {

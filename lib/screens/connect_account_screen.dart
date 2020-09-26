@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/screens/login_screen.dart';
 
 class ConnectAccountScreen extends StatefulWidget {
 
@@ -16,9 +20,9 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
   // Constants
   final List<String> _serverTagList = ["BR","EUW","EUN","JP","KR","NA","OC","RU","TR"];
   // Vars
-  bool _summonerNameValid = true;
   String summonerName = "";
   String serverTag = "EUW";
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +31,17 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.black87,
+        leading: IconButton(
+          icon: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
+          color: Colors.white,
+          iconSize: _size.height * 25 / ConstraintHelper.screenHeightCoe,
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Container(
           width: _size.width,
@@ -68,7 +83,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                                 child: Text(
                                   "Enter you summoner name and game server below to connect Summoner account."
                                       " Connecting summoner is required, because after successfully completing challenges"
-                                      " we will send gift skins to specified summoner account. You cannot change account after",
+                                      " we will send gift skins to specified summoner account.",
                                   style: TextStyle(
                                       color: Colors.white70,
                                       fontSize: 13 * _size.height / ConstraintHelper.screenHeightCoe
@@ -120,7 +135,6 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                                       ),
                                       validator: (value) {
                                         if(value.isEmpty) {
-                                          _summonerNameValid = false;
                                           return "Please enter e-mail address";
                                         }
                                       },
@@ -133,6 +147,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                               ),
                               Container(
                                   width: _size.width * 0.8,
+                                  height: _size.height * 0.1,
                                   child: DropdownButtonFormField<String>( // into this
                                     decoration: InputDecoration(
                                       isDense: true,
@@ -169,6 +184,41 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                                     }).toList(),
                                   )
                               ),
+                              SizedBox(
+                                height: _size.height * 0.05,
+                              ),
+                              Container(
+                                height: _size.height * 0.1,
+                                alignment: Alignment.center,
+                                child: ButtonTheme(
+                                  minWidth: _size.height * 250 / ConstraintHelper.screenHeightCoe,
+                                  height: _size.height * 40 / ConstraintHelper.screenHeightCoe,
+                                  child: RaisedButton(
+                                    child: Text(
+                                      "Find Summoner",
+                                      style: TextStyle(
+                                        fontSize: _size.height * 17 / ConstraintHelper.screenHeightCoe,
+                                        color: Colors.white
+                                      ),
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    color: Colors.black87,
+                                    textColor: Colors.white70,
+                                    splashColor: Colors.amber,
+                                    onPressed: _submit,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                "* you cannot change account after its connection",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: _size.height * 11 / ConstraintHelper.screenHeightCoe
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -181,6 +231,62 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState.validate()) {
+      // Invalid!
+      return;
+    }
+    _formKey.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+
+    } catch (error) {
+      final errorMassage = "Failed to get summoner information,try again later";
+      _showErrorDialog(errorMassage);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) => Platform.isAndroid
+        ? AlertDialog(
+          title: Text("Request failed"),
+          content: Text(message),
+          actions: [
+            FlatButton(
+              child: Text(
+                "OK",
+                style: TextStyle(
+                    color: Colors.amber
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            )
+          ],
+        )
+        : CupertinoAlertDialog(
+          title: Text("Request failed"),
+          content: Text(message),
+          actions: [
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            )
+          ],
+        )
     );
   }
 }
