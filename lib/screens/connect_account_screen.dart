@@ -258,7 +258,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
     } catch (error) {
       String errorMassage = "Failed to get summoner information,try again later";
       if(error.message == _summonerNotFoundCustomExceptionMsg) {
-        errorMassage = "Summoner does not exist";
+        errorMassage = "Summoner not found";
       }
       _showErrorDialog(errorMassage);
     }

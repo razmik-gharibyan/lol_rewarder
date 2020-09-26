@@ -8,10 +8,15 @@ class Summoner {
 
   String puuid;
   String accountId;
+  String name;
+  String serverTag;
+  String summonerLevel;
 
   Summoner._privateConstructor() {
     this.puuid = null;
     this.accountId = null;
+    this.name = null;
+    this.summonerLevel = null;
   }
 
 }
