@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lol_rewarder/screens/connect_account_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/signup_screen.dart';
 
@@ -16,10 +17,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginScreen(),
+      home: ConnectAccountScreen(),
       routes: {
         SignUpScreen.routeName: (ctx) => SignUpScreen(),
         LoginScreen.routeName: (ctx) => LoginScreen(),
+        ConnectAccountScreen.routeName: (ctx) => ConnectAccountScreen(),
       },
     );
   }
