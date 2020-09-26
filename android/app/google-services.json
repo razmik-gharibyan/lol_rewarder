@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "366516297658",
+    "firebase_url": "https://lolrewarder.firebaseio.com",
+    "project_id": "lolrewarder",
+    "storage_bucket": "lolrewarder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366516297658:android:d6a0a2592455d5176b4783",
+        "android_client_info": {
+          "package_name": "com.studio29.gharibyan.lol_rewarder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "366516297658-q8tv7jgl3bipiblb7qjc25l54dnfmseq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsVdBepDSnBJ5Kfe1waBl5edq_H2WfhJo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "366516297658-q8tv7jgl3bipiblb7qjc25l54dnfmseq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
