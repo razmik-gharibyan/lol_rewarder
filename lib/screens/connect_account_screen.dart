@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/providers/lol_provider.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 
 class ConnectAccountScreen extends StatefulWidget {
@@ -19,6 +20,10 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
 
   // Constants
   final List<String> _serverTagList = ["BR","EUW","EUN","JP","KR","NA","OC","RU","TR"];
+  // Custom Exception constants
+  final String _summonerNotFoundCustomExceptionMsg = "SUMMONER_NOT_FOUND";
+  // Tools
+  final _lolProvider = LoLProvider();
   // Vars
   String summonerName = "";
   String serverTag = "EUW";
@@ -135,7 +140,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                                       ),
                                       validator: (value) {
                                         if(value.isEmpty) {
-                                          return "Please enter e-mail address";
+                                          return "Please enter summoner name";
                                         }
                                       },
                                       onSaved: (value) {
@@ -227,6 +232,11 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                   ),
                 ],
               ),
+              _isLoading ? Center(
+                child: Platform.isAndroid
+                    ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
+                    : CupertinoActivityIndicator(),
+              ) : Center()
             ],
           ),
         ),
@@ -244,9 +254,12 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
       _isLoading = true;
     });
     try {
-
+      await _lolProvider.checkIfSummonerExistsInLeague(summonerName, serverTag);
     } catch (error) {
-      final errorMassage = "Failed to get summoner information,try again later";
+      String errorMassage = "Failed to get summoner information,try again later";
+      if(error.message == _summonerNotFoundCustomExceptionMsg) {
+        errorMassage = "Summoner does not exist";
+      }
       _showErrorDialog(errorMassage);
     }
     setState(() {
