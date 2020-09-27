@@ -26,7 +26,7 @@ class LoLProvider with ChangeNotifier {
   // Singleton
   Summoner _summoner = Summoner();
 
-  Future<void> getSummonerInfo(String summonerName,String serverTag) async {
+  Future<void> getSummonerInfoByName(String summonerName,String serverTag) async {
     String serverKeyName;
     _serverTagList.forEach((key, value) {
       if(key == serverTag) {
@@ -46,6 +46,30 @@ class LoLProvider with ChangeNotifier {
       _summoner.setAccountId(jsonResponse["accountId"]);
       _summoner.setName(jsonResponse["name"]);
       _summoner.setServerTag(serverKeyName);
+      _summoner.setIconId(jsonResponse["profileIconId"]);
+      _summoner.setSummonerLevel(jsonResponse["summonerLevel"]);
+    }else if(result.statusCode == 404) {
+      // Summoner not found
+      if(result.reasonPhrase == _summonerNotFoundLoLMsg) {
+        throw Exception(_summonerNotFoundCustomExceptionMsg);
+      }
+    }
+  }
+
+  Future<void> getSummonerInfoByPuuid(String puuid,String serverTag) async {
+    final result = await http.get(
+      "https://$serverTag.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/$puuid?api_key=${LoLApiKey.API_KEY}",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+    if(result.statusCode == 200) {
+      // Summoner found
+      Map<String,dynamic> jsonResponse = json.decode(result.body);
+      _summoner.setPuuid(jsonResponse["puuid"]);
+      _summoner.setAccountId(jsonResponse["accountId"]);
+      _summoner.setName(jsonResponse["name"]);
+      _summoner.setServerTag(jsonResponse["serverTag"]);
       _summoner.setIconId(jsonResponse["profileIconId"]);
       _summoner.setSummonerLevel(jsonResponse["summonerLevel"]);
     }else if(result.statusCode == 404) {

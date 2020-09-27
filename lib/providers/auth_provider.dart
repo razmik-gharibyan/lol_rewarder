@@ -21,6 +21,10 @@ class AuthProvider with ChangeNotifier {
   // Vars
   final String _USER_UID = "user_uid";
 
+  Future<FirebaseUser> getCurrentUser() {
+    return _auth.currentUser();
+  }
+
   Future<void> signUpNewUser(String email,String password) async {
     final AuthResult authResult = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     // Write firebase user uid into sharedPreferences.
@@ -35,6 +39,13 @@ class AuthProvider with ChangeNotifier {
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences.setString(_USER_UID, authResult.user.uid);
     _user.setUid(authResult.user.uid);
+  }
+
+  Future<void> logOutUser() async {
+    final currentUser = await getCurrentUser();
+    if(currentUser != null) {
+      await _auth.signOut();
+    }
   }
 
 }

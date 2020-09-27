@@ -262,7 +262,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
       _isLoading = true;
     });
     try {
-      await _lolProvider.getSummonerInfo(_summonerName, _serverTag);
+      await _lolProvider.getSummonerInfoByName(_summonerName, _serverTag);
       _showSummonerDialog();
     } on SocketException catch (error) {
       String errorMessage = "Connection failed, try again later";
@@ -338,7 +338,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                     Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
                   }else{
                     Navigator.of(context).pop();
-                    String errorMessage = "Summoner already exists";
+                    String errorMessage = "Summoner already exists, use different summoner account";
                     _showErrorDialog(errorMessage);
                   }
                 }catch (error) {
@@ -374,7 +374,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                     Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
                   }else{
                     Navigator.of(context).pop();
-                    String errorMessage = "Summoner already exists";
+                    String errorMessage = "Summoner already exists, use different summoner account";
                     _showErrorDialog(errorMessage);
                   }
                 }catch (error) {
