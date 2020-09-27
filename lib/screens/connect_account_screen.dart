@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
@@ -263,6 +264,12 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
     try {
       await _lolProvider.getSummonerInfo(_summonerName, _serverTag);
       _showSummonerDialog();
+    } on SocketException catch (error) {
+      String errorMessage = "Connection failed, try again later";
+      if(error.osError.message == "Network is unreachable" || error.osError.message == "No address associated with hostname") {
+        errorMessage = "No internet connection";
+      }
+      _showErrorDialog(errorMessage);
     } catch (error) {
       String errorMassage = "Failed to get summoner information,try again later";
       if(error.message == _summonerNotFoundCustomExceptionMsg) {
@@ -323,8 +330,8 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
             FlatButton(
               child: Text("ADD SUMMONER", style: TextStyle(color: Colors.amber),),
               onPressed: () async {
-                await _backendProvider.addSummoner();
-                Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
+                 await _backendProvider.addSummoner();
+                 Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
               },
             )
           ],
@@ -345,7 +352,10 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
             ),
             FlatButton(
               child: Text("ADD SUMMONER"),
-              onPressed: () {Navigator.of(ctx).pop();},
+              onPressed: () async {
+                await _backendProvider.addSummoner();
+                Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
+              },
             )
           ],
         )
