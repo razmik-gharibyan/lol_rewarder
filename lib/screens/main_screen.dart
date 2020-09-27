@@ -13,12 +13,16 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+
   @override
   Widget build(BuildContext context) {
 
     final _size = MediaQuery.of(context).size;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black87,
         leading: IconButton(
@@ -29,6 +33,22 @@ class _MainScreenState extends State<MainScreen> {
 
           },
         ),
+        actions: [
+          RaisedButton(
+            color: Colors.transparent,
+            child: Text(
+              "OPEN MENU",
+              style: TextStyle(
+                color: Colors.white
+              ),
+            ),
+            onPressed: () {
+              if(!_scaffoldKey.currentState.isDrawerOpen) {
+                _scaffoldKey.currentState.openDrawer();
+              }
+            },
+          )
+        ],
       ),
       drawer: AppDrawer(),
     );
