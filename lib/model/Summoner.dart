@@ -10,7 +10,7 @@ class Summoner {
   String accountId;
   String name;
   String serverTag;
-  String summonerLevel;
+  int summonerLevel;
 
   Summoner._privateConstructor() {
     this.puuid = null;

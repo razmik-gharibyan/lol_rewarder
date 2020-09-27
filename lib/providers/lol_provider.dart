@@ -17,8 +17,8 @@ class LoLProvider with ChangeNotifier {
 
   // Constants
   final Map<String,String> _serverTagList = {
-    "BR": "br1", "EUW": "euw1", "EUN": "eun1", "JP": "jp1", "KR": "kr", "LA": "la1",
-    "NA": "na1", "OC": "oc1", "RU": "ru", "TR": "tr1"
+    "BR": "br1", "EUW": "euw1", "EUN": "eun1", "JP": "jp1", "KR": "kr", "LAN": "la1",
+    "LAS" : "la2", "NA": "na1", "OC": "oc1", "RU": "ru", "TR": "tr1"
   };
   final String _summonerNotFoundLoLMsg = "Not Found";
   // Custom Exception constants

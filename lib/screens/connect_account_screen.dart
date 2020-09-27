@@ -19,7 +19,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   // Constants
-  final List<String> _serverTagList = ["BR","EUW","EUN","JP","KR","NA","OC","RU","TR"];
+  final List<String> _serverTagList = ["BR","EUW","EUN","JP","KR","NA","LAN","LAS","OC","RU","TR"];
   // Custom Exception constants
   final String _summonerNotFoundCustomExceptionMsg = "SUMMONER_NOT_FOUND";
   // Tools
