@@ -69,7 +69,7 @@ class LoLProvider with ChangeNotifier {
       _summoner.setPuuid(jsonResponse["puuid"]);
       _summoner.setAccountId(jsonResponse["accountId"]);
       _summoner.setName(jsonResponse["name"]);
-      _summoner.setServerTag(jsonResponse["serverTag"]);
+      _summoner.setServerTag(serverTag);
       _summoner.setIconId(jsonResponse["profileIconId"]);
       _summoner.setSummonerLevel(jsonResponse["summonerLevel"]);
     }else if(result.statusCode == 404) {

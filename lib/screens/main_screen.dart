@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/widgets/app_drawer.dart';
 
 class MainScreen extends StatefulWidget {
 
@@ -29,6 +30,7 @@ class _MainScreenState extends State<MainScreen> {
           },
         ),
       ),
+      drawer: AppDrawer(),
     );
   }
 }
