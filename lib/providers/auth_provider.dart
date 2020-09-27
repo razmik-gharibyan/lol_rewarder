@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lol_rewarder/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -12,6 +13,8 @@ class AuthProvider with ChangeNotifier {
 
   AuthProvider.privateConstructor();
 
+  // Singletons
+  User _user = User();
   // Tools
   final _auth = FirebaseAuth.instance;
   SharedPreferences _sharedPreferences;
@@ -23,6 +26,7 @@ class AuthProvider with ChangeNotifier {
     // Write firebase user uid into sharedPreferences.
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences.setString(_USER_UID, authResult.user.uid);
+    _user.setUid(authResult.user.uid);
   }
 
   Future<void> logInUser(String email,String password) async {
@@ -30,6 +34,7 @@ class AuthProvider with ChangeNotifier {
     // Write firebase user uid into sharedPreferences.
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences.setString(_USER_UID, authResult.user.uid);
+    _user.setUid(authResult.user.uid);
   }
 
 }

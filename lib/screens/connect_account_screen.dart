@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/model/summoner.dart';
+import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/providers/lol_provider.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
+import 'package:lol_rewarder/screens/main_screen.dart';
 
 class ConnectAccountScreen extends StatefulWidget {
 
@@ -20,13 +23,17 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
 
   // Constants
   final List<String> _serverTagList = ["BR","EUW","EUN","JP","KR","NA","LAN","LAS","OC","RU","TR"];
+  final String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/";
   // Custom Exception constants
   final String _summonerNotFoundCustomExceptionMsg = "SUMMONER_NOT_FOUND";
   // Tools
   final _lolProvider = LoLProvider();
+  final _backendProvider = BackendProvider();
+  // Singletons
+  Summoner _summoner = Summoner();
   // Vars
-  String summonerName = "";
-  String serverTag = "EUW";
+  String _summonerName = "";
+  String _serverTag = "EUW";
   bool _isLoading = false;
 
   @override
@@ -144,7 +151,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                                         }
                                       },
                                       onSaved: (value) {
-                                        summonerName = value;
+                                        _summonerName = value;
                                       },
                                     ),
                                   ),
@@ -177,10 +184,10 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                                     ),
                                     onChanged: (String newValue) {
                                       setState(() {
-                                        serverTag = newValue;
+                                        _serverTag = newValue;
                                       });
                                     },
-                                    value: serverTag,
+                                    value: _serverTag,
                                     items: _serverTagList.map<DropdownMenuItem<String>>((String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
@@ -254,7 +261,8 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
       _isLoading = true;
     });
     try {
-      await _lolProvider.checkIfSummonerExistsInLeague(summonerName, serverTag);
+      await _lolProvider.getSummonerInfo(_summonerName, _serverTag);
+      _showSummonerDialog();
     } catch (error) {
       String errorMassage = "Failed to get summoner information,try again later";
       if(error.message == _summonerNotFoundCustomExceptionMsg) {
@@ -276,15 +284,8 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
           content: Text(message),
           actions: [
             FlatButton(
-              child: Text(
-                "OK",
-                style: TextStyle(
-                    color: Colors.amber
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
+              child: Text("OK", style: TextStyle(color: Colors.amber),),
+              onPressed: () {Navigator.of(ctx).pop();},
             )
           ],
         )
@@ -294,12 +295,61 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
           actions: [
             FlatButton(
               child: Text("OK"),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
+              onPressed: () {Navigator.of(ctx).pop();},
             )
           ],
         )
     );
   }
+
+  void _showSummonerDialog() {
+    showDialog(
+        context: context,
+        builder: (ctx) => Platform.isAndroid
+        ? AlertDialog(
+          title: Text("Add Summoner",textAlign: TextAlign.center,),
+          content: Column(
+            children: [
+              Image.network("$_iconFinderUrl${_summoner.iconId}.png",fit: BoxFit.fill,),
+              Text(_summoner.name),
+              Text("LVL ${_summoner.summonerLevel}"),
+            ],
+          ),
+          actions: [
+            FlatButton(
+              child: Text("CANCEL", style: TextStyle(color: Colors.black87),),
+              onPressed: () {Navigator.of(ctx).pop();},
+            ),
+            FlatButton(
+              child: Text("ADD SUMMONER", style: TextStyle(color: Colors.amber),),
+              onPressed: () async {
+                await _backendProvider.addSummoner();
+                Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
+              },
+            )
+          ],
+        )
+        : CupertinoAlertDialog(
+          title: Text("Add Summoner",textAlign: TextAlign.center,),
+          content: Column(
+            children: [
+              Image.network("$_iconFinderUrl${_summoner.iconId}.png",fit: BoxFit.fill,),
+              Text(_summoner.name),
+              Text("LVL ${_summoner.summonerLevel}"),
+            ],
+          ),
+          actions: [
+            FlatButton(
+              child: Text("CANCEL"),
+              onPressed: () {Navigator.of(ctx).pop();},
+            ),
+            FlatButton(
+              child: Text("ADD SUMMONER"),
+              onPressed: () {Navigator.of(ctx).pop();},
+            )
+          ],
+        )
+    );
+  }
+
 }

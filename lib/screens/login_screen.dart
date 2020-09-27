@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/providers/auth_provider.dart';
+import 'package:lol_rewarder/providers/backend_provider.dart';
+import 'package:lol_rewarder/screens/connect_account_screen.dart';
+import 'package:lol_rewarder/screens/main_screen.dart';
 import 'package:lol_rewarder/screens/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -25,11 +28,11 @@ class _LoginScreenState extends State<LoginScreen> {
   };
   // Tools
   final _authProvider = AuthProvider();
+  final _backendProvider = BackendProvider();
   final _passwordController = TextEditingController();
   // Vars
   var _emailValid = true;
   var _passwordValid = true;
-  var _passwordConfirmValid = true;
   var _isLoading = false;
 
   @override
@@ -340,6 +343,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       await _authProvider.logInUser(_authData["email"].trim(), _authData["password"].trim());
+      await _backendProvider.checkIfSummonerConnected();
+      Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
     } on PlatformException catch (error) {
       var errorMassage = "Authentication Error";
       if (error.toString().contains("ERROR_INVALID_EMAIL")) {
@@ -354,7 +359,11 @@ class _LoginScreenState extends State<LoginScreen> {
       _showErrorDialog(errorMassage);
     } catch (error) {
       final errorMassage = "Authentication failed, please try again later";
-      _showErrorDialog(errorMassage);
+      if(error.message == "Summoner not found") {
+        Navigator.of(context).pushNamed(ConnectAccountScreen.routeName);
+      }else{
+        _showErrorDialog(errorMassage);
+      }
     }
     setState(() {
       _isLoading = false;

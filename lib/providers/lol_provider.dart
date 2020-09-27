@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:lol_rewarder/lol_api_key.dart';
-import 'package:lol_rewarder/model/Summoner.dart';
+import 'package:lol_rewarder/model/summoner.dart';
 
 class LoLProvider with ChangeNotifier {
 
@@ -26,7 +26,7 @@ class LoLProvider with ChangeNotifier {
   // Singleton
   Summoner _summoner = Summoner();
 
-  Future<void> checkIfSummonerExistsInLeague(String summonerName,String serverTag) async {
+  Future<void> getSummonerInfo(String summonerName,String serverTag) async {
     String serverKeyName;
     _serverTagList.forEach((key, value) {
       if(key == serverTag) {
@@ -42,11 +42,12 @@ class LoLProvider with ChangeNotifier {
     if(result.statusCode == 200) {
       // Summoner found
       Map<String,dynamic> jsonResponse = json.decode(result.body);
-      _summoner.puuid = jsonResponse["puuid"];
-      _summoner.accountId = jsonResponse["accountId"];
-      _summoner.name = summonerName;
-      _summoner.serverTag = serverKeyName;
-      _summoner.summonerLevel = jsonResponse["summonerLevel"];
+      _summoner.setPuuid(jsonResponse["puuid"]);
+      _summoner.setAccountId(jsonResponse["accountId"]);
+      _summoner.setName(jsonResponse["name"]);
+      _summoner.setServerTag(serverKeyName);
+      _summoner.setIconId(jsonResponse["profileIconId"]);
+      _summoner.setSummonerLevel(jsonResponse["summonerLevel"]);
     }else if(result.statusCode == 404) {
       // Summoner not found
       if(result.reasonPhrase == _summonerNotFoundLoLMsg) {
