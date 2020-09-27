@@ -42,9 +42,10 @@ class BackendProvider {
     }
   }
 
-  Future<QuerySnapshot> checkIfSummonerExists(String summonerName) async {
+  Future<QuerySnapshot> checkIfSummonerExists(String summonerName,String serverTag) async {
     return await _firestore.collection(_summonerCollection)
         .where("name", isEqualTo: summonerName)
+        .where("serverTag", isEqualTo: serverTag)
         .getDocuments();
   }
 

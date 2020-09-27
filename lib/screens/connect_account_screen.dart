@@ -331,7 +331,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
               child: Text("ADD SUMMONER", style: TextStyle(color: Colors.amber),),
               onPressed: () async {
                 try {
-                  final QuerySnapshot result = await _backendProvider.checkIfSummonerExists(_summoner.name);
+                  final QuerySnapshot result = await _backendProvider.checkIfSummonerExists(_summoner.name,_summoner.serverTag);
                   if(result.documents.isEmpty) {
                     // Summoner not found, so you can add new summoner to firebase
                     await _backendProvider.addSummoner();
@@ -367,7 +367,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
               child: Text("ADD SUMMONER"),
               onPressed: () async {
                 try {
-                  final QuerySnapshot result = await _backendProvider.checkIfSummonerExists(_summoner.name);
+                  final QuerySnapshot result = await _backendProvider.checkIfSummonerExists(_summoner.name,_summoner.serverTag);
                   if(result.documents.isEmpty) {
                     // Summoner not found, so you can add new summoner to firebase
                     await _backendProvider.addSummoner();
