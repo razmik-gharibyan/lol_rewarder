@@ -34,6 +34,12 @@ class BackendProvider {
     }
   }
 
+  Future<QuerySnapshot> checkIfSummonerExists(String summonerName) async {
+    return await _firestore.collection(_summonerCollection)
+        .where("name", isEqualTo: summonerName)
+        .getDocuments();
+  }
+
   Map<String,dynamic> _convertSummonerToMap() {
     Map<String,dynamic> resultMap = {
       "puuid": _summoner.puuid,

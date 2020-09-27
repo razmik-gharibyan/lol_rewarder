@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
@@ -330,8 +330,21 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
             FlatButton(
               child: Text("ADD SUMMONER", style: TextStyle(color: Colors.amber),),
               onPressed: () async {
-                 await _backendProvider.addSummoner();
-                 Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
+                try {
+                  final QuerySnapshot result = await _backendProvider.checkIfSummonerExists(_summoner.name);
+                  if(result.documents.isEmpty) {
+                    // Summoner not found, so you can add new summoner to firebase
+                    await _backendProvider.addSummoner();
+                    Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
+                  }else{
+                    Navigator.of(context).pop();
+                    String errorMessage = "Summoner already exists";
+                    _showErrorDialog(errorMessage);
+                  }
+                }catch (error) {
+                  String errorMessage = "Failed to get summoner information,try again later";
+                  _showErrorDialog(errorMessage);
+                }
               },
             )
           ],
@@ -353,9 +366,22 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
             FlatButton(
               child: Text("ADD SUMMONER"),
               onPressed: () async {
-                await _backendProvider.addSummoner();
-                Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
-              },
+                try {
+                  final QuerySnapshot result = await _backendProvider.checkIfSummonerExists(_summoner.name);
+                  if(result.documents.isEmpty) {
+                    // Summoner not found, so you can add new summoner to firebase
+                    await _backendProvider.addSummoner();
+                    Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
+                  }else{
+                    Navigator.of(context).pop();
+                    String errorMessage = "Summoner already exists";
+                    _showErrorDialog(errorMessage);
+                  }
+                }catch (error) {
+                  String errorMessage = "Failed to get summoner information,try again later";
+                  _showErrorDialog(errorMessage);
+                }
+              }
             )
           ],
         )
