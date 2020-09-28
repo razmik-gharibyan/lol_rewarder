@@ -66,7 +66,7 @@ class AppDrawer extends StatelessWidget {
               Divider(),
               ListTile(
                 title: Text(
-                  "Active Challange",
+                  "Active Challenge",
                   style: TextStyle(
                       color: Colors.white
                   ),
