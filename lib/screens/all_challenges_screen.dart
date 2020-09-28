@@ -2,18 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/widgets/all_challenges_listview.dart';
 import 'package:lol_rewarder/widgets/app_drawer.dart';
-import 'package:lol_rewarder/widgets/main_menu_grid.dart';
 
-class MainScreen extends StatefulWidget {
+class AllChallengesScreen extends StatefulWidget {
 
-  static const routeName = "/main_screen";
+  static const routeName = "/all_challenges_screen";
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _AllChallengesScreenState createState() => _AllChallengesScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _AllChallengesScreenState extends State<AllChallengesScreen> {
 
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 
@@ -26,13 +26,21 @@ class _MainScreenState extends State<MainScreen> {
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black87,
+        leading: IconButton(
+          icon: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
+          color: Colors.white,
+          iconSize: _size.height * 25 / ConstraintHelper.screenHeightCoe,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           RaisedButton(
             color: Colors.transparent,
             child: Text(
               "OPEN MENU",
               style: TextStyle(
-                color: Colors.white
+                  color: Colors.white
               ),
             ),
             onPressed: () {
@@ -44,9 +52,9 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: Center(
-        child: MainMenuGrid(),
-      ),
+      body: Container(
+          padding: EdgeInsets.only(top: _size.height * 15 / ConstraintHelper.screenHeightCoe),
+          child: AllChallengesListView())
     );
   }
 }

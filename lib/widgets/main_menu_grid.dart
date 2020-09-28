@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/menu_item.dart';
+import 'package:lol_rewarder/screens/all_challenges_screen.dart';
 
 class MainMenuGrid extends StatelessWidget {
 
   // Constants
   final List<MenuItem> _menuItemList = [
-    MenuItem("All challenges", "assets/images/challenges.png", "View all available challenges", "/"),
+    MenuItem("All challenges", "assets/images/challenges.png", "View all available challenges", AllChallengesScreen.routeName),
     MenuItem("Active challenge", "assets/images/mychallenge.png", "View currently active challenge", "/"),
     MenuItem("All rewards", "assets/images/allrewards.png", "Available rewards for this month", "/"),
     MenuItem("My rewards", "assets/images/myrewards.png", "View all your rewards", "/")

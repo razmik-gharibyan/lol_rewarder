@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/auth_provider.dart';
+import 'package:lol_rewarder/screens/all_challenges_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
+import 'package:lol_rewarder/screens/main_screen.dart';
 
 class AppDrawer extends StatelessWidget {
 
@@ -51,7 +53,18 @@ class AppDrawer extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(),
+              Divider(color: Colors.grey,),
+              ListTile(
+                title: Text(
+                  "Home",
+                  style: TextStyle(
+                      color: Colors.white
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
+                },
+              ),
               ListTile(
                 title: Text(
                   "All Challenges",
@@ -60,10 +73,11 @@ class AppDrawer extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  // Go to home page
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      AllChallengesScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
+                  );
                 },
               ),
-              Divider(),
               ListTile(
                 title: Text(
                   "Active Challenge",
@@ -75,7 +89,6 @@ class AppDrawer extends StatelessWidget {
                   // Go to home page
                 },
               ),
-              Divider(),
               ListTile(
                 title: Text(
                   "My Rewards",
@@ -87,7 +100,6 @@ class AppDrawer extends StatelessWidget {
                   // Go to home page
                 },
               ),
-              Divider(),
               ListTile(
                 title: Text(
                   "Available Rewards",
@@ -99,7 +111,6 @@ class AppDrawer extends StatelessWidget {
                  // Go to home page
                 },
               ),
-              Divider(),
               ListTile(
                 title: Text(
                   "Log Out",
