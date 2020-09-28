@@ -2,17 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/extensions/hex_to_rgb.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/challenge_type.dart';
+import 'package:lol_rewarder/screens/type_challenge_screen.dart';
 
 class AllChallengesListView extends StatelessWidget {
 
+  // Constants
   final List<ChallengeType> _challengeTypeList = [
-    ChallengeType("Mage Challenges", "assets/images/mage_challenge.png"),
-    ChallengeType("Fighter Challenges", "assets/images/fighter_challenge.png"),
-    ChallengeType("Assassin Challenges", "assets/images/assassin_challenge.png"),
-    ChallengeType("Marksman Challenges", "assets/images/marksman_challenge.png"),
-    ChallengeType("Support Challenges", "assets/images/support_challenge.png")
+    ChallengeType("Mage Challenges", "assets/images/mage_challenge.png", "mage"),
+    ChallengeType("Fighter Challenges", "assets/images/fighter_challenge.png", "fighter"),
+    ChallengeType("Assassin Challenges", "assets/images/assassin_challenge.png", "assassin"),
+    ChallengeType("Marksman Challenges", "assets/images/marksman_challenge.png", "marksman"),
+    ChallengeType("Support Challenges", "assets/images/support_challenge.png", "support")
   ];
+  // Singleton
+  Challenge _challenge = Challenge();
 
   @override
   Widget build(BuildContext context) {
@@ -39,27 +44,33 @@ class AllChallengesListView extends StatelessWidget {
                 ),
               ]
           ),
-          child: Container(
-            child: Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
-                  alignment: Alignment.centerLeft,
-                  color: HexColor.fromHex("f0f0f0"),
-                  child: Text(
-                    _challengeTypeList[index].title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
+          child: InkWell(
+            child: Container(
+              child: Stack(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
+                    alignment: Alignment.centerLeft,
+                    color: HexColor.fromHex("f0f0f0"),
+                    child: Text(
+                      _challengeTypeList[index].title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  alignment: Alignment.bottomRight,
-                  child: Image.asset(_challengeTypeList[index].imageAsset),
-                )
-              ],
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    child: Image.asset(_challengeTypeList[index].imageAsset),
+                  )
+                ],
+              ),
             ),
+            onTap: () {
+              _challenge.setType(_challengeTypeList[index].type);
+              Navigator.of(context).pushNamed(TypeChallengeScreen.routeName);
+            },
           ),
         ),
         itemCount: _challengeTypeList.length,

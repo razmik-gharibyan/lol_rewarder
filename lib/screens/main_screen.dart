@@ -20,8 +20,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final _size = MediaQuery.of(context).size;
-
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(

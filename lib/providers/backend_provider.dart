@@ -48,6 +48,18 @@ class BackendProvider {
         .where("serverTag", isEqualTo: serverTag)
         .getDocuments();
   }
+  
+  Future<List<String>> getChallenges(String type) async {
+    final result =  await _firestore.collection("$type-challenges").getDocuments();
+    List<String> challengeList = List<String>();
+    if(result.documents.isNotEmpty) {
+      for(var document in result.documents) {
+        challengeList.add(document.documentID);
+      }
+      return challengeList;
+    }
+    return challengeList;
+  }
 
   Map<String,dynamic> _convertSummonerToMap() {
     Map<String,dynamic> resultMap = {

@@ -5,6 +5,7 @@ import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
 import 'package:lol_rewarder/screens/signup_screen.dart';
 import 'package:lol_rewarder/screens/splash_screen.dart';
+import 'package:lol_rewarder/screens/type_challenge_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         ConnectAccountScreen.routeName: (ctx) => ConnectAccountScreen(),
         MainScreen.routeName: (ctx) => MainScreen(),
         AllChallengesScreen.routeName: (ctx) => AllChallengesScreen(),
+        TypeChallengeScreen.routeName: (ctx) => TypeChallengeScreen(),
       },
     );
   }

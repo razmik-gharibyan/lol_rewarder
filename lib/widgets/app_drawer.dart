@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/auth_provider.dart';
+import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
@@ -12,6 +13,7 @@ class AppDrawer extends StatelessWidget {
   final String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/";
   // Tools
   final _authProvider = AuthProvider();
+  final _backendProvider = BackendProvider();
   // Singletons
   Summoner _summoner = Summoner();
 
@@ -85,7 +87,7 @@ class AppDrawer extends StatelessWidget {
                       color: Colors.white
                   ),
                 ),
-                onTap: () {
+                onTap: () async {
                   // Go to home page
                 },
               ),
