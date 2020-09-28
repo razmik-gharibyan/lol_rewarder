@@ -1,8 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lol_rewarder/extensions/hex_to_rgb.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/model/challenge_type.dart';
 
 class AllChallengesListView extends StatelessWidget {
+
+  final List<ChallengeType> _challengeTypeList = [
+    ChallengeType("Mage Challenges", "assets/images/mage_challenge.png"),
+    ChallengeType("Fighter Challenges", "assets/images/fighter_challenge.png"),
+    ChallengeType("Assassin Challenges", "assets/images/assassin_challenge.png"),
+    ChallengeType("Marksman Challenges", "assets/images/marksman_challenge.png"),
+    ChallengeType("Support Challenges", "assets/images/support_challenge.png")
+  ];
+
   @override
   Widget build(BuildContext context) {
 
@@ -28,8 +39,30 @@ class AllChallengesListView extends StatelessWidget {
                 ),
               ]
           ),
+          child: Container(
+            child: Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
+                  alignment: Alignment.centerLeft,
+                  color: HexColor.fromHex("f0f0f0"),
+                  child: Text(
+                    _challengeTypeList[index].title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
+                    ),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.bottomRight,
+                  child: Image.asset(_challengeTypeList[index].imageAsset),
+                )
+              ],
+            ),
+          ),
         ),
-        itemCount: 6,
+        itemCount: _challengeTypeList.length,
       ),
     );
   }

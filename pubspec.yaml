@@ -57,6 +57,11 @@ flutter:
    - assets/images/mychallenge.png
    - assets/images/allrewards.png
    - assets/images/myrewards.png
+   - assets/images/mage_challenge.png
+   - assets/images/fighter_challenge.png
+   - assets/images/assassin_challenge.png
+   - assets/images/marksman_challenge.png
+   - assets/images/support_challenge.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
