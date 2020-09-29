@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:lol_rewarder/lol_api_key.dart';
+import 'package:lol_rewarder/model/active_challenge.dart';
+import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/game_main.dart';
 import 'package:lol_rewarder/model/summoner.dart';
+import 'package:lol_rewarder/providers/backend_provider.dart';
 
 class LoLProvider with ChangeNotifier {
 
@@ -26,6 +29,9 @@ class LoLProvider with ChangeNotifier {
   final String _summonerNotFoundCustomExceptionMsg = "SUMMONER_NOT_FOUND";
   // Singleton
   Summoner _summoner = Summoner();
+  Challenge _challenge = Challenge();
+  // Tools
+  final _backendProvider = BackendProvider();
 
   Future<void> getSummonerInfoByName(String summonerName,String serverTag) async {
     String serverKeyName;

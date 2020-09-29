@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
       _user.setUid(firebaseUser.uid);
       // LoggedIn user found
       try {
-        await _backendProvider.checkIfSummonerConnected();
+        await _backendProvider.checkIfSummonerConnectedAndGetData();
         // Summoner account already connected , get latest information from puuid, and update firestore information with new values
         await _lolProvider.getSummonerInfoByPuuid(_summoner.puuid, _summoner.serverTag);
         await _backendProvider.updateSummoner();

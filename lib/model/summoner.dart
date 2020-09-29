@@ -1,3 +1,5 @@
+import 'package:lol_rewarder/model/active_challenge.dart';
+
 class Summoner {
 
   static final Summoner _summoner = Summoner._privateConstructor();
@@ -6,12 +8,15 @@ class Summoner {
     return _summoner;
   }
 
+  Summoner._privateConstructor();
+
   String _puuid;
   String _accountId;
   String _name;
   String _serverTag;
   int _iconId;
   int _summonerLevel;
+  ActiveChallenge _activeChallenge;
 
   String get puuid => _puuid;
   String get accountId => _accountId;
@@ -19,6 +24,7 @@ class Summoner {
   String get serverTag => _serverTag;
   int get iconId => _iconId;
   int get summonerLevel => _summonerLevel;
+  ActiveChallenge get activeChallenge => _activeChallenge;
 
   void setPuuid(String newValue) {
     _puuid = newValue;
@@ -44,6 +50,8 @@ class Summoner {
     _summonerLevel = newValue;
   }
 
-  Summoner._privateConstructor();
+  void setActiveChallenge(ActiveChallenge newValue) {
+    _activeChallenge = newValue;
+  }
 
 }

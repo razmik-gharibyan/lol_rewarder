@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/model/user.dart';
 
@@ -30,7 +31,7 @@ class BackendProvider {
     await _firestore.collection(_summonerCollection).document(userUID).updateData(_convertSummonerToMap());
   }
 
-  Future<void> checkIfSummonerConnected() async {
+  Future<void> checkIfSummonerConnectedAndGetData() async {
     String userUID = _user.uid;
     final DocumentSnapshot result = await _firestore.collection(_summonerCollection).document(userUID).get();
     if(result.exists) {
@@ -67,7 +68,8 @@ class BackendProvider {
       "name": _summoner.name,
       "serverTag": _summoner.serverTag,
       "iconId": _summoner.iconId,
-      "summonerLevel": _summoner.summonerLevel
+      "summonerLevel": _summoner.summonerLevel,
+      "activeChallenge": _convertActiveChallengeToMap(_summoner.activeChallenge)
     };
     return resultMap;
   }
@@ -79,6 +81,30 @@ class BackendProvider {
     _summoner.setServerTag(data["serverTag"]);
     _summoner.setIconId(data["iconId"]);
     _summoner.setSummonerLevel(data["summonerLevel"]);
+    _summoner.setActiveChallenge(_convertActiveChallengeMapToActiveChallenge(data["activeChallenge"]));
+  }
+
+  Map<String,dynamic> _convertActiveChallengeToMap(ActiveChallenge activeChallenge) {
+    Map<String, dynamic> resultMap;
+    if(activeChallenge != null) {
+       resultMap = {
+        "activeChallengeId": activeChallenge.activeChallengeId,
+        "activeChallengeType": activeChallenge.activeChallengeType,
+        "activeChallengeTimestamp": activeChallenge.activeChallengeTimestamp
+      };
+    }
+    return resultMap;
+  }
+
+  ActiveChallenge _convertActiveChallengeMapToActiveChallenge(Map<String,dynamic> activeChallengeMap) {
+    if(activeChallengeMap != null) {
+      return ActiveChallenge(
+          activeChallengeMap["activeChallengeId"],
+          activeChallengeMap["activeChallengeType"],
+          activeChallengeMap["activeChallengeTimestamp"]
+      );
+    }
+    return null;
   }
 
 }

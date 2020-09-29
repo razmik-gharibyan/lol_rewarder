@@ -343,7 +343,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       await _authProvider.logInUser(_authData["email"].trim(), _authData["password"].trim());
-      await _backendProvider.checkIfSummonerConnected();
+      await _backendProvider.checkIfSummonerConnectedAndGetData();
       Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
     } on PlatformException catch (error) {
       var errorMassage = "Authentication Error";
