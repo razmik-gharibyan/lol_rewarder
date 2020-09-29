@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lol_rewarder/extensions/hex_to_rgb.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/challenge.dart';
+import 'package:lol_rewarder/providers/challenge_provider.dart';
 
 class ChallengeListView extends StatefulWidget {
   @override
@@ -13,6 +14,8 @@ class _ChallengeListViewState extends State<ChallengeListView> {
 
   // Singletons
   Challenge _challenge = Challenge();
+  // Tools
+  final _challengeProvider = ChallengeProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
       builder: (c, constraints) => Container(
         child: ListView.builder(
           itemBuilder: (ctx, index) => Container(
-            height: _size.height * 0.115,
+            height: _size.height * 0.17,
             margin: EdgeInsets.only(
               bottom: _size.height * 15 / ConstraintHelper.screenHeightCoe,
               left: _size.height * 15 / ConstraintHelper.screenHeightCoe,
@@ -41,20 +44,35 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                 ]
             ),
             child: Container(
-                padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
+                padding: EdgeInsets.symmetric(horizontal: _size.height * 25 / ConstraintHelper.screenHeightCoe),
                 alignment: Alignment.centerLeft,
                 color: HexColor.fromHex("f0f0f0"),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: constraints.maxWidth * 0.65,
-                      child: Text(
-                        "${_challenge.challengeList[index].type.toString().toUpperCase()} CHALLENGE",
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontWeight: FontWeight.bold,
-                          fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
-                        ),
+                      width: constraints.maxWidth * 0.62,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${_challenge.challengeList[index].type.toString().toUpperCase()} CHALLENGE",
+                            style: TextStyle(
+                              color: Colors.amber,
+                              fontWeight: FontWeight.bold,
+                              fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
+                            ),
+                          ),
+                          Text(
+                            _challengeProvider.convertTypeToChallengeText(_challenge.challengeList[index]),
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: _size.height * 18 / ConstraintHelper.screenHeightCoe
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     Container(
