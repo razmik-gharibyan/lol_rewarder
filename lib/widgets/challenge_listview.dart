@@ -19,41 +19,66 @@ class _ChallengeListViewState extends State<ChallengeListView> {
 
     final _size = MediaQuery.of(context).size;
 
-    return Container(
-      child: ListView.builder(
-        itemBuilder: (ctx, index) => Container(
-          height: _size.height * 0.115,
-          margin: EdgeInsets.only(
-            bottom: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-            left: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-            right: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-          ),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.4),
-                  spreadRadius: 2,
-                  blurRadius: 7,
-                  offset: Offset(0, 2), // changes position of shadow
-                ),
-              ]
-          ),
-          child: Container(
-              padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
-              alignment: Alignment.centerLeft,
-              color: HexColor.fromHex("f0f0f0"),
-              child: Text(
-                "${_challenge.challengeList[index]["type"]} Challenge",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
+    return LayoutBuilder(
+      builder: (c, constraints) => Container(
+        child: ListView.builder(
+          itemBuilder: (ctx, index) => Container(
+            height: _size.height * 0.115,
+            margin: EdgeInsets.only(
+              bottom: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+              left: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+              right: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+            ),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.4),
+                    spreadRadius: 2,
+                    blurRadius: 7,
+                    offset: Offset(0, 2), // changes position of shadow
+                  ),
+                ]
+            ),
+            child: Container(
+                padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
+                alignment: Alignment.centerLeft,
+                color: HexColor.fromHex("f0f0f0"),
+                child: Row(
+                  children: [
+                    Container(
+                      width: constraints.maxWidth * 0.65,
+                      child: Text(
+                        "${_challenge.challengeList[index].type.toString().toUpperCase()} CHALLENGE",
+                        style: TextStyle(
+                          color: Colors.amber,
+                          fontWeight: FontWeight.bold,
+                          fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: constraints.maxWidth * 0.15,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Progress",
+                            style: TextStyle(
+                              fontSize: _size.height * 13 / ConstraintHelper.screenHeightCoe
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
-            ),
-        ),
-        itemCount: _challenge.challengeList.length,
-      )
+          ),
+          itemCount: _challenge.challengeList.length,
+        )
+      ),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/providers/challenge_provider.dart';
+import 'package:lol_rewarder/screens/challenge_screen.dart';
 
 class TypeChallengeListView extends StatefulWidget {
 
@@ -64,8 +65,9 @@ class _TypeChallengeListViewState extends State<TypeChallengeListView> {
                 ),
               ),
               onTap: () async {
-                _challenge.setData(result.data);
-                await _challengeProvider.getChallengeData(result.data);
+                _challenge.setData(result.data[index]);
+                await _challengeProvider.getChallengeData(result.data[index]);
+                Navigator.of(context).pushNamed(ChallengeScreen.routeName);
               },
             ),
           ),
