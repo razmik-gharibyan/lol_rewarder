@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/model/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class BackendProvider {
 
@@ -49,12 +48,12 @@ class BackendProvider {
         .getDocuments();
   }
   
-  Future<List<String>> getChallenges(String type) async {
+  Future<List<DocumentSnapshot>> getChallengeListByType(String type) async {
     final result =  await _firestore.collection("$type-challenges").getDocuments();
-    List<String> challengeList = List<String>();
+    List<DocumentSnapshot> challengeList = List<DocumentSnapshot>();
     if(result.documents.isNotEmpty) {
       for(var document in result.documents) {
-        challengeList.add(document.documentID);
+        challengeList.add(document);
       }
       return challengeList;
     }

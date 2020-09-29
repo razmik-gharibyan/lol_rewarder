@@ -6,6 +6,7 @@ import 'package:lol_rewarder/extensions/hex_to_rgb.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
+import 'package:lol_rewarder/providers/challenge_provider.dart';
 
 class TypeChallengeListView extends StatefulWidget {
 
@@ -19,6 +20,7 @@ class _TypeChallengeListViewState extends State<TypeChallengeListView> {
   Challenge _challenge = Challenge();
   // Tools
   final _backendProvider = BackendProvider();
+  final _challengeProvider = ChallengeProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class _TypeChallengeListViewState extends State<TypeChallengeListView> {
     final _size = MediaQuery.of(context).size;
 
     return FutureBuilder(
-      future: _backendProvider.getChallenges(_challenge.type),
+      future: _backendProvider.getChallengeListByType(_challenge.type),
       builder: (c, result) =>
       Container(
         child:  result.connectionState == ConnectionState.done ? ListView.builder(
@@ -61,8 +63,9 @@ class _TypeChallengeListViewState extends State<TypeChallengeListView> {
                    ),
                 ),
               ),
-              onTap: () {
-
+              onTap: () async {
+                _challenge.setData(result.data);
+                await _challengeProvider.getChallengeData(result.data);
               },
             ),
           ),

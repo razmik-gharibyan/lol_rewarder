@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
+import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/connect_account_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         MainScreen.routeName: (ctx) => MainScreen(),
         AllChallengesScreen.routeName: (ctx) => AllChallengesScreen(),
         TypeChallengeScreen.routeName: (ctx) => TypeChallengeScreen(),
+        ChallengeScreen.routeName: (ctx) => ChallengeScreen(),
       },
     );
   }
