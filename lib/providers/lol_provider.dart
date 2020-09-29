@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:lol_rewarder/lol_api_key.dart';
+import 'package:lol_rewarder/model/game_main.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 
 class LoLProvider with ChangeNotifier {
@@ -78,6 +79,25 @@ class LoLProvider with ChangeNotifier {
         throw Exception(_summonerNotFoundCustomExceptionMsg);
       }
     }
+  }
+
+  Future<List<GameMain>> getMatchListByAccountId(String accountId, String serverTag) async {
+    final result = await http.get(
+      "https://$serverTag.api.riotgames.com/lol/match/v4/matchlists/by-account/$accountId?api_key=${LoLApiKey.API_KEY}",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+    List<GameMain> matchList = List<GameMain>();
+    if(result.statusCode == 200) {
+      Map<String,dynamic> jsonResponse = json.decode(result.body);
+      final List<dynamic> mList = jsonResponse["matches"];
+      mList.forEach((element) {
+        matchList.add(GameMain(element["gameId"], element["timestamp"]));
+      });
+      return matchList;
+    }
+    return matchList;
   }
 
 }
