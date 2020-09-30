@@ -5,10 +5,12 @@ import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/game_main.dart';
+import 'package:lol_rewarder/model/lol_index.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/providers/challenge_provider.dart';
 import 'package:lol_rewarder/providers/lol_provider.dart';
+import 'package:lol_rewarder/widgets/buttons/start_challenge_button.dart';
 
 class ChallengeListView extends StatefulWidget {
   @override
@@ -23,7 +25,20 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   // Tools
   final _challengeProvider = ChallengeProvider();
   final _lolProvider = LoLProvider();
-  final _backendProvider = BackendProvider();
+  // Vars
+  List<int> _progressCountList = List<int>();
+  bool _isInit = true;
+
+
+  @override
+  void didChangeDependencies() async {
+    if(_isInit) {
+      //await _getChallengeProgressByType();
+      BeginEndIndex indexes = await _lolProvider.getBeginIndexForTimestampMatchList(_summoner.accountId, _summoner.serverTag);
+      _isInit = false;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,26 +131,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
               ButtonTheme(
                 minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
                 height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
-                child: RaisedButton(
-                  child: Text(
-                    "START CHALLENGE",
-                    style: TextStyle(
-                      fontSize: _size.height * 17 / ConstraintHelper.screenHeightCoe,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                    ),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  color: Colors.black87,
-                  textColor: Colors.white70,
-                  splashColor: Colors.amber,
-                  onPressed: () async {
-                    _updateActiveChallenge(result.data);
-                  },
-                ),
+                child: StartChallengeButton(_size,result)
               ),
             ],
           )
@@ -144,10 +140,33 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     );
   }
 
-  Future<void> _updateActiveChallenge(dynamic data) async {
-    final int latestTimestamp = (data as List<GameMain>).last.timestamp;
-    _summoner.setActiveChallenge(ActiveChallenge(_challenge.data.documentID, _challenge.type, latestTimestamp));
-    await _backendProvider.updateSummoner();
+  Future<void> _getChallengeProgressByType() async {
+    final List<GameMain> matchList = await _lolProvider.getMatchListByAccountId(_summoner.accountId, _summoner.serverTag);
+    // Find challenge type, and check progress for it
+    for(var challenge in _challenge.challengeList) {
+      switch (challenge.type) {
+        case "tower":
+          int count = 0;
+          for(var match in matchList) {
+            // Return true if challenge accomplished, false if not
+            if(match.timestamp >= _summoner.activeChallenge.activeChallengeTimestamp) {
+              if (await _lolProvider.getTowerChallenge(match.gameId, _summoner.serverTag)) count++;
+              // Write progress data for current challenge in it's position in List
+              _progressCountList.add(count);
+            }
+          }
+          break;
+        case "kill":
+          //TODO
+          break;
+        case "assist":
+          //TODO
+          break;
+        case "time":
+          //TODO
+          break;
+      }
+    }
   }
 
 }

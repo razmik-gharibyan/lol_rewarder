@@ -2,11 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:lol_rewarder/helper/champion_id_helper.dart';
 import 'package:lol_rewarder/lol_api_key.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/game_main.dart';
+import 'package:lol_rewarder/model/lol_index.dart';
 import 'package:lol_rewarder/model/summoner.dart';
+import 'package:lol_rewarder/model/tower_challenge.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 
 class LoLProvider with ChangeNotifier {
@@ -30,8 +33,6 @@ class LoLProvider with ChangeNotifier {
   // Singleton
   Summoner _summoner = Summoner();
   Challenge _challenge = Challenge();
-  // Tools
-  final _backendProvider = BackendProvider();
 
   Future<void> getSummonerInfoByName(String summonerName,String serverTag) async {
     String serverKeyName;
@@ -104,6 +105,124 @@ class LoLProvider with ChangeNotifier {
       return matchList;
     }
     return matchList;
+  }
+
+  Future<BeginEndIndex> getBeginIndexForTimestampMatchList(String accountId, String serverTag) async {
+    int beginIndex = 0;
+    int totalGames = 0;
+    int endIndex = 0;
+    List<dynamic> mList = List<dynamic>();
+    bool loopStop = true;
+    while(loopStop) {
+      var result;
+      if(endIndex == 0) {
+        result = await http.get("https://$serverTag.api.riotgames.com/lol/match/v4/matchlists/by-account/"
+              "$accountId?beginIndex=$beginIndex&api_key=${LoLApiKey.API_KEY}",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        );
+      }else{
+        result = await http.get("https://$serverTag.api.riotgames.com/lol/match/v4/matchlists/by-account/"
+              "$accountId?beginIndex=$beginIndex&endIndex=$endIndex&api_key=${LoLApiKey.API_KEY}",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        );
+      }
+      if(result.statusCode == 200) {
+        Map<String,dynamic> jsonResponse = json.decode(result.body);
+        totalGames = jsonResponse["totalGames"];
+        mList = jsonResponse["matches"];
+        mList.forEach((element) {
+          //TODO change constant to timestamp
+          if(1544864492579 == element["timestamp"]) {
+            // Found timestamp to beginIndex search matchList with, stop loop and return beginIndex value
+            loopStop = false;
+          }
+        });
+        if(loopStop) {
+          // timestamp not found yet add beginIndex value with 100 or value depending on totalGames
+          if(totalGames > 0) {
+            final indexDifference = totalGames - beginIndex;
+            if(indexDifference >= 100) {
+              beginIndex = beginIndex + 100;
+            }else{
+              endIndex = beginIndex + indexDifference;
+            }
+          }else{
+            beginIndex = beginIndex + 100;
+          }
+        }
+      }
+    }
+    return BeginEndIndex(beginIndex, endIndex);
+  }
+
+  Future<bool> getTowerChallenge(int matchId,String serverTag) async {
+    final result = await http.get(
+      "https://$serverTag.api.riotgames.com/lol/match/v4/matches/$matchId?api_key=${LoLApiKey.API_KEY}",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+    if(result.statusCode == 200) {
+      // Get current challenge information from server
+      TowerChallenge towerChallenge;
+      _challenge.challengeList.forEach((element) {
+        if(element.type == "tower") {
+          towerChallenge = element;
+        }
+      });
+      // Decode LoL json, and find summoner team, champion, wins etc
+      Map<String,dynamic> jsonResponse = json.decode(result.body);
+      List<dynamic> participantIdentities = jsonResponse["participantIdentities"];
+      List<dynamic> participants = jsonResponse["participants"];
+      List<dynamic> teams = jsonResponse["teams"];
+      // Get participants index in all players list, and use that index to get from participant list with same index
+      int participantIndex = 0;
+      participantIdentities.forEach((element) {
+        if(element["accountId"] == _summoner.accountId) {
+          return;
+        }
+        participantIndex++;
+      });
+      var participant = participants[participantIndex];
+      final int championId = participant["championId"];
+      final int teamId = participant["teamId"];
+      String champion;
+      String win;
+      int towerKills;
+      // Find the summoner team, win condition, and tower kills
+      teams.forEach((element) {
+        if(element["teamId"] == teamId) {
+          win = element["win"];
+          towerKills = element["towerKills"];
+        }
+      });
+      // Check if summoner team was winner team or not
+      if(win == "WIN") {
+        // Find champion name by id
+        ChampionIdHelper.champions.forEach((key, value) {
+          if(key == championId) {
+            champion = value;
+            return;
+          }
+        });
+        // Check if summoner champion is same as challenge champion
+        if(champion == towerChallenge.champion) {
+          // Check if tower challenge complete (all towers killed)
+          if(towerKills == 11) {
+            // Challenge complete
+            return true;
+          }
+          return false;
+        }
+        return false;
+      }else{
+        return false;
+      }
+    }
   }
 
 }
