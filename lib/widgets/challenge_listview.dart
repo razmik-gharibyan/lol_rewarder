@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/extensions/hex_to_rgb.dart';
+import 'package:lol_rewarder/helper/calc_helper.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
@@ -36,7 +37,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
       //await _getChallengeProgressByType();
       final BeginEndIndex indexes = await _lolProvider.getBeginIndexForTimestampMatchList(_summoner.accountId, _summoner.serverTag);
       List<GameMain> allMatchList = List<GameMain>();
-      int beginIndexForLoop = int.parse((indexes.beginIndex / 100).toString().substring(0,2));
+      int beginIndexForLoop = CalcHelper().getCountFromBeginIndex(indexes.beginIndex);
       if(indexes.endIndex == 0) {
         // If endIndex == 0 (was not found)
         int beginIndex = indexes.beginIndex;
