@@ -34,7 +34,46 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   void didChangeDependencies() async {
     if(_isInit) {
       //await _getChallengeProgressByType();
-      BeginEndIndex indexes = await _lolProvider.getBeginIndexForTimestampMatchList(_summoner.accountId, _summoner.serverTag);
+      final BeginEndIndex indexes = await _lolProvider.getBeginIndexForTimestampMatchList(_summoner.accountId, _summoner.serverTag);
+      List<GameMain> allMatchList = List<GameMain>();
+      int beginIndexForLoop = int.parse((indexes.beginIndex / 100).toString().substring(0,2));
+      if(indexes.endIndex == 0) {
+        // If endIndex == 0 (was not found)
+        int beginIndex = indexes.beginIndex;
+        int endIndex = indexes.endIndex;
+        BeginEndIndex currentIndexes = BeginEndIndex(beginIndex, endIndex);
+        // Use for loop to go from beginIndex match to latest match with -100 match subtract (latest game user played)
+        for(int i=0; i<beginIndexForLoop; i++) {
+          final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
+              _summoner.accountId, _summoner.serverTag, currentIndexes);
+          allMatchList.addAll(matchList);
+          beginIndex = beginIndex - 100;
+          currentIndexes = BeginEndIndex(beginIndex, endIndex);
+        }
+      }else{
+        // If endIndex != 0 , endIndex found
+        int beginIndex = indexes.beginIndex;
+        int endIndex = indexes.endIndex;
+        BeginEndIndex currentIndexes = BeginEndIndex(beginIndex, endIndex);
+        for(int i=0; i<beginIndexForLoop; i++) {
+          if(endIndex != 0) {
+            final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
+                _summoner.accountId, _summoner.serverTag, currentIndexes);
+            allMatchList.addAll(matchList);
+            beginIndex = beginIndex - 100;
+            endIndex = 0;
+            currentIndexes = BeginEndIndex(beginIndex,endIndex);
+          }else{
+            final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
+                _summoner.accountId, _summoner.serverTag, currentIndexes);
+            allMatchList.addAll(matchList);
+            beginIndex = beginIndex - 100;
+            currentIndexes = BeginEndIndex(beginIndex, endIndex);
+          }
+        }
+      }
+
+      print(allMatchList.length);
       _isInit = false;
     }
     super.didChangeDependencies();

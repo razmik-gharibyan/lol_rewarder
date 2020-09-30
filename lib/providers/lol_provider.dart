@@ -159,6 +159,37 @@ class LoLProvider with ChangeNotifier {
     return BeginEndIndex(beginIndex, endIndex);
   }
 
+  Future<List<GameMain>> getMatchListByBeginEndIndexes(String accountId,String serverTag,BeginEndIndex indexes) async {
+    var result;
+    if(indexes.endIndex == 0) {
+      // If endIndex == 0 that means no need to query with endIndex, begin index is enough
+      result = await http.get("https://$serverTag.api.riotgames.com/lol/match/v4/matchlists/by-account/"
+          "$accountId?beginIndex=${indexes.beginIndex}&api_key=${LoLApiKey.API_KEY}",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+    }else{
+      // If endIndex != 0 that means also add endIndex to beginIndex (i.e. oldest matchList query)
+      result = await http.get("https://$serverTag.api.riotgames.com/lol/match/v4/matchlists/by-account/"
+          "$accountId?beginIndex=${indexes.beginIndex}&endIndex=${indexes.endIndex}&api_key=${LoLApiKey.API_KEY}",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+    }
+    List<GameMain> matchList = List<GameMain>();
+    if(result.statusCode == 200) {
+      Map<String,dynamic> jsonResponse = json.decode(result.body);
+      final List<dynamic> mList = jsonResponse["matches"];
+      mList.forEach((element) {
+        matchList.add(GameMain(element["gameId"], element["timestamp"]));
+      });
+      return matchList;
+    }
+    return matchList;
+  }
+
   Future<bool> getTowerChallenge(int matchId,String serverTag) async {
     final result = await http.get(
       "https://$serverTag.api.riotgames.com/lol/match/v4/matches/$matchId?api_key=${LoLApiKey.API_KEY}",
