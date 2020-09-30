@@ -5,10 +5,14 @@ import 'package:http/http.dart' as http;
 import 'package:lol_rewarder/helper/champion_id_helper.dart';
 import 'package:lol_rewarder/lol_api_key.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
+import 'package:lol_rewarder/model/assist_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/game_main.dart';
+import 'package:lol_rewarder/model/kill_challenge.dart';
 import 'package:lol_rewarder/model/lol_index.dart';
+import 'package:lol_rewarder/model/match_main.dart';
 import 'package:lol_rewarder/model/summoner.dart';
+import 'package:lol_rewarder/model/time_challenge.dart';
 import 'package:lol_rewarder/model/tower_challenge.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 
@@ -176,7 +180,8 @@ class LoLProvider with ChangeNotifier {
     return matchList;
   }
 
-  Future<bool> getTowerChallenge(int matchId,String serverTag) async {
+  Future<MatchMain> getMatchByMatchId(int matchId,String serverTag) async {
+    Map<String,dynamic> jsonResponse = Map<String,dynamic>();
     final result = await http.get(
       "https://$serverTag.api.riotgames.com/lol/match/v4/matches/$matchId?api_key=${LoLApiKey.API_KEY}",
       headers: {
@@ -184,15 +189,8 @@ class LoLProvider with ChangeNotifier {
       },
     );
     if(result.statusCode == 200) {
-      // Get current challenge information from server
-      TowerChallenge towerChallenge;
-      _challenge.challengeList.forEach((element) {
-        if(element.type == "tower") {
-          towerChallenge = element;
-        }
-      });
       // Decode LoL json, and find summoner team, champion, wins etc
-      Map<String,dynamic> jsonResponse = json.decode(result.body);
+      jsonResponse = json.decode(result.body);
       List<dynamic> participantIdentities = jsonResponse["participantIdentities"];
       List<dynamic> participants = jsonResponse["participants"];
       List<dynamic> teams = jsonResponse["teams"];
@@ -207,6 +205,8 @@ class LoLProvider with ChangeNotifier {
       var participant = participants[participantIndex];
       final int championId = participant["championId"];
       final int teamId = participant["teamId"];
+      final Map<String,dynamic> stats = participant["stats"];
+      final int gameDuration = jsonResponse["gameDuration"];
       String champion;
       String win;
       int towerKills;
@@ -217,19 +217,114 @@ class LoLProvider with ChangeNotifier {
           towerKills = element["towerKills"];
         }
       });
+      // Find champion name by id
+      ChampionIdHelper.champions.forEach((key, value) {
+        if(key == championId) {
+          champion = value;
+          return;
+        }
+      });
+      return MatchMain(jsonResponse, stats, gameDuration, teamId, champion, towerKills, win);
+    }
+    return null;
+  }
+
+  Future<bool> getTowerChallenge(MatchMain matchMain) async {
+    if(matchMain != null) {
+      // Get current challenge information from server
+      TowerChallenge towerChallenge;
+      _challenge.challengeList.forEach((element) {
+        if(element.type == "tower") {
+          towerChallenge = element;
+        }
+      });
       // Check if summoner team was winner team or not
-      if(win == "Win") {
-        // Find champion name by id
-        ChampionIdHelper.champions.forEach((key, value) {
-          if(key == championId) {
-            champion = value;
-            return;
-          }
-        });
+      if(matchMain.win == "Win") {
         // Check if summoner champion is same as challenge champion
-        if(champion == towerChallenge.champion) {
+        if(matchMain.champion == towerChallenge.champion) {
           // Check if tower challenge complete (all towers killed)
-          if(towerKills == 11) {
+          if(matchMain.towerKills == 11) {
+            // Challenge complete
+            return true;
+          }
+          return false;
+        }
+        return false;
+      }else{
+        return false;
+      }
+    }
+  }
+
+  Future<bool> getKillChallenge(MatchMain matchMain) async {
+    if(matchMain != null) {
+      // Get current challenge information from server
+      KillChallenge killChallenge;
+      _challenge.challengeList.forEach((element) {
+        if(element.type == "kill") {
+          killChallenge = element;
+        }
+      });
+      // Check if summoner team was winner team or not
+      if(matchMain.win == "Win") {
+        // Check if summoner champion is same as challenge champion
+        if(matchMain.champion == killChallenge.champion) {
+          // Check if tower challenge complete (all towers killed)
+          if(matchMain.stats["kills"] >= killChallenge.killTotal) {
+            // Challenge complete
+            return true;
+          }
+          return false;
+        }
+        return false;
+      }else{
+        return false;
+      }
+    }
+  }
+
+  Future<bool> getAssistChallenge(MatchMain matchMain) async {
+    if(matchMain != null) {
+      // Get current challenge information from server
+      AssistChallenge assistChallenge;
+      _challenge.challengeList.forEach((element) {
+        if(element.type == "assist") {
+          assistChallenge = element;
+        }
+      });
+      // Check if summoner team was winner team or not
+      if(matchMain.win == "Win") {
+        // Check if summoner champion is same as challenge champion
+        if(matchMain.champion == assistChallenge.champion) {
+          // Check if tower challenge complete (all towers killed)
+          if(matchMain.stats["assists"] >= assistChallenge.assistTotal) {
+            // Challenge complete
+            return true;
+          }
+          return false;
+        }
+        return false;
+      }else{
+        return false;
+      }
+    }
+  }
+
+  Future<bool> getTimeChallenge(MatchMain matchMain) async {
+    if(matchMain != null) {
+      // Get current challenge information from server
+      TimeChallenge timeChallenge;
+      _challenge.challengeList.forEach((element) {
+        if(element.type == "time") {
+          timeChallenge = element;
+        }
+      });
+      // Check if summoner team was winner team or not
+      if(matchMain.win == "Win") {
+        // Check if summoner champion is same as challenge champion
+        if(matchMain.champion == timeChallenge.champion) {
+          // Check if tower challenge complete (all towers killed)
+          if(matchMain.gameDuration <= timeChallenge.gameUnder * 60) {
             // Challenge complete
             return true;
           }

@@ -25,7 +25,9 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   final _challengeProvider = ChallengeProvider();
   final _lolProvider = LoLProvider();
   // Vars
-  List<int> _progressCountList = List<int>();
+  Map<String,int> _progressCountMap = {
+    "tower": 0, "kill": 0, "assist": 0, "time": 0
+  };
   bool _isInit = true;
 
 
@@ -141,31 +143,42 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   Future<void> _getChallengeProgressByType() async {
     final List<GameMain> matchList = await _getCorrectMatchList();
     // Find challenge type, and check progress for it
-    for(var challenge in _challenge.challengeList) {
-      switch (challenge.type) {
-        case "tower":
-          int count = 0;
-          for(var match in matchList) {
-            // Return true if challenge accomplished, false if not
-            if(match.timestamp >= _summoner.activeChallenge.activeChallengeTimestamp) {
-              if (await _lolProvider.getTowerChallenge(match.gameId, _summoner.serverTag)) count++;
-            }
+    int towerCount = 0;
+    int killCount = 0;
+    int assistCount = 0;
+    int timeCount = 0;
+    for(var match in matchList) {
+      // Check if match is acceptable for check with timestamp
+      if(match.timestamp >= _summoner.activeChallenge.activeChallengeTimestamp) {
+        final matchMain = await _lolProvider.getMatchByMatchId(match.gameId, _summoner.serverTag);
+        for(var challenge in _challenge.challengeList) {
+          switch (challenge.type) {
+            case "tower":
+              // Return true if challenge accomplished, false if not
+              if (await _lolProvider.getTowerChallenge(matchMain)) towerCount++;
+              break;
+            case "kill":
+              // Return true if challenge accomplished, false if not
+              if (await _lolProvider.getKillChallenge(matchMain)) killCount++;
+              break;
+            case "assist":
+              // Return true if challenge accomplished, false if not
+              if (await _lolProvider.getAssistChallenge(matchMain)) assistCount++;
+              break;
+            case "time":
+              // Return true if challenge accomplished, false if not
+              if (await _lolProvider.getTimeChallenge(matchMain)) timeCount++;
+              break;
           }
-          // Write progress data for current challenge in it's position in List
-          _progressCountList.add(count);
-          break;
-        case "kill":
-          //TODO
-          break;
-        case "assist":
-          //TODO
-          break;
-        case "time":
-          //TODO
-          break;
+        }
       }
     }
-    print(_progressCountList);
+    // Write progress data for current challenge in it's position in progressMap
+    _progressCountMap["tower"] = towerCount;
+    _progressCountMap["kill"] = killCount;
+    _progressCountMap["assist"] = assistCount;
+    _progressCountMap["time"] = timeCount;
+    print(_progressCountMap);
   }
 
   Future<List<GameMain>> _getCorrectMatchList() async {
