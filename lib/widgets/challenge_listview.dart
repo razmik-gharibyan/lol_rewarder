@@ -43,7 +43,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
         int endIndex = indexes.endIndex;
         BeginEndIndex currentIndexes = BeginEndIndex(beginIndex, endIndex);
         // Use for loop to go from beginIndex match to latest match with -100 match subtract (latest game user played)
-        for(int i=0; i<beginIndexForLoop; i++) {
+        for(int i=0; i<beginIndexForLoop + 1; i++) {
           final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
               _summoner.accountId, _summoner.serverTag, currentIndexes);
           allMatchList.addAll(matchList);
@@ -55,7 +55,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
         int beginIndex = indexes.beginIndex;
         int endIndex = indexes.endIndex;
         BeginEndIndex currentIndexes = BeginEndIndex(beginIndex, endIndex);
-        for(int i=0; i<beginIndexForLoop; i++) {
+        for(int i=0; i<beginIndexForLoop + 1; i++) {
           if(endIndex != 0) {
             final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
                 _summoner.accountId, _summoner.serverTag, currentIndexes);
@@ -72,7 +72,6 @@ class _ChallengeListViewState extends State<ChallengeListView> {
           }
         }
       }
-
       print(allMatchList.length);
       _isInit = false;
     }

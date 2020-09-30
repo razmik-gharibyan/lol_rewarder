@@ -115,44 +115,30 @@ class LoLProvider with ChangeNotifier {
     bool loopStop = true;
     while(loopStop) {
       var result;
-      if(endIndex == 0) {
-        result = await http.get("https://$serverTag.api.riotgames.com/lol/match/v4/matchlists/by-account/"
-              "$accountId?beginIndex=$beginIndex&api_key=${LoLApiKey.API_KEY}",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        );
-      }else{
-        result = await http.get("https://$serverTag.api.riotgames.com/lol/match/v4/matchlists/by-account/"
-              "$accountId?beginIndex=$beginIndex&endIndex=$endIndex&api_key=${LoLApiKey.API_KEY}",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        );
-      }
+      result = await http.get("https://$serverTag.api.riotgames.com/lol/match/v4/matchlists/by-account/"
+          "$accountId?beginIndex=$beginIndex&api_key=${LoLApiKey.API_KEY}",
+        headers: {
+        "Content-Type": "application/json",
+        },
+      );
       if(result.statusCode == 200) {
         Map<String,dynamic> jsonResponse = json.decode(result.body);
         totalGames = jsonResponse["totalGames"];
         mList = jsonResponse["matches"];
         mList.forEach((element) {
           //TODO change constant to timestamp
-          if(1544864492579 == element["timestamp"]) {
+          if(1550847573347 == element["timestamp"]) {
             // Found timestamp to beginIndex search matchList with, stop loop and return beginIndex value
+            final indexDifference = totalGames - beginIndex;
+            if(indexDifference < 100) {
+              endIndex = beginIndex + indexDifference;
+            }
             loopStop = false;
           }
         });
         if(loopStop) {
-          // timestamp not found yet add beginIndex value with 100 or value depending on totalGames
-          if(totalGames > 0) {
-            final indexDifference = totalGames - beginIndex;
-            if(indexDifference >= 100) {
-              beginIndex = beginIndex + 100;
-            }else{
-              endIndex = beginIndex + indexDifference;
-            }
-          }else{
-            beginIndex = beginIndex + 100;
-          }
+          // timestamp not found yet add beginIndex value with 100
+          beginIndex = beginIndex + 100;
         }
       }
     }
