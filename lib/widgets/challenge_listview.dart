@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:lol_rewarder/extensions/hex_to_rgb.dart';
 import 'package:lol_rewarder/helper/calc_helper.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
-import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/game_main.dart';
 import 'package:lol_rewarder/model/lol_index.dart';
 import 'package:lol_rewarder/model/summoner.dart';
-import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/providers/challenge_provider.dart';
 import 'package:lol_rewarder/providers/lol_provider.dart';
 import 'package:lol_rewarder/widgets/buttons/start_challenge_button.dart';
@@ -34,46 +32,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   @override
   void didChangeDependencies() async {
     if(_isInit) {
-      //await _getChallengeProgressByType();
-      final BeginEndIndex indexes = await _lolProvider.getBeginIndexForTimestampMatchList(_summoner.accountId, _summoner.serverTag);
-      List<GameMain> allMatchList = List<GameMain>();
-      int beginIndexForLoop = CalcHelper().getCountFromBeginIndex(indexes.beginIndex);
-      if(indexes.endIndex == 0) {
-        // If endIndex == 0 (was not found)
-        int beginIndex = indexes.beginIndex;
-        int endIndex = indexes.endIndex;
-        BeginEndIndex currentIndexes = BeginEndIndex(beginIndex, endIndex);
-        // Use for loop to go from beginIndex match to latest match with -100 match subtract (latest game user played)
-        for(int i=0; i<beginIndexForLoop + 1; i++) {
-          final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
-              _summoner.accountId, _summoner.serverTag, currentIndexes);
-          allMatchList.addAll(matchList);
-          beginIndex = beginIndex - 100;
-          currentIndexes = BeginEndIndex(beginIndex, endIndex);
-        }
-      }else{
-        // If endIndex != 0 , endIndex found
-        int beginIndex = indexes.beginIndex;
-        int endIndex = indexes.endIndex;
-        BeginEndIndex currentIndexes = BeginEndIndex(beginIndex, endIndex);
-        for(int i=0; i<beginIndexForLoop + 1; i++) {
-          if(endIndex != 0) {
-            final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
-                _summoner.accountId, _summoner.serverTag, currentIndexes);
-            allMatchList.addAll(matchList);
-            beginIndex = beginIndex - 100;
-            endIndex = 0;
-            currentIndexes = BeginEndIndex(beginIndex,endIndex);
-          }else{
-            final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
-                _summoner.accountId, _summoner.serverTag, currentIndexes);
-            allMatchList.addAll(matchList);
-            beginIndex = beginIndex - 100;
-            currentIndexes = BeginEndIndex(beginIndex, endIndex);
-          }
-        }
-      }
-      print(allMatchList.length);
+      await _getChallengeProgressByType();
       _isInit = false;
     }
     super.didChangeDependencies();
@@ -180,7 +139,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   }
 
   Future<void> _getChallengeProgressByType() async {
-    final List<GameMain> matchList = await _lolProvider.getMatchListByAccountId(_summoner.accountId, _summoner.serverTag);
+    final List<GameMain> matchList = await _getCorrectMatchList();
     // Find challenge type, and check progress for it
     for(var challenge in _challenge.challengeList) {
       switch (challenge.type) {
@@ -190,10 +149,10 @@ class _ChallengeListViewState extends State<ChallengeListView> {
             // Return true if challenge accomplished, false if not
             if(match.timestamp >= _summoner.activeChallenge.activeChallengeTimestamp) {
               if (await _lolProvider.getTowerChallenge(match.gameId, _summoner.serverTag)) count++;
-              // Write progress data for current challenge in it's position in List
-              _progressCountList.add(count);
             }
           }
+          // Write progress data for current challenge in it's position in List
+          _progressCountList.add(count);
           break;
         case "kill":
           //TODO
@@ -206,6 +165,49 @@ class _ChallengeListViewState extends State<ChallengeListView> {
           break;
       }
     }
+    print(_progressCountList);
+  }
+
+  Future<List<GameMain>> _getCorrectMatchList() async {
+    final BeginEndIndex indexes = await _lolProvider.getBeginIndexForTimestampMatchList(_summoner.accountId, _summoner.serverTag);
+    List<GameMain> allMatchList = List<GameMain>();
+    int beginIndexForLoop = CalcHelper().getCountFromBeginIndex(indexes.beginIndex);
+    if(indexes.endIndex == 0) {
+      // If endIndex == 0 (was not found)
+      int beginIndex = indexes.beginIndex;
+      int endIndex = indexes.endIndex;
+      BeginEndIndex currentIndexes = BeginEndIndex(beginIndex, endIndex);
+      // Use for loop to go from beginIndex match to latest match with -100 match subtract (latest game user played)
+      for(int i=0; i<beginIndexForLoop + 1; i++) {
+        final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
+            _summoner.accountId, _summoner.serverTag, currentIndexes);
+        allMatchList.addAll(matchList);
+        beginIndex = beginIndex - 100;
+        currentIndexes = BeginEndIndex(beginIndex, endIndex);
+      }
+    }else{
+      // If endIndex != 0 , endIndex found
+      int beginIndex = indexes.beginIndex;
+      int endIndex = indexes.endIndex;
+      BeginEndIndex currentIndexes = BeginEndIndex(beginIndex, endIndex);
+      for(int i=0; i<beginIndexForLoop + 1; i++) {
+        if(endIndex != 0) {
+          final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
+              _summoner.accountId, _summoner.serverTag, currentIndexes);
+          allMatchList.addAll(matchList);
+          beginIndex = beginIndex - 100;
+          endIndex = 0;
+          currentIndexes = BeginEndIndex(beginIndex,endIndex);
+        }else{
+          final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
+              _summoner.accountId, _summoner.serverTag, currentIndexes);
+          allMatchList.addAll(matchList);
+          beginIndex = beginIndex - 100;
+          currentIndexes = BeginEndIndex(beginIndex, endIndex);
+        }
+      }
+    }
+    return allMatchList;
   }
 
 }

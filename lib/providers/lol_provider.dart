@@ -198,12 +198,12 @@ class LoLProvider with ChangeNotifier {
       List<dynamic> teams = jsonResponse["teams"];
       // Get participants index in all players list, and use that index to get from participant list with same index
       int participantIndex = 0;
-      participantIdentities.forEach((element) {
-        if(element["accountId"] == _summoner.accountId) {
-          return;
+      for(var element in participantIdentities) {
+        if(element["player"]["accountId"] == _summoner.accountId) {
+          break;
         }
         participantIndex++;
-      });
+      }
       var participant = participants[participantIndex];
       final int championId = participant["championId"];
       final int teamId = participant["teamId"];
@@ -218,7 +218,7 @@ class LoLProvider with ChangeNotifier {
         }
       });
       // Check if summoner team was winner team or not
-      if(win == "WIN") {
+      if(win == "Win") {
         // Find champion name by id
         ChampionIdHelper.champions.forEach((key, value) {
           if(key == championId) {
