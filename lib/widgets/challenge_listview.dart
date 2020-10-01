@@ -30,9 +30,11 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   Map<String,int> _progressCountMap = {
     "tower": 0, "kill": 0, "assist": 0, "time": 0
   };
+  Map<String,bool> _completeCountMap = {
+    "tower": false, "kill": false, "assist": false, "time": false
+  };
   bool _isInit = true;
   bool _isLoading = true;
-
 
   @override
   void initState() {
@@ -124,23 +126,25 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                                 ],
                               ),
                             ),
-                            Container(
-                              width: constraints.maxWidth * 0.15,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Progress",
-                                    style: TextStyle(
-                                      fontSize: _size.height * 13 / ConstraintHelper.screenHeightCoe
-                                    ),
-                                  ),
-                                  _isLoading
-                                      ? Platform.isAndroid
-                                        ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
-                                        : CupertinoActivityIndicator()
-                                      : Text(_showProgress(_challenge.challengeList[index].type))
+                            _completeCountMap[_challenge.challengeList[index].type]
+                                ? Icon(Icons.check, color: Colors.amber,)
+                                : Container(
+                                    width: constraints.maxWidth * 0.15,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Progress",
+                                          style: TextStyle(
+                                            fontSize: _size.height * 13 / ConstraintHelper.screenHeightCoe
+                                          ),
+                                        ),
+                                        _isLoading
+                                          ? Platform.isAndroid
+                                              ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
+                                              : CupertinoActivityIndicator()
+                                          : Text(_showProgress(_challenge.challengeList[index].type))
                                 ],
                               ),
                             )
@@ -253,6 +257,10 @@ class _ChallengeListViewState extends State<ChallengeListView> {
         _challenge.challengeList.forEach((element) {
           if(element.type == "tower") {
             progressText = ("${_progressCountMap["tower"]} / ${element.gameTotal}");
+            if(_progressCountMap["tower"] >= element.gameTotal) {
+              // Challenge completed
+              _completeCountMap["tower"] = true;
+            }
           }
         });
         break;
@@ -260,6 +268,10 @@ class _ChallengeListViewState extends State<ChallengeListView> {
         _challenge.challengeList.forEach((element) {
           if(element.type == "kill") {
             progressText = ("${_progressCountMap["kill"]} / ${element.gameTotal}");
+            if(_progressCountMap["kill"] >= element.gameTotal) {
+              // Challenge completed
+              _completeCountMap["kill"] = true;
+            }
           }
         });
         break;
@@ -267,6 +279,10 @@ class _ChallengeListViewState extends State<ChallengeListView> {
         _challenge.challengeList.forEach((element) {
           if(element.type == "assist") {
             progressText = ("${_progressCountMap["assist"]} / ${element.gameTotal}");
+            if(_progressCountMap["assist"] >= element.gameTotal) {
+              // Challenge completed
+              _completeCountMap["assist"] = true;
+            }
           }
         });
         break;
@@ -274,6 +290,10 @@ class _ChallengeListViewState extends State<ChallengeListView> {
         _challenge.challengeList.forEach((element) {
           if(element.type == "time") {
             progressText = ("${_progressCountMap["time"]} / ${element.gameTotal}");
+            if(_progressCountMap["time"] >= element.gameTotal) {
+              // Challenge completed
+              _completeCountMap["time"] = true;
+            }
           }
         });
     }
