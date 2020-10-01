@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/extensions/hex_to_rgb.dart';
@@ -29,13 +31,29 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     "tower": 0, "kill": 0, "assist": 0, "time": 0
   };
   bool _isInit = true;
+  bool _isLoading = true;
 
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => setState(() {
+      Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Wait while progress is being loaded, this may take some time"),
+            duration: Duration(seconds: 20),
+          )
+      );
+    }));
+  }
 
   @override
   void didChangeDependencies() async {
     if(_isInit) {
       await _getChallengeProgressByType();
       _isInit = false;
+      setState(() {});
     }
     super.didChangeDependencies();
   }
@@ -117,7 +135,12 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                                     style: TextStyle(
                                       fontSize: _size.height * 13 / ConstraintHelper.screenHeightCoe
                                     ),
-                                  )
+                                  ),
+                                  _isLoading
+                                      ? Platform.isAndroid
+                                        ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
+                                        : CupertinoActivityIndicator()
+                                      : Text(_showProgress(_challenge.challengeList[index].type))
                                 ],
                               ),
                             )
@@ -174,11 +197,11 @@ class _ChallengeListViewState extends State<ChallengeListView> {
       }
     }
     // Write progress data for current challenge in it's position in progressMap
-    _progressCountMap["tower"] = towerCount;
-    _progressCountMap["kill"] = killCount;
-    _progressCountMap["assist"] = assistCount;
-    _progressCountMap["time"] = timeCount;
-    print(_progressCountMap);
+      _progressCountMap["tower"] = towerCount;
+      _progressCountMap["kill"] = killCount;
+      _progressCountMap["assist"] = assistCount;
+      _progressCountMap["time"] = timeCount;
+      _isLoading = false;
   }
 
   Future<List<GameMain>> _getCorrectMatchList() async {
@@ -221,6 +244,40 @@ class _ChallengeListViewState extends State<ChallengeListView> {
       }
     }
     return allMatchList;
+  }
+
+  String _showProgress(String type) {
+    String progressText;
+    switch (type) {
+      case "tower":
+        _challenge.challengeList.forEach((element) {
+          if(element.type == "tower") {
+            progressText = ("${_progressCountMap["tower"]} / ${element.gameTotal}");
+          }
+        });
+        break;
+      case "kill":
+        _challenge.challengeList.forEach((element) {
+          if(element.type == "kill") {
+            progressText = ("${_progressCountMap["kill"]} / ${element.gameTotal}");
+          }
+        });
+        break;
+      case "assist":
+        _challenge.challengeList.forEach((element) {
+          if(element.type == "assist") {
+            progressText = ("${_progressCountMap["assist"]} / ${element.gameTotal}");
+          }
+        });
+        break;
+      case "time":
+        _challenge.challengeList.forEach((element) {
+          if(element.type == "time") {
+            progressText = ("${_progressCountMap["time"]} / ${element.gameTotal}");
+          }
+        });
+    }
+    return progressText;
   }
 
 }
