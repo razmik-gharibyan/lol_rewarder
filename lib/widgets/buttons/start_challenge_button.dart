@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
@@ -39,8 +42,61 @@ class StartChallengeButton extends StatelessWidget {
       textColor: Colors.white70,
       splashColor: Colors.amber,
       onPressed: () async {
-        _updateActiveChallenge(result.data);
+        _showConfirmationDialog(context);
       },
+    );
+  }
+
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (ctx) => Platform.isAndroid
+        ? AlertDialog(
+          title: Text("Are you sure?"),
+          content: Text("If you start a new challenge, your current active (ongoing) challenge will be lost."
+              "Are you sure you want to start this challenge"),
+          actions: [
+            FlatButton(
+              child: Text(
+                "NO",
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                "YES",
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () async {
+                await _updateActiveChallenge(result.data);
+                Navigator.of(ctx).pop();
+              },
+            )
+          ],
+        )
+        : CupertinoAlertDialog(
+          title: Text("Are you sure?"),
+          content: Text("If you start a new challenge, your current active (ongoing) challenge will be lost."
+              "Are you sure you want to start this challenge"),
+          actions: [
+            FlatButton(
+              child: Text("NO",),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            ),
+            FlatButton(
+              child: Text("YES"),
+              onPressed: () async {
+                await _updateActiveChallenge(result.data);
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
+        )
     );
   }
 
