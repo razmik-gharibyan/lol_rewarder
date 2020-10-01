@@ -36,6 +36,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   };
   bool _isInit = true;
   bool _isLoading = true;
+  bool _isAllChallengesComplete = false;
 
   @override
   void initState() {
@@ -55,6 +56,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   void didChangeDependencies() async {
     if(_isInit) {
       await _getChallengeProgressByType();
+      _isAllChallengesComplete = _checkRequiredChallengesComplete(_completeCountMap);
       _isInit = false;
       setState(() {});
     }
@@ -160,7 +162,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                 minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
                 height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
                 child: _challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
-                    ? GetRewardButton(_size)
+                    ? GetRewardButton(_size,_isAllChallengesComplete)
                     : StartChallengeButton(_size,result)
               ),
             ],
@@ -204,11 +206,11 @@ class _ChallengeListViewState extends State<ChallengeListView> {
       }
     }
     // Write progress data for current challenge in it's position in progressMap
-      _progressCountMap["tower"] = towerCount;
-      _progressCountMap["kill"] = killCount;
-      _progressCountMap["assist"] = assistCount;
-      _progressCountMap["time"] = timeCount;
-      _isLoading = false;
+    _progressCountMap["tower"] = towerCount;
+    _progressCountMap["kill"] = killCount;
+    _progressCountMap["assist"] = assistCount;
+    _progressCountMap["time"] = timeCount;
+    _isLoading = false;
   }
 
   Future<List<GameMain>> _getCorrectMatchList() async {
@@ -301,6 +303,15 @@ class _ChallengeListViewState extends State<ChallengeListView> {
         });
     }
     return progressText;
+  }
+
+  bool _checkRequiredChallengesComplete(Map<String,bool> completeCountMap) {
+    int completeCounter = 0;
+    completeCountMap.forEach((key, value) {
+      if(value) completeCounter++;
+    });
+    // Return true if complete counter have 3 completed challenges
+    return completeCounter >= 3;
   }
 
 }

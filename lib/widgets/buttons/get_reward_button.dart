@@ -4,9 +4,9 @@ import 'package:lol_rewarder/helper/constraint_helper.dart';
 class GetRewardButton extends StatelessWidget {
 
   Size size;
+  bool isAllChallengesComplete;
 
-
-  GetRewardButton(this.size,);
+  GetRewardButton(this.size,this.isAllChallengesComplete);
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +27,22 @@ class GetRewardButton extends StatelessWidget {
       textColor: Colors.white70,
       splashColor: Colors.amber,
       onPressed: () async {
-
+        _checkIfAllChallengesCompleted(context);
       },
     );
   }
+
+  void _checkIfAllChallengesCompleted(BuildContext context) {
+    if(isAllChallengesComplete) {
+
+    }else{
+      Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Complete all challenges to unlock reward"),
+            duration: Duration(seconds: 5),
+          )
+      );
+    }
+  }
+
 }
