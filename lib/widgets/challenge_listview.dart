@@ -35,32 +35,48 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     "tower": false, "kill": false, "assist": false, "time": false
   };
   bool _isInit = true;
-  bool _isLoading = true;
+  bool _isLoading;
   bool _isAllChallengesComplete = false;
+  bool _isDisposed = false;
 
   @override
   void initState() {
     super.initState();
+    _isLoading = _challenge.data.documentID == _summoner.activeChallenge.activeChallengeId; // If opened challenge is already active;
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => setState(() {
-      Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Wait while progress is being loaded, this may take some time"),
-            duration: Duration(seconds: 20),
-          )
-      );
-    }));
+        .addPostFrameCallback((_) {
+          if(_isLoading) {
+            setState(() {
+              Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Wait while progress is being loaded, this may take some time"),
+                    duration: Duration(seconds: 20),
+                  )
+              );});
+          }
+      });
   }
 
   @override
   void didChangeDependencies() async {
     if(_isInit) {
-      await _getChallengeProgressByType();
-      _isAllChallengesComplete = _checkRequiredChallengesComplete(_completeCountMap);
-      _isInit = false;
-      setState(() {});
+      if(_isLoading) {
+        await _getChallengeProgressByType();
+        if(!_isDisposed) {
+          _isAllChallengesComplete = _checkRequiredChallengesComplete(_completeCountMap);
+          _isInit = false;
+          setState(() {});
+        }
+      }
     }
     super.didChangeDependencies();
+  }
+
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
   }
 
   @override
@@ -163,7 +179,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                 height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
                 child: _challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
                     ? GetRewardButton(_size,_isAllChallengesComplete)
-                    : StartChallengeButton(_size,result)
+                    : StartChallengeButton(_size,result,_startChallengePressed)
               ),
             ],
           )
@@ -312,6 +328,24 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     });
     // Return true if complete counter have 3 completed challenges
     return completeCounter >= 3;
+  }
+
+  void _startChallengePressed() async {
+    setState(() {
+      Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Wait while progress is being loaded, this may take some time"),
+            duration: Duration(seconds: 20),
+          )
+      );
+      _isLoading = true;
+    });
+    await _getChallengeProgressByType();
+    if(!_isDisposed) {
+      _isAllChallengesComplete = _checkRequiredChallengesComplete(_completeCountMap);
+      _isInit = false;
+      setState(() {});
+    }
   }
 
 }

@@ -10,8 +10,9 @@ class StartChallengeButton extends StatelessWidget {
 
   Size size;
   dynamic result;
+  Function startChallengePressed;
 
-  StartChallengeButton(this.size,this.result);
+  StartChallengeButton(this.size,this.result,this.startChallengePressed);
 
   // Singletons
   Summoner _summoner = Summoner();
@@ -47,5 +48,6 @@ class StartChallengeButton extends StatelessWidget {
     final int latestTimestamp = (data as List<GameMain>).first.timestamp;
     _summoner.setActiveChallenge(ActiveChallenge(_challenge.data.documentID, _challenge.type, latestTimestamp));
     await _backendProvider.updateSummoner();
+    startChallengePressed();
   }
 }
