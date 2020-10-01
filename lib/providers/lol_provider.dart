@@ -207,6 +207,7 @@ class LoLProvider with ChangeNotifier {
       final int teamId = participant["teamId"];
       final Map<String,dynamic> stats = participant["stats"];
       final int gameDuration = jsonResponse["gameDuration"];
+      final int queueId = jsonResponse["queueId"];
       String champion;
       String win;
       int towerKills;
@@ -224,7 +225,7 @@ class LoLProvider with ChangeNotifier {
           return;
         }
       });
-      return MatchMain(jsonResponse, stats, gameDuration, teamId, champion, towerKills, win);
+      return MatchMain(jsonResponse, stats, gameDuration, queueId, teamId, champion, towerKills, win);
     }
     return null;
   }
@@ -238,18 +239,13 @@ class LoLProvider with ChangeNotifier {
           towerChallenge = element;
         }
       });
-      // Check if summoner team was winner team or not
-      if(matchMain.win == "Win") {
-        // Check if summoner champion is same as challenge champion
-        if(matchMain.champion == towerChallenge.champion) {
-          // Check if tower challenge complete (all towers killed)
-          if(matchMain.towerKills == 11) {
-            // Challenge complete
-            return true;
-          }
-          return false;
-        }
-        return false;
+      // Check if summoner team was winner team or not and if game was ranked 5 v 5 in summoners rift (queueId = 420)
+      // also check if champion is same as challenge required champion, and if challenge requirments met
+      if(matchMain.win == "Win"
+          && matchMain.queueId == 420
+          && matchMain.champion == towerChallenge.champion
+          && matchMain.towerKills == 11) {
+        return true;
       }else{
         return false;
       }
@@ -265,18 +261,13 @@ class LoLProvider with ChangeNotifier {
           killChallenge = element;
         }
       });
-      // Check if summoner team was winner team or not
-      if(matchMain.win == "Win") {
-        // Check if summoner champion is same as challenge champion
-        if(matchMain.champion == killChallenge.champion) {
-          // Check if tower challenge complete (all towers killed)
-          if(matchMain.stats["kills"] >= killChallenge.killTotal) {
-            // Challenge complete
-            return true;
-          }
-          return false;
-        }
-        return false;
+      // Check if summoner team was winner team or not and if game was ranked 5 v 5 in summoners rift (queueId == 420)
+      // also check if champion is same as challenge required champion, and if challenge requirments met
+      if(matchMain.win == "Win"
+          && matchMain.queueId == 420
+          && matchMain.champion == killChallenge.champion
+          && matchMain.stats["kills"] >= killChallenge.killTotal) {
+        return true;
       }else{
         return false;
       }
@@ -292,18 +283,13 @@ class LoLProvider with ChangeNotifier {
           assistChallenge = element;
         }
       });
-      // Check if summoner team was winner team or not
-      if(matchMain.win == "Win") {
-        // Check if summoner champion is same as challenge champion
-        if(matchMain.champion == assistChallenge.champion) {
-          // Check if tower challenge complete (all towers killed)
-          if(matchMain.stats["assists"] >= assistChallenge.assistTotal) {
-            // Challenge complete
-            return true;
-          }
-          return false;
-        }
-        return false;
+      // Check if summoner team was winner team or not and if game was ranked 5 v 5 in summoners rift (queueId == 420)
+      // also check if champion is same as challenge required champion, and if challenge requirments met
+      if(matchMain.win == "Win"
+          && matchMain.queueId == 420
+          && matchMain.champion == assistChallenge.champion
+          && matchMain.stats["assists"] >= assistChallenge.assistTotal) {
+       return true;
       }else{
         return false;
       }
@@ -319,18 +305,13 @@ class LoLProvider with ChangeNotifier {
           timeChallenge = element;
         }
       });
-      // Check if summoner team was winner team or not
-      if(matchMain.win == "Win") {
-        // Check if summoner champion is same as challenge champion
-        if(matchMain.champion == timeChallenge.champion) {
-          // Check if tower challenge complete (all towers killed)
-          if(matchMain.gameDuration <= timeChallenge.gameUnder * 60) {
-            // Challenge complete
-            return true;
-          }
-          return false;
-        }
-        return false;
+      // Check if summoner team was winner team or not and if game was ranked 5 v 5 in summoners rift (queueId == 420)
+      // also check if champion is same as challenge required champion, and if challenge requirments met
+      if(matchMain.win == "Win"
+          && matchMain.queueId == 420
+          && matchMain.champion == timeChallenge.champion
+          && matchMain.gameDuration <= timeChallenge.gameUnder * 60) {
+        return true;
       }else{
         return false;
       }

@@ -48,25 +48,25 @@ class ChallengeProvider with ChangeNotifier {
       case "tower":
         final gameTotal = (challenge as TowerChallenge).gameTotal;
         final champion = (challenge as TowerChallenge).champion;
-        challengeText = "Win $gameTotal games by playing as $champion and destroying all enemy towers";
+        challengeText = "Win $gameTotal (5 v 5 Ranked) games in Summoner's Rift by playing as $champion and destroying all enemy towers";
         break;
       case "kill":
         final gameTotal = (challenge as KillChallenge).gameTotal;
         final champion = (challenge as KillChallenge).champion;
         final killTotal = (challenge as KillChallenge).killTotal;
-        challengeText = "Win $gameTotal games by playing as $champion and having $killTotal or more kills";
+        challengeText = "Win $gameTotal (5 v 5 Ranked) games in Summoner's Rift by playing as $champion and having $killTotal or more kills";
         break;
       case "assist":
         final gameTotal = (challenge as AssistChallenge).gameTotal;
         final champion = (challenge as AssistChallenge).champion;
         final assistTotal = (challenge as AssistChallenge).assistTotal;
-        challengeText = "Win $gameTotal games by playing as $champion and having $assistTotal or more assists";
+        challengeText = "Win $gameTotal (5 v 5 Ranked) games in Summoner's Rift by playing as $champion and having $assistTotal or more assists";
         break;
       case "time":
         final gameTotal = (challenge as TimeChallenge).gameTotal;
         final champion = (challenge as TimeChallenge).champion;
         final gameUnder = (challenge as TimeChallenge).gameUnder;
-        challengeText = "Win $gameTotal games by playing as $champion and finishing game under $gameUnder minutes";
+        challengeText = "Win $gameTotal (5 v 5 Ranked) games in Summoner's Rift by playing as $champion and finishing game under $gameUnder minutes";
         break;
     }
     return challengeText;

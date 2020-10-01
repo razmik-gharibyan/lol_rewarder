@@ -11,6 +11,7 @@ import 'package:lol_rewarder/model/lol_index.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/challenge_provider.dart';
 import 'package:lol_rewarder/providers/lol_provider.dart';
+import 'package:lol_rewarder/widgets/buttons/get_reward_button.dart';
 import 'package:lol_rewarder/widgets/buttons/start_challenge_button.dart';
 
 class ChallengeListView extends StatefulWidget {
@@ -120,7 +121,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                                     _challengeProvider.convertTypeToChallengeText(_challenge.challengeList[index]),
                                     style: TextStyle(
                                       color: Colors.black54,
-                                      fontSize: _size.height * 18 / ConstraintHelper.screenHeightCoe
+                                      fontSize: _size.height * 16 / ConstraintHelper.screenHeightCoe
                                     ),
                                   )
                                 ],
@@ -158,7 +159,9 @@ class _ChallengeListViewState extends State<ChallengeListView> {
               ButtonTheme(
                 minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
                 height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
-                child: StartChallengeButton(_size,result)
+                child: _challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
+                    ? GetRewardButton(_size)
+                    : StartChallengeButton(_size,result)
               ),
             ],
           )
