@@ -285,6 +285,7 @@ class LoLProvider with ChangeNotifier {
       });
       // Check if summoner team was winner team or not and if game was ranked 5 v 5 in summoners rift (queueId == 420)
       // also check if champion is same as challenge required champion, and if challenge requirments met
+      print("${matchMain.win} ${matchMain.queueId} ${matchMain.champion} ${matchMain.stats["assists"]}");
       if(matchMain.win == "Win"
           && matchMain.queueId == 420
           && matchMain.champion == assistChallenge.champion

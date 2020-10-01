@@ -49,7 +49,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
             setState(() {
               Scaffold.of(context).showSnackBar(
                   SnackBar(
-                    content: Text("Wait while progress is being loaded, this may take some time"),
+                    content: Text("Wait while progress is being loaded, this may take a few minutes"),
                     duration: Duration(seconds: 20),
                   )
               );});
@@ -197,7 +197,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     int timeCount = 0;
     for(var match in matchList) {
       // Check if match is acceptable for check with timestamp
-      if(match.timestamp >= _summoner.activeChallenge.activeChallengeTimestamp) {
+      if(_summoner.activeChallenge.activeChallengeTimestamp >= match.timestamp) {
         final matchMain = await _lolProvider.getMatchByMatchId(match.gameId, _summoner.serverTag);
         for(var challenge in _challenge.challengeList) {
           switch (challenge.type) {
@@ -334,7 +334,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     setState(() {
       Scaffold.of(context).showSnackBar(
           SnackBar(
-            content: Text("Wait while progress is being loaded, this may take some time"),
+            content: Text("Wait while progress is being loaded, this may take a few minutes"),
             duration: Duration(seconds: 20),
           )
       );
