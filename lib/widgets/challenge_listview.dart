@@ -42,7 +42,11 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   @override
   void initState() {
     super.initState();
-    _isLoading = _challenge.data.documentID == _summoner.activeChallenge.activeChallengeId; // If opened challenge is already active;
+    if(_summoner.activeChallenge == null) {
+      _isLoading = false;
+    }else{
+      _isLoading = _challenge.data.documentID == _summoner.activeChallenge.activeChallengeId; // If opened challenge is already active;
+    }
     WidgetsBinding.instance
         .addPostFrameCallback((_) {
           if(_isLoading) {
@@ -52,7 +56,8 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                     content: Text("Wait while progress is being loaded, this may take a few minutes"),
                     duration: Duration(seconds: 20),
                   )
-              );});
+              );
+            });
           }
       });
   }
@@ -177,7 +182,9 @@ class _ChallengeListViewState extends State<ChallengeListView> {
               ButtonTheme(
                 minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
                 height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
-                child: _challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
+                child: _summoner.activeChallenge == null
+                  ? StartChallengeButton(_size,result,_startChallengePressed)
+                  :_challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
                     ? GetRewardButton(_size,_isAllChallengesComplete)
                     : StartChallengeButton(_size,result,_startChallengePressed)
               ),

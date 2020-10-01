@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/menu_item.dart';
+import 'package:lol_rewarder/model/summoner.dart';
+import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
+import 'package:lol_rewarder/screens/challenge_screen.dart';
 
-class MainMenuGrid extends StatelessWidget {
+class MainMenuGrid extends StatefulWidget {
 
   // Constants
+  @override
+  _MainMenuGridState createState() => _MainMenuGridState();
+}
+
+class _MainMenuGridState extends State<MainMenuGrid> {
   final List<MenuItem> _menuItemList = [
     MenuItem("All challenges", "assets/images/challenges.png", "View all available challenges", AllChallengesScreen.routeName),
-    MenuItem("Active challenge", "assets/images/mychallenge.png", "View currently active challenge", "/"),
+    MenuItem("Active challenge", "assets/images/mychallenge.png", "View currently active challenge", ChallengeScreen.routeName),
     MenuItem("All rewards", "assets/images/allrewards.png", "Available rewards for this month", "/"),
     MenuItem("My rewards", "assets/images/myrewards.png", "View all your rewards", "/")
   ];
+
+  Summoner _summoner = Summoner();
+
+  final _backendProvider = BackendProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +81,8 @@ class MainMenuGrid extends StatelessWidget {
                 ],
               ),
             ),
-            onTap: () {
-              Navigator.of(context).pushNamed(_menuItemList[index].navigation);
+            onTap: () async {
+              await _menuItemPressed(index);
             },
           ),
         ),
@@ -79,6 +91,35 @@ class MainMenuGrid extends StatelessWidget {
           crossAxisCount: 2,childAspectRatio: 3/2,crossAxisSpacing: 10,mainAxisSpacing: 10
       ),
     );
+  }
+
+  Future<void> _menuItemPressed(int index) async {
+    switch(_menuItemList[index].title) {
+      case "All challenges":
+        Navigator.of(context).pushNamed(_menuItemList[index].navigation);
+        break;
+      case "Active challenge":
+        if(_summoner.activeChallenge != null) {
+          await _backendProvider.getChallengeDocumentById(_summoner.activeChallenge);
+          Navigator.of(context).pushNamed(_menuItemList[index].navigation);
+        }else{
+          setState(() {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text("You don't have active challenge"),
+                duration: Duration(seconds: 3),
+              )
+            );
+          });
+        }
+        break;
+      case "All rewards":
+        //TODO
+        break;
+      case "My rewards":
+        //TODO
+        break;
+    }
   }
 
 }

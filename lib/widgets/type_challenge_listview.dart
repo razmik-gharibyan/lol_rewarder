@@ -30,8 +30,7 @@ class _TypeChallengeListViewState extends State<TypeChallengeListView> {
 
     return FutureBuilder(
       future: _backendProvider.getChallengeListByType(_challenge.type),
-      builder: (c, result) =>
-      Container(
+      builder: (c, result) => Container(
         child:  result.connectionState == ConnectionState.done ? ListView.builder(
           itemBuilder: (ctx, index) => Container(
             height: _size.height * 0.115,

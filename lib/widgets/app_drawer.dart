@@ -4,17 +4,24 @@ import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/auth_provider.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
+import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends StatefulWidget {
 
   // Constants
+  @override
+  _AppDrawerState createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
   final String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/";
-  // Tools
+
   final _authProvider = AuthProvider();
+
   final _backendProvider = BackendProvider();
-  // Singletons
+
   Summoner _summoner = Summoner();
 
   @override
@@ -88,7 +95,21 @@ class AppDrawer extends StatelessWidget {
                   ),
                 ),
                 onTap: () async {
-                  // Go to home page
+                  if(_summoner.activeChallenge != null) {
+                    await _backendProvider.getChallengeDocumentById(_summoner.activeChallenge);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        ChallengeScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
+                    );
+                  }else{
+                    setState(() {
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("You don't have active challenge"),
+                          duration: Duration(seconds: 3),
+                        )
+                      );
+                    });
+                  }
                 },
               ),
               ListTile(

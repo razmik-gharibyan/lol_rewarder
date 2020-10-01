@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
+import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/model/user.dart';
+import 'package:lol_rewarder/providers/challenge_provider.dart';
 
 class BackendProvider {
 
@@ -17,9 +19,11 @@ class BackendProvider {
   final String _summonerCollection = "summoners";
   // Singletons
   Summoner _summoner = Summoner();
+  Challenge _challenge = Challenge();
   User _user = User();
   // Tools
   final Firestore _firestore = Firestore.instance;
+  final _challengeProvider = ChallengeProvider();
 
   Future<void> addSummoner() async {
     String userUID = _user.uid;
@@ -50,7 +54,7 @@ class BackendProvider {
   }
   
   Future<List<DocumentSnapshot>> getChallengeListByType(String type) async {
-    final result =  await _firestore.collection("$type-challenges").getDocuments();
+    final result = await _firestore.collection("$type-challenges").getDocuments();
     List<DocumentSnapshot> challengeList = List<DocumentSnapshot>();
     if(result.documents.isNotEmpty) {
       for(var document in result.documents) {
@@ -59,6 +63,17 @@ class BackendProvider {
       return challengeList;
     }
     return challengeList;
+  }
+
+  Future<void> getChallengeDocumentById(ActiveChallenge activeChallenge) async {
+    // Get challenge document by it's ID
+    final result = await _firestore.collection("${activeChallenge.activeChallengeType}-challenges")
+        .document(activeChallenge.activeChallengeId)
+        .get();
+    // Update and rewrite active challenge data
+    _challenge.setType(activeChallenge.activeChallengeType);
+    _challenge.setData(result);
+    await _challengeProvider.getChallengeData(result);
   }
 
   Map<String,dynamic> _convertSummonerToMap() {
