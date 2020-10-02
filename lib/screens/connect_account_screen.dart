@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/helper/game_version_helper.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/providers/lol_provider.dart';
@@ -24,7 +25,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
 
   // Constants
   final List<String> _serverTagList = ["BR","EUW","EUN","JP","KR","NA","LAN","LAS","OC","RU","TR"];
-  final String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/";
+  final String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/${GameVersionHelper.GAME_VERSION}/img/profileicon/";
   // Custom Exception constants
   final String _summonerNotFoundCustomExceptionMsg = "SUMMONER_NOT_FOUND";
   // Tools

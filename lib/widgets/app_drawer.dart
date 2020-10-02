@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/helper/game_version_helper.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/auth_provider.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
@@ -16,7 +17,7 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
-  final String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/";
+  final String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/${GameVersionHelper.GAME_VERSION}/img/profileicon/";
 
   final _authProvider = AuthProvider();
 
