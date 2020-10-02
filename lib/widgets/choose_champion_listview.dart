@@ -57,9 +57,10 @@ class _ChooseChampionListViewState extends State<ChooseChampionListView> {
                 ),
               ),
               onTap: () async {
-                final skinList = await _ddragonProvider.getSkinListForChampion(ChampionIdHelper.champions.values.toList()[index]);
+                final skinList = await _ddragonProvider
+                    .getSkinListForChampion(ChampionIdHelper.champions.values.toList()[index].replaceAll(" ",""));
                 _currentSkinHolder.setSkinList(skinList);
-                _currentSkinHolder.setChampionName(ChampionIdHelper.champions.values.toList()[index]);
+                _currentSkinHolder.setChampionName(ChampionIdHelper.champions.values.toList()[index].replaceAll(" ",""));
                 Navigator.of(context).pushNamed(ChooseSkinScreen.routeName);
               },
             ),
