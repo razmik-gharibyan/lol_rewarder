@@ -24,48 +24,52 @@ class _ChooseChampionListViewState extends State<ChooseChampionListView> {
     final _size = MediaQuery.of(context).size;
 
     return Container(
-        child: ListView.builder(
-          itemBuilder: (ctx, index) => Container(
-            height: _size.height * 0.1,
-            margin: EdgeInsets.only(
-              bottom: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-              left: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-              right: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-            ),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.4),
-                    spreadRadius: 2,
-                    blurRadius: 7,
-                    offset: Offset(0, 2), // changes position of shadow
-                  ),
-                ]
-            ),
-            child: InkWell(
-              child: Container(
-                padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
-                alignment: Alignment.centerLeft,
-                color: HexColor.fromHex("f0f0f0"),
-                child: Text(
-                  ChampionIdHelper.champions.values.toList()[index],
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
+        child: Scrollbar(
+          child: ListView.builder(
+            itemBuilder: (ctx, index) => Container(
+              height: _size.height * 0.1,
+              margin: EdgeInsets.only(
+                bottom: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+                left: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+                right: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.4),
+                      spreadRadius: 2,
+                      blurRadius: 7,
+                      offset: Offset(0, 2), // changes position of shadow
+                    ),
+                  ]
+              ),
+              child: InkWell(
+                child: Container(
+                  padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
+                  alignment: Alignment.centerLeft,
+                  color: HexColor.fromHex("f0f0f0"),
+                  child: Text(
+                    ChampionIdHelper.champions.values.toList()[index],
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
+                    ),
                   ),
                 ),
+                onTap: () async {
+                  String champion = ChampionIdHelper.champions.values.toList()[index].replaceAll(" ","");
+                  if(champion == "Wukong") champion = "MonkeyKing";
+                  final skinList = await _ddragonProvider
+                      .getSkinListForChampion(champion);
+                  _currentSkinHolder.setSkinList(skinList);
+                  _currentSkinHolder.setChampionName(champion);
+                  Navigator.of(context).pushNamed(ChooseSkinScreen.routeName);
+                },
               ),
-              onTap: () async {
-                final skinList = await _ddragonProvider
-                    .getSkinListForChampion(ChampionIdHelper.champions.values.toList()[index].replaceAll(" ",""));
-                _currentSkinHolder.setSkinList(skinList);
-                _currentSkinHolder.setChampionName(ChampionIdHelper.champions.values.toList()[index].replaceAll(" ",""));
-                Navigator.of(context).pushNamed(ChooseSkinScreen.routeName);
-              },
             ),
+            itemCount: ChampionIdHelper.champions.length,
           ),
-          itemCount: ChampionIdHelper.champions.length,
         )
     );
   }
