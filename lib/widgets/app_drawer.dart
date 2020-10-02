@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
-import 'package:lol_rewarder/helper/game_version_helper.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/auth_provider.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
+import 'package:lol_rewarder/providers/ddragon_provider.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
 import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
@@ -17,13 +17,21 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
-  final String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/${GameVersionHelper.GAME_VERSION}/img/profileicon/";
 
+
+  // Tools
   final _authProvider = AuthProvider();
-
   final _backendProvider = BackendProvider();
-
+  final _ddragonProvider = DDragonProvider();
+  // Vars
+  String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/10.19.1/img/profileicon/";
   Summoner _summoner = Summoner();
+
+  @override
+  void initState() {
+    _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/${_ddragonProvider.gameVersion}/img/profileicon/";
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:lol_rewarder/helper/champion_id_helper.dart';
 import 'package:lol_rewarder/lol_api_key.dart';
-import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/assist_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/game_main.dart';
@@ -14,7 +13,6 @@ import 'package:lol_rewarder/model/match_main.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/model/time_challenge.dart';
 import 'package:lol_rewarder/model/tower_challenge.dart';
-import 'package:lol_rewarder/providers/backend_provider.dart';
 
 class LoLProvider with ChangeNotifier {
 

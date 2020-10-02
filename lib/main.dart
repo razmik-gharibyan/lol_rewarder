@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
 import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/choose_champion_screen.dart';
+import 'package:lol_rewarder/screens/choose_skin_screen.dart';
 import 'package:lol_rewarder/screens/connect_account_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         TypeChallengeScreen.routeName: (ctx) => TypeChallengeScreen(),
         ChallengeScreen.routeName: (ctx) => ChallengeScreen(),
         ChooseChampionScreen.routeName: (ctx) => ChooseChampionScreen(),
+        ChooseSkinScreen.routeName: (ctx) => ChooseSkinScreen(),
       },
     );
   }

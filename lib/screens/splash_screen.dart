@@ -7,6 +7,7 @@ import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/model/user.dart';
 import 'package:lol_rewarder/providers/auth_provider.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
+import 'package:lol_rewarder/providers/ddragon_provider.dart';
 import 'package:lol_rewarder/providers/lol_provider.dart';
 import 'package:lol_rewarder/screens/connect_account_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
@@ -26,6 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   final _authProvider = AuthProvider();
   final _backendProvider = BackendProvider();
   final _lolProvider = LoLProvider();
+  final _ddragonProvider = DDragonProvider();
   // Singletons
   User _user = User();
   Summoner _summoner = Summoner();
@@ -36,6 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void didChangeDependencies() async {
     if(_isInit) {
+      await _ddragonProvider.updateGameVersion();
       _navigateFromSplashOperation();
       _isInit = false;
     }

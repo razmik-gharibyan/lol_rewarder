@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lol_rewarder/extensions/hex_to_rgb.dart';
 import 'package:lol_rewarder/helper/champion_id_helper.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/model/current_skin_holder.dart';
+import 'package:lol_rewarder/providers/ddragon_provider.dart';
+import 'package:lol_rewarder/screens/choose_skin_screen.dart';
 
 class ChooseChampionListView extends StatefulWidget {
   @override
@@ -9,6 +12,11 @@ class ChooseChampionListView extends StatefulWidget {
 }
 
 class _ChooseChampionListViewState extends State<ChooseChampionListView> {
+
+  // Tools
+  final _ddragonProvider = DDragonProvider();
+  // Singletons
+  CurrentSkinHolder _currentSkinHolder = CurrentSkinHolder();
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +57,10 @@ class _ChooseChampionListViewState extends State<ChooseChampionListView> {
                 ),
               ),
               onTap: () async {
-
+                final skinList = await _ddragonProvider.getSkinListForChampion(ChampionIdHelper.champions.values.toList()[index]);
+                _currentSkinHolder.setSkinList(skinList);
+                _currentSkinHolder.setChampionName(ChampionIdHelper.champions.values.toList()[index]);
+                Navigator.of(context).pushNamed(ChooseSkinScreen.routeName);
               },
             ),
           ),

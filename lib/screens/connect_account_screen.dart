@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
-import 'package:lol_rewarder/helper/game_version_helper.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
+import 'package:lol_rewarder/providers/ddragon_provider.dart';
 import 'package:lol_rewarder/providers/lol_provider.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
@@ -25,18 +25,25 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
 
   // Constants
   final List<String> _serverTagList = ["BR","EUW","EUN","JP","KR","NA","LAN","LAS","OC","RU","TR"];
-  final String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/${GameVersionHelper.GAME_VERSION}/img/profileicon/";
+  String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/10.19.1/img/profileicon/";
   // Custom Exception constants
   final String _summonerNotFoundCustomExceptionMsg = "SUMMONER_NOT_FOUND";
   // Tools
   final _lolProvider = LoLProvider();
   final _backendProvider = BackendProvider();
+  final _ddragonProvider = DDragonProvider();
   // Singletons
   Summoner _summoner = Summoner();
   // Vars
   String _summonerName = "";
   String _serverTag = "EUW";
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/${_ddragonProvider.gameVersion}/img/profileicon/";
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
