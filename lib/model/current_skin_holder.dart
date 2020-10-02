@@ -12,9 +12,11 @@ class CurrentSkinHolder {
 
   String _championName;
   List<Skin> _skinList;
+  String _currentSkinName;
 
   String get championName => _championName;
   List<Skin> get skinList => _skinList;
+  String get currentSkinName => _currentSkinName;
 
   void setChampionName(String newValue) {
     _championName = newValue;
@@ -24,4 +26,7 @@ class CurrentSkinHolder {
     _skinList = newValue;
   }
 
+  void setCurrentSkinName(String newValue) {
+    _currentSkinName = newValue;
+  }
 }

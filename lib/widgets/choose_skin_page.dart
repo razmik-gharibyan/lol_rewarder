@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/current_skin_holder.dart';
+import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/widgets/skinpicker/slide_dot.dart';
 import 'package:lol_rewarder/widgets/skinpicker/slider_item.dart';
 
@@ -15,6 +19,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
   // Tools
   var _pageController = PageController(initialPage: 0);
   // Singletons
+  Summoner _summoner = Summoner();
   CurrentSkinHolder _currentSkinHolder = CurrentSkinHolder();
   // Vars
   int _currentIndex = 0;
@@ -82,8 +87,8 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
               color: Colors.amber,
               textColor: Colors.white70,
               splashColor: Colors.amberAccent,
-              onPressed: () async {
-
+              onPressed: () {
+                _showInformationDialog(context,_currentSkinHolder.skinList[_currentIndex].name);
               },
             )
           ),
@@ -96,6 +101,86 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  void _showInformationDialog(BuildContext context, String skinName) {
+    showDialog(
+        context: context,
+        builder: (ctx) => Platform.isAndroid
+        ? AlertDialog(
+          title: Text("ATTENTION"),
+          content: Text("Attention: Submit only those skins that are available for purchase in official League of Legends"
+              " magazine."),
+          actions: [
+            FlatButton(
+              child: Text("OK", style: TextStyle(color: Colors.amber),),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                _showConfirmationDialog(context, skinName);
+              },
+            )
+          ],
+        )
+        : CupertinoAlertDialog(
+          title: Text("ATTENTION"),
+          content: Text("Attention: Submit only those skins that are available for purchase in official League of Legends"
+              " magazine."),
+          actions: [
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                _showConfirmationDialog(context, skinName);
+              },
+            )
+          ],
+        )
+    );
+  }
+
+  void _showConfirmationDialog(BuildContext context,String skinName) {
+    showDialog(
+        context: context,
+        builder: (ctx) => Platform.isAndroid
+        ? AlertDialog(
+          title: Text("Are you sure?"),
+          content: Text("Are you sure you want to get $skinName skin?"
+              " Skin will be gifted to ${_summoner.name} summoner in ${_summoner.serverTag.toUpperCase()} server"),
+          actions: [
+            FlatButton(
+              child: Text("CANCEL", style: TextStyle(color: Colors.black87),),
+              onPressed: () {Navigator.of(ctx).pop();},
+            ),
+            FlatButton(
+              child: Text("GET SKIN", style: TextStyle(color: Colors.amber),),
+              onPressed: () async {
+                sendEmail(skinName);
+              },
+            )
+          ],
+        )
+        : CupertinoAlertDialog(
+          title: Text("Are you sure?"),
+          content: Text("Are you sure you want to get $skinName skin?"
+              " Skin will be gifted to ${_summoner.name} summoner in ${_summoner.serverTag.toUpperCase()} server"),
+          actions: [
+            FlatButton(
+              child: Text("CANCEL"),
+              onPressed: () {Navigator.of(ctx).pop();},
+            ),
+            FlatButton(
+              child: Text("GET SKIN"),
+              onPressed: () async {
+                sendEmail(skinName);
+              },
+            )
+          ],
+        )
+    );
+  }
+
+  void sendEmail(String skinName) async {
+
   }
 
 }
