@@ -1,8 +1,10 @@
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
+import 'package:lol_rewarder/admob/ad_manager.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
-import 'package:lol_rewarder/screens/choose_skin_screen.dart';
+import 'package:lol_rewarder/screens/choose_champion_screen.dart';
 
-class GetRewardButton extends StatelessWidget {
+class GetRewardButton extends StatefulWidget {
 
   Size size;
   bool isAllChallengesComplete;
@@ -10,12 +12,39 @@ class GetRewardButton extends StatelessWidget {
   GetRewardButton(this.size,this.isAllChallengesComplete);
 
   @override
+  _GetRewardButtonState createState() => _GetRewardButtonState();
+}
+
+class _GetRewardButtonState extends State<GetRewardButton> {
+
+  // AdMob
+  InterstitialAd _interstitialAd;
+  // Vars
+  bool _isInterstitialAdReady;
+
+  @override
+  void initState() {
+    _isInterstitialAdReady = false;
+    _interstitialAd = InterstitialAd(
+      adUnitId: AdManager.interstitialAdUnitId,
+      listener: _onInterstitialAdEvent,
+    );
+  }
+
+
+  @override
+  void dispose() {
+    _interstitialAd?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return RaisedButton(
       child: Text(
         "GET REWARD",
         style: TextStyle(
-            fontSize: size.height * 17 / ConstraintHelper.screenHeightCoe,
+            fontSize: widget.size.height * 17 / ConstraintHelper.screenHeightCoe,
             fontWeight: FontWeight.bold,
             color: Colors.white
         ),
@@ -34,8 +63,12 @@ class GetRewardButton extends StatelessWidget {
   }
 
   void _checkIfAllChallengesCompleted(BuildContext context) {
-    if(isAllChallengesComplete) {
-      Navigator.of(context).pushNamed(ChooseSkinScreen.routeName);
+    if(widget.isAllChallengesComplete) {
+      _loadInterstitialAd();
+      if (_isInterstitialAdReady) {
+        _interstitialAd.show();
+      }
+      //Navigator.of(context).pushNamed(ChooseChampionScreen.routeName);
     }else{
       Scaffold.of(context).showSnackBar(
           SnackBar(
@@ -46,4 +79,24 @@ class GetRewardButton extends StatelessWidget {
     }
   }
 
+  void _loadInterstitialAd() {
+    _interstitialAd.load();
+  }
+
+  void _onInterstitialAdEvent(MobileAdEvent event) {
+    switch (event) {
+      case MobileAdEvent.loaded:
+        _isInterstitialAdReady = true;
+        break;
+      case MobileAdEvent.failedToLoad:
+        _isInterstitialAdReady = false;
+        print('Failed to load an interstitial ad');
+        break;
+      case MobileAdEvent.closed:
+        Navigator.of(context).pushNamed(ChooseChampionScreen.routeName);
+        break;
+      default:
+      // do nothing
+    }
+  }
 }

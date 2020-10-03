@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
+import 'package:lol_rewarder/admob/ad_manager.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/widgets/app_drawer.dart';
 import 'package:lol_rewarder/widgets/type_challenge_listview.dart';
@@ -15,7 +17,27 @@ class TypeChallengeScreen extends StatefulWidget {
 
 class _TypeChallengeScreenState extends State<TypeChallengeScreen> {
 
+  // AdMob
+  BannerAd _bannerAd;
+  // Tools
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+
+
+  @override
+  void initState() {
+    _bannerAd = BannerAd(
+      adUnitId: AdManager.bannerAdUnitId,
+      size: AdSize.banner,
+    );
+    _loadBannerAd();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,4 +80,11 @@ class _TypeChallengeScreenState extends State<TypeChallengeScreen> {
         ),
     );
   }
+
+  void _loadBannerAd() {
+    _bannerAd
+      ..load()
+      ..show(anchorType: AnchorType.bottom);
+  }
+
 }
