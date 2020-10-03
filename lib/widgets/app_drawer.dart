@@ -5,6 +5,7 @@ import 'package:lol_rewarder/providers/auth_provider.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/providers/ddragon_provider.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
+import 'package:lol_rewarder/screens/all_rewards_screen.dart';
 import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
@@ -131,7 +132,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 ),
                 onTap: () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      AllChallengesScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
+                      AllRewardsScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
                   );
                 },
               ),

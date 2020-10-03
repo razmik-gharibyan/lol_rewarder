@@ -105,6 +105,10 @@ class BackendProvider {
     return result.data["rewardList"];
   }
 
+  Future<void> updateAllRewards(Map<String,dynamic> map) async {
+    await _firestore.collection(_allRewardsCollection).document(_thisMonthRewardsDocument).updateData(map);
+  }
+
   Map<String,dynamic> _convertSummonerToMap() {
     Map<String,dynamic> resultMap = {
       "puuid": _summoner.puuid,
