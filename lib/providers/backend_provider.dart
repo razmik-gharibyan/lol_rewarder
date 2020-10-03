@@ -19,6 +19,8 @@ class BackendProvider {
   // Constants
   final String _summonerCollection = "summoners";
   final String _rewardsCollection = "rewards";
+  final String _allRewardsCollection = "all-rewards";
+  final String _thisMonthRewardsDocument = "month-rewards";
   // Singletons
   Summoner _summoner = Summoner();
   Challenge _challenge = Challenge();
@@ -96,6 +98,11 @@ class BackendProvider {
     }
     _summoner.setRewardList(rewardList);
     updateSummoner();
+  }
+
+  Future<List<dynamic>> getThisMonthAllRewards() async {
+    final DocumentSnapshot result = await _firestore.collection(_allRewardsCollection).document(_thisMonthRewardsDocument).get();
+    return result.data["rewardList"];
   }
 
   Map<String,dynamic> _convertSummonerToMap() {

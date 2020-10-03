@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/screens/choose_skin_screen.dart';
 
 class GetRewardButton extends StatelessWidget {
 
@@ -34,7 +35,7 @@ class GetRewardButton extends StatelessWidget {
 
   void _checkIfAllChallengesCompleted(BuildContext context) {
     if(isAllChallengesComplete) {
-
+      Navigator.of(context).pushNamed(ChooseSkinScreen.routeName);
     }else{
       Scaffold.of(context).showSnackBar(
           SnackBar(

@@ -61,6 +61,8 @@ flutter:
    - assets/images/assassin_challenge.png
    - assets/images/marksman_challenge.png
    - assets/images/support_challenge.png
+   - assets/images/skin.png
+   - assets/images/skin_owned.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

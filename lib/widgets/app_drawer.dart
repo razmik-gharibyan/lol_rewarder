@@ -124,6 +124,19 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
               ListTile(
                 title: Text(
+                  "Available Rewards",
+                  style: TextStyle(
+                      color: Colors.white
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      AllChallengesScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
+                  );
+                },
+              ),
+              ListTile(
+                title: Text(
                   "My Rewards",
                   style: TextStyle(
                       color: Colors.white
@@ -133,17 +146,6 @@ class _AppDrawerState extends State<AppDrawer> {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       MyRewardsScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
                   );
-                },
-              ),
-              ListTile(
-                title: Text(
-                  "Available Rewards",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
-                ),
-                onTap: () {
-                 // Go to home page
                 },
               ),
               ListTile(

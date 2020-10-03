@@ -5,6 +5,7 @@ import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/providers/challenge_provider.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
+import 'package:lol_rewarder/screens/all_rewards_screen.dart';
 import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/choose_champion_screen.dart';
 import 'package:lol_rewarder/screens/my_rewards_screen.dart';
@@ -125,8 +126,7 @@ class _MainMenuGridState extends State<MainMenuGrid> {
         }
         break;
       case "All rewards":
-        //TODO change logic below its for testing only
-        Navigator.of(context).pushNamed(ChooseChampionScreen.routeName);
+        Navigator.of(context).pushNamed(AllRewardsScreen.routeName);
         break;
       case "My rewards":
         Navigator.of(context).pushNamed(MyRewardsScreen.routeName);
