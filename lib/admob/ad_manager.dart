@@ -14,7 +14,7 @@ class AdManager {
 
   static String get bannerAdUnitId {
     if (Platform.isAndroid) {
-      return "<ca-app-pub-8371067774687611/2481114567";
+      return "<ca-app-pub-8371067774687611/2481114567>";
     } else if (Platform.isIOS) {
       return "<ca-app-pub-8371067774687611/1443365061>";
     } else {
