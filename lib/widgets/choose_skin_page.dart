@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/current_skin_holder.dart';
 import 'package:lol_rewarder/model/summoner.dart';
+import 'package:lol_rewarder/providers/backend_provider.dart';
+import 'package:lol_rewarder/providers/challenge_provider.dart';
+import 'package:lol_rewarder/screens/main_screen.dart';
 import 'package:lol_rewarder/widgets/skinpicker/slide_dot.dart';
 import 'package:lol_rewarder/widgets/skinpicker/slider_item.dart';
 
@@ -18,6 +21,8 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
 
   // Tools
   var _pageController = PageController(initialPage: 0);
+  final _backendProvider = BackendProvider();
+  final _challengeProvider = ChallengeProvider();
   // Singletons
   Summoner _summoner = Summoner();
   CurrentSkinHolder _currentSkinHolder = CurrentSkinHolder();
@@ -154,7 +159,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
             FlatButton(
               child: Text("GET SKIN", style: TextStyle(color: Colors.amber),),
               onPressed: () async {
-                sendEmail(skinName);
+                await _addSkinToDatabase(context,skinName);
               },
             )
           ],
@@ -171,7 +176,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
             FlatButton(
               child: Text("GET SKIN"),
               onPressed: () async {
-                sendEmail(skinName);
+                await _addSkinToDatabase(context,skinName);
               },
             )
           ],
@@ -179,8 +184,47 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     );
   }
 
-  void sendEmail(String skinName) async {
+  Future<void> _addSkinToDatabase(BuildContext context,String skinName) async {
+    try {
+      await _backendProvider.addSkinToDatabase(skinName);
+      _showSuccessSnackBar(context);
+    }catch(error) {
+      if(error.message == "Skin was not added") {
+        _showErrorDialog(context);
+      }
+    }
+  }
 
+  void _showSuccessSnackBar(BuildContext context) {
+    Navigator.of(context).popUntil((route) => route.settings.name == MainScreen.routeName);
+    _challengeProvider.addSkinFunctionCallback();
+  }
+
+  void _showErrorDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (ctx) => Platform.isAndroid
+        ? AlertDialog(
+          title: Text("REQUEST FAILED"),
+          content: Text("Something went wrong please try again later."),
+          actions: [
+            FlatButton(
+              child: Text("OK", style: TextStyle(color: Colors.amber),),
+              onPressed: () {Navigator.of(ctx).pop();},
+            )
+          ],
+        )
+        : CupertinoAlertDialog(
+          title: Text("REQUEST FAILED"),
+          content: Text("Something went wrong please try again later."),
+          actions: [
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () {Navigator.of(ctx).pop();},
+            )
+          ],
+        )
+    );
   }
 
 }

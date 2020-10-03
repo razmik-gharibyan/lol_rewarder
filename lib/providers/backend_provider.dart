@@ -17,6 +17,7 @@ class BackendProvider {
 
   // Constants
   final String _summonerCollection = "summoners";
+  final String _rewardsCollection = "rewards";
   // Singletons
   Summoner _summoner = Summoner();
   Challenge _challenge = Challenge();
@@ -76,6 +77,13 @@ class BackendProvider {
     await _challengeProvider.getChallengeData(result);
   }
 
+  Future<void> addSkinToDatabase(String skinName) async {
+    final DocumentReference result = await _firestore.collection(_rewardsCollection).add(_convertSkinDataToMap(skinName));
+    if(result == null) {
+      throw Exception("Skin was not added");
+    }
+  }
+
   Map<String,dynamic> _convertSummonerToMap() {
     Map<String,dynamic> resultMap = {
       "puuid": _summoner.puuid,
@@ -120,6 +128,14 @@ class BackendProvider {
       );
     }
     return null;
+  }
+
+  Map<String,dynamic> _convertSkinDataToMap(String skinName) {
+    return {
+      "skinName": skinName,
+      "summonerName": _summoner.name,
+      "serverTag": _summoner.serverTag.toUpperCase()
+    };
   }
 
 }

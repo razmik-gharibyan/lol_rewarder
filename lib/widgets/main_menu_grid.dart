@@ -3,6 +3,7 @@ import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/menu_item.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
+import 'package:lol_rewarder/providers/challenge_provider.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
 import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/choose_champion_screen.dart';
@@ -24,7 +25,15 @@ class _MainMenuGridState extends State<MainMenuGrid> {
 
   Summoner _summoner = Summoner();
 
+  // Tools
   final _backendProvider = BackendProvider();
+  final _challengeProvider = ChallengeProvider();
+
+  @override
+  void didChangeDependencies() {
+    _challengeProvider.addSkinFunctionCallback = _addSkinCallback;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +131,16 @@ class _MainMenuGridState extends State<MainMenuGrid> {
         //TODO
         break;
     }
+  }
+
+  void _addSkinCallback() {
+    Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Skin successfully ordered. It will be gifted to ${_summoner.name}"
+              " summoner on ${_summoner.serverTag.toUpperCase()} server within 1 day. Thanks"),
+          duration: Duration(seconds: 15),
+        )
+    );
   }
 
 }

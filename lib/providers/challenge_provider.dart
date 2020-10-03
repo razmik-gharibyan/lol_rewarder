@@ -18,6 +18,8 @@ class ChallengeProvider with ChangeNotifier {
 
   // Singletons
   Challenge _challenge = Challenge();
+  // Vars
+  Function addSkinFunctionCallback;
 
   Future<void> getChallengeData(DocumentSnapshot document) async {
     List<dynamic> challengeList = List<dynamic>();
