@@ -8,6 +8,7 @@ import 'package:lol_rewarder/screens/all_challenges_screen.dart';
 import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
+import 'package:lol_rewarder/screens/my_rewards_screen.dart';
 
 class AppDrawer extends StatefulWidget {
 
@@ -129,7 +130,9 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                 ),
                 onTap: () {
-                  // Go to home page
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      MyRewardsScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
+                  );
                 },
               ),
               ListTile(

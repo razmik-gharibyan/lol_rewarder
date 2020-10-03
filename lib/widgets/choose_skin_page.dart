@@ -94,7 +94,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
               textColor: Colors.white70,
               splashColor: Colors.amberAccent,
               onPressed: () {
-                _showInformationDialog(context,_currentSkinHolder.skinList[_currentIndex]);
+                _showInformationDialog(context,_currentSkinHolder.skinList[_currentIndex],_currentSkinHolder.championName);
               },
             )
           ),
@@ -109,7 +109,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     });
   }
 
-  void _showInformationDialog(BuildContext context, Skin skin) {
+  void _showInformationDialog(BuildContext context, Skin skin,String champion) {
     showDialog(
         context: context,
         builder: (ctx) => Platform.isAndroid
@@ -122,7 +122,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
               child: Text("OK", style: TextStyle(color: Colors.amber),),
               onPressed: () {
                 Navigator.of(ctx).pop();
-                _showConfirmationDialog(context, skin);
+                _showConfirmationDialog(context,skin,champion);
               },
             )
           ],
@@ -136,7 +136,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
               child: Text("OK"),
               onPressed: () {
                 Navigator.of(ctx).pop();
-                _showConfirmationDialog(context, skin);
+                _showConfirmationDialog(context,skin,champion);
               },
             )
           ],
@@ -144,7 +144,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     );
   }
 
-  void _showConfirmationDialog(BuildContext context,Skin skin) {
+  void _showConfirmationDialog(BuildContext context,Skin skin,String champion) {
     showDialog(
         context: context,
         builder: (ctx) => Platform.isAndroid
@@ -160,7 +160,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
             FlatButton(
               child: Text("GET SKIN", style: TextStyle(color: Colors.amber),),
               onPressed: () async {
-                await _addSkinToDatabase(context,skin);
+                await _addSkinToDatabase(context,skin,champion);
               },
             )
           ],
@@ -177,7 +177,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
             FlatButton(
               child: Text("GET SKIN"),
               onPressed: () async {
-                await _addSkinToDatabase(context,skin);
+                await _addSkinToDatabase(context,skin,champion);
               },
             )
           ],
@@ -185,10 +185,10 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     );
   }
 
-  Future<void> _addSkinToDatabase(BuildContext context,Skin skin) async {
+  Future<void> _addSkinToDatabase(BuildContext context,Skin skin,String champion) async {
     try {
       await _backendProvider.addSkinToDatabase(skin.name);
-      await _showSuccessSnackBar(context,skin);
+      await _showSuccessSnackBar(context,skin,champion);
     }catch(error) {
       if(error.message == "Skin was not added") {
         _showErrorDialog(context);
@@ -196,9 +196,9 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     }
   }
 
-  Future<void> _showSuccessSnackBar(BuildContext context,Skin skin) async {
+  Future<void> _showSuccessSnackBar(BuildContext context,Skin skin,String champion) async {
     Navigator.of(context).popUntil((route) => route.settings.name == MainScreen.routeName);
-    await _backendProvider.addRewardToSummonerRewardList(skin);
+    await _backendProvider.addRewardToSummonerRewardList(skin,champion);
     _challengeProvider.addSkinFunctionCallback();
   }
 

@@ -3,34 +3,38 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/widgets/app_drawer.dart';
-import 'package:lol_rewarder/widgets/main_menu_grid.dart';
+import 'package:lol_rewarder/widgets/my_rewards_gridview.dart';
 
-class MainScreen extends StatefulWidget {
+class MyRewardsScreen extends StatelessWidget {
 
-  static const routeName = "/main_screen";
-
-  @override
-  _MainScreenState createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
+  static const routeName = "/my_rewards_screen";
 
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 
   @override
   Widget build(BuildContext context) {
 
+    final _size = MediaQuery.of(context).size;
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black87,
+        leading: IconButton(
+          icon: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
+          color: Colors.white,
+          iconSize: _size.height * 25 / ConstraintHelper.screenHeightCoe,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           RaisedButton(
             color: Colors.transparent,
             child: Text(
               "OPEN MENU",
               style: TextStyle(
-                color: Colors.white
+                  color: Colors.white
               ),
             ),
             onPressed: () {
@@ -43,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       drawer: AppDrawer(),
       body: Center(
-        child: MainMenuGrid(),
+        child: MyRewardsGridView(),
       ),
     );
   }

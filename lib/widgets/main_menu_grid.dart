@@ -7,6 +7,7 @@ import 'package:lol_rewarder/providers/challenge_provider.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
 import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/choose_champion_screen.dart';
+import 'package:lol_rewarder/screens/my_rewards_screen.dart';
 
 class MainMenuGrid extends StatefulWidget {
 
@@ -128,7 +129,7 @@ class _MainMenuGridState extends State<MainMenuGrid> {
         Navigator.of(context).pushNamed(ChooseChampionScreen.routeName);
         break;
       case "My rewards":
-        //TODO
+        Navigator.of(context).pushNamed(MyRewardsScreen.routeName);
         break;
     }
   }

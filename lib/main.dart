@@ -6,6 +6,7 @@ import 'package:lol_rewarder/screens/choose_skin_screen.dart';
 import 'package:lol_rewarder/screens/connect_account_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
+import 'package:lol_rewarder/screens/my_rewards_screen.dart';
 import 'package:lol_rewarder/screens/signup_screen.dart';
 import 'package:lol_rewarder/screens/splash_screen.dart';
 import 'package:lol_rewarder/screens/type_challenge_screen.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         ChallengeScreen.routeName: (ctx) => ChallengeScreen(),
         ChooseChampionScreen.routeName: (ctx) => ChooseChampionScreen(),
         ChooseSkinScreen.routeName: (ctx) => ChooseSkinScreen(),
+        MyRewardsScreen.routeName: (ctx) => MyRewardsScreen(),
       },
     );
   }

@@ -85,14 +85,14 @@ class BackendProvider {
     }
   }
 
-  Future<void> addRewardToSummonerRewardList(Skin skin) async {
+  Future<void> addRewardToSummonerRewardList(Skin skin,String champion) async {
     await checkIfSummonerConnectedAndGetData();
     List<dynamic> rewardList = _summoner.rewardList;
     if(rewardList == null) {
       rewardList = List<dynamic>();
-      rewardList.add(_convertSkinToMap(skin));
+      rewardList.add(_convertSkinToMap(skin,champion));
     }else{
-      rewardList.add(_convertSkinToMap(skin));
+      rewardList.add(_convertSkinToMap(skin,champion));
     }
     _summoner.setRewardList(rewardList);
     updateSummoner();
@@ -154,17 +154,11 @@ class BackendProvider {
     };
   }
 
-  Skin _convertSkinMapToSkin(Map<String,dynamic> skinMap) {
-    if(skinMap != null) {
-      return Skin(skinMap["name"], skinMap["num"]);
-    }
-    return null;
-  }
-
-  Map<String,dynamic> _convertSkinToMap(Skin skin) {
+  Map<String,dynamic> _convertSkinToMap(Skin skin, String champion) {
     return {
       "name": skin.name,
-      "num": skin.num
+      "num": skin.num,
+      "champion": champion
     };
   }
 
