@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lol_rewarder/admob/ad_manager.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/model/user.dart';
 import 'package:lol_rewarder/providers/auth_provider.dart';
@@ -39,6 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void didChangeDependencies() async {
     if(_isInit) {
       await _ddragonProvider.updateGameVersion();
+      await _initAdMob();
       _navigateFromSplashOperation();
       _isInit = false;
     }
@@ -127,5 +130,9 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
+  // Initialize adMob
+  Future<void> _initAdMob() {
+    return FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+  }
 
 }
