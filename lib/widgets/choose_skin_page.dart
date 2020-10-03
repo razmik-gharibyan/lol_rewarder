@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/model/current_skin_holder.dart';
+import 'package:lol_rewarder/model/skin.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/providers/challenge_provider.dart';
@@ -93,7 +94,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
               textColor: Colors.white70,
               splashColor: Colors.amberAccent,
               onPressed: () {
-                _showInformationDialog(context,_currentSkinHolder.skinList[_currentIndex].name);
+                _showInformationDialog(context,_currentSkinHolder.skinList[_currentIndex]);
               },
             )
           ),
@@ -108,7 +109,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     });
   }
 
-  void _showInformationDialog(BuildContext context, String skinName) {
+  void _showInformationDialog(BuildContext context, Skin skin) {
     showDialog(
         context: context,
         builder: (ctx) => Platform.isAndroid
@@ -121,7 +122,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
               child: Text("OK", style: TextStyle(color: Colors.amber),),
               onPressed: () {
                 Navigator.of(ctx).pop();
-                _showConfirmationDialog(context, skinName);
+                _showConfirmationDialog(context, skin);
               },
             )
           ],
@@ -135,7 +136,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
               child: Text("OK"),
               onPressed: () {
                 Navigator.of(ctx).pop();
-                _showConfirmationDialog(context, skinName);
+                _showConfirmationDialog(context, skin);
               },
             )
           ],
@@ -143,13 +144,13 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     );
   }
 
-  void _showConfirmationDialog(BuildContext context,String skinName) {
+  void _showConfirmationDialog(BuildContext context,Skin skin) {
     showDialog(
         context: context,
         builder: (ctx) => Platform.isAndroid
         ? AlertDialog(
           title: Text("Are you sure?"),
-          content: Text("Are you sure you want to get $skinName skin?"
+          content: Text("Are you sure you want to get ${skin.name} skin?"
               " Skin will be gifted to ${_summoner.name} summoner in ${_summoner.serverTag.toUpperCase()} server"),
           actions: [
             FlatButton(
@@ -159,14 +160,14 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
             FlatButton(
               child: Text("GET SKIN", style: TextStyle(color: Colors.amber),),
               onPressed: () async {
-                await _addSkinToDatabase(context,skinName);
+                await _addSkinToDatabase(context,skin);
               },
             )
           ],
         )
         : CupertinoAlertDialog(
           title: Text("Are you sure?"),
-          content: Text("Are you sure you want to get $skinName skin?"
+          content: Text("Are you sure you want to get ${skin.name} skin?"
               " Skin will be gifted to ${_summoner.name} summoner in ${_summoner.serverTag.toUpperCase()} server"),
           actions: [
             FlatButton(
@@ -176,7 +177,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
             FlatButton(
               child: Text("GET SKIN"),
               onPressed: () async {
-                await _addSkinToDatabase(context,skinName);
+                await _addSkinToDatabase(context,skin);
               },
             )
           ],
@@ -184,10 +185,10 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     );
   }
 
-  Future<void> _addSkinToDatabase(BuildContext context,String skinName) async {
+  Future<void> _addSkinToDatabase(BuildContext context,Skin skin) async {
     try {
-      await _backendProvider.addSkinToDatabase(skinName);
-      await _showSuccessSnackBar(context,skinName);
+      await _backendProvider.addSkinToDatabase(skin.name);
+      await _showSuccessSnackBar(context,skin);
     }catch(error) {
       if(error.message == "Skin was not added") {
         _showErrorDialog(context);
@@ -195,9 +196,9 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     }
   }
 
-  Future<void> _showSuccessSnackBar(BuildContext context,String skinName) async {
+  Future<void> _showSuccessSnackBar(BuildContext context,Skin skin) async {
     Navigator.of(context).popUntil((route) => route.settings.name == MainScreen.routeName);
-    await _backendProvider.addRewardToSummonerRewardList(skinName);
+    await _backendProvider.addRewardToSummonerRewardList(skin);
     _challengeProvider.addSkinFunctionCallback();
   }
 

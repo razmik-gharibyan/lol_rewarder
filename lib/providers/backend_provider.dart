@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
+import 'package:lol_rewarder/model/skin.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/model/user.dart';
 import 'package:lol_rewarder/providers/challenge_provider.dart';
@@ -84,14 +85,14 @@ class BackendProvider {
     }
   }
 
-  Future<void> addRewardToSummonerRewardList(String skinName) async {
+  Future<void> addRewardToSummonerRewardList(Skin skin) async {
     await checkIfSummonerConnectedAndGetData();
     List<dynamic> rewardList = _summoner.rewardList;
     if(rewardList == null) {
       rewardList = List<dynamic>();
-      rewardList.add(skinName);
+      rewardList.add(_convertSkinToMap(skin));
     }else{
-      rewardList.add(skinName);
+      rewardList.add(_convertSkinToMap(skin));
     }
     _summoner.setRewardList(rewardList);
     updateSummoner();
@@ -150,6 +151,20 @@ class BackendProvider {
       "skinName": skinName,
       "summonerName": _summoner.name,
       "serverTag": _summoner.serverTag.toUpperCase()
+    };
+  }
+
+  Skin _convertSkinMapToSkin(Map<String,dynamic> skinMap) {
+    if(skinMap != null) {
+      return Skin(skinMap["name"], skinMap["num"]);
+    }
+    return null;
+  }
+
+  Map<String,dynamic> _convertSkinToMap(Skin skin) {
+    return {
+      "name": skin.name,
+      "num": skin.num
     };
   }
 
