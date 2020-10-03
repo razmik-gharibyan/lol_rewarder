@@ -17,6 +17,7 @@ class Summoner {
   int _iconId;
   int _summonerLevel;
   ActiveChallenge _activeChallenge;
+  List<dynamic> _rewardList;
 
   String get puuid => _puuid;
   String get accountId => _accountId;
@@ -25,6 +26,7 @@ class Summoner {
   int get iconId => _iconId;
   int get summonerLevel => _summonerLevel;
   ActiveChallenge get activeChallenge => _activeChallenge;
+  List<dynamic> get rewardList => _rewardList;
 
   void setPuuid(String newValue) {
     _puuid = newValue;
@@ -52,6 +54,10 @@ class Summoner {
 
   void setActiveChallenge(ActiveChallenge newValue) {
     _activeChallenge = newValue;
+  }
+
+  void setRewardList(List<dynamic> newValue) {
+    _rewardList = newValue;
   }
 
 }

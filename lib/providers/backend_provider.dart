@@ -84,6 +84,19 @@ class BackendProvider {
     }
   }
 
+  Future<void> addRewardToSummonerRewardList(String skinName) async {
+    await checkIfSummonerConnectedAndGetData();
+    List<dynamic> rewardList = _summoner.rewardList;
+    if(rewardList == null) {
+      rewardList = List<dynamic>();
+      rewardList.add(skinName);
+    }else{
+      rewardList.add(skinName);
+    }
+    _summoner.setRewardList(rewardList);
+    updateSummoner();
+  }
+
   Map<String,dynamic> _convertSummonerToMap() {
     Map<String,dynamic> resultMap = {
       "puuid": _summoner.puuid,
@@ -92,7 +105,8 @@ class BackendProvider {
       "serverTag": _summoner.serverTag,
       "iconId": _summoner.iconId,
       "summonerLevel": _summoner.summonerLevel,
-      "activeChallenge": _convertActiveChallengeToMap(_summoner.activeChallenge)
+      "activeChallenge": _convertActiveChallengeToMap(_summoner.activeChallenge),
+      "rewardList": _summoner.rewardList
     };
     return resultMap;
   }
@@ -105,6 +119,7 @@ class BackendProvider {
     _summoner.setIconId(data["iconId"]);
     _summoner.setSummonerLevel(data["summonerLevel"]);
     _summoner.setActiveChallenge(_convertActiveChallengeMapToActiveChallenge(data["activeChallenge"]));
+    _summoner.setRewardList(data["rewardList"]);
   }
 
   Map<String,dynamic> _convertActiveChallengeToMap(ActiveChallenge activeChallenge) {

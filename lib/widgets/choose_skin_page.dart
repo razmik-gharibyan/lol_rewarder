@@ -187,7 +187,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
   Future<void> _addSkinToDatabase(BuildContext context,String skinName) async {
     try {
       await _backendProvider.addSkinToDatabase(skinName);
-      _showSuccessSnackBar(context);
+      await _showSuccessSnackBar(context,skinName);
     }catch(error) {
       if(error.message == "Skin was not added") {
         _showErrorDialog(context);
@@ -195,8 +195,9 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     }
   }
 
-  void _showSuccessSnackBar(BuildContext context) {
+  Future<void> _showSuccessSnackBar(BuildContext context,String skinName) async {
     Navigator.of(context).popUntil((route) => route.settings.name == MainScreen.routeName);
+    await _backendProvider.addRewardToSummonerRewardList(skinName);
     _challengeProvider.addSkinFunctionCallback();
   }
 
