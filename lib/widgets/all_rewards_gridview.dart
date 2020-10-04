@@ -14,8 +14,6 @@ class _AllRewardsGridViewState extends State<AllRewardsGridView> {
   final String _ownedSkinAsset = "assets/images/skin_owned.png";
   // Tools
   final _backendProvider = BackendProvider();
-  // Vars
-  int _ownedSkinCount = 0;
 
   @override
   Widget build(BuildContext context) {

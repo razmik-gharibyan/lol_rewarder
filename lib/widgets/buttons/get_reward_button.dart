@@ -29,6 +29,7 @@ class _GetRewardButtonState extends State<GetRewardButton> {
       adUnitId: AdManager.interstitialAdUnitId,
       listener: _onInterstitialAdEvent,
     );
+    super.initState();
   }
 
 
@@ -40,6 +41,9 @@ class _GetRewardButtonState extends State<GetRewardButton> {
 
   @override
   Widget build(BuildContext context) {
+
+    _loadInterstitialAd();
+
     return RaisedButton(
       child: Text(
         "GET REWARD",
@@ -64,11 +68,8 @@ class _GetRewardButtonState extends State<GetRewardButton> {
 
   void _checkIfAllChallengesCompleted(BuildContext context) {
     if(widget.isAllChallengesComplete) {
-      _loadInterstitialAd();
-      if (_isInterstitialAdReady) {
-        _interstitialAd.show();
-      }
-      //Navigator.of(context).pushNamed(ChooseChampionScreen.routeName);
+      _interstitialAd.show();
+      Navigator.of(context).pushNamed(ChooseChampionScreen.routeName);
     }else{
       Scaffold.of(context).showSnackBar(
           SnackBar(
@@ -93,7 +94,6 @@ class _GetRewardButtonState extends State<GetRewardButton> {
         print('Failed to load an interstitial ad');
         break;
       case MobileAdEvent.closed:
-        Navigator.of(context).pushNamed(ChooseChampionScreen.routeName);
         break;
       default:
       // do nothing

@@ -17,27 +17,8 @@ class TypeChallengeScreen extends StatefulWidget {
 
 class _TypeChallengeScreenState extends State<TypeChallengeScreen> {
 
-  // AdMob
-  BannerAd _bannerAd;
   // Tools
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
-
-
-  @override
-  void initState() {
-    _bannerAd = BannerAd(
-      adUnitId: AdManager.bannerAdUnitId,
-      size: AdSize.banner,
-    );
-    _loadBannerAd();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _bannerAd?.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,12 +60,6 @@ class _TypeChallengeScreenState extends State<TypeChallengeScreen> {
             child: TypeChallengeListView()
         ),
     );
-  }
-
-  void _loadBannerAd() {
-    _bannerAd
-      ..load()
-      ..show(anchorType: AnchorType.bottom);
   }
 
 }

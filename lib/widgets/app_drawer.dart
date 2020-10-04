@@ -10,6 +10,7 @@ import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
 import 'package:lol_rewarder/screens/my_rewards_screen.dart';
+import 'package:lol_rewarder/widgets/buttons/get_reward_button.dart';
 
 class AppDrawer extends StatefulWidget {
 

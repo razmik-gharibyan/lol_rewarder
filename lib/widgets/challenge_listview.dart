@@ -144,7 +144,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                                     _challengeProvider.convertTypeToChallengeText(_challenge.challengeList[index]),
                                     style: TextStyle(
                                       color: Colors.black54,
-                                      fontSize: _size.height * 16 / ConstraintHelper.screenHeightCoe
+                                      fontSize: _size.height * 14 / ConstraintHelper.screenHeightCoe
                                     ),
                                   )
                                 ],
