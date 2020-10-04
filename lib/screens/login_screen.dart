@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: TextStyle(
                                   color: Colors.amber,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 15 * _size.height / ConstraintHelper.screenHeightCoe
+                                  fontSize: 13 * _size.height / ConstraintHelper.screenHeightCoe
                               ),
                             ),
                           ),
@@ -104,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.black87,
                               ),
                               Container(
+                                width: _size.width * 0.45,
                                 padding: EdgeInsets.all(_size.height * 5 / ConstraintHelper.screenHeightCoe),
                                 decoration: BoxDecoration(
                                   border: Border.all(
@@ -113,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 child: Text(
                                   "Login to your account",
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.black87,
                                       fontWeight: FontWeight.bold,
