@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:lol_rewarder/admob/ad_manager.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/widgets/all_challenges_listview.dart';
 import 'package:lol_rewarder/widgets/app_drawer.dart';
@@ -54,7 +56,19 @@ class _AllChallengesScreenState extends State<AllChallengesScreen> {
       drawer: AppDrawer(),
       body: Container(
           padding: EdgeInsets.only(top: _size.height * 15 / ConstraintHelper.screenHeightCoe),
-          child: AllChallengesListView())
+          child: Stack(
+            children: [
+              AllChallengesListView(),
+              Positioned(
+                bottom: _size.height * 0.05,
+                child: AdmobBanner(
+                  adUnitId: AdManager.bannerAdUnitId,
+                  adSize: AdmobBannerSize.FULL_BANNER
+                ),
+              )
+            ],
+          )
+      )
     );
   }
 }

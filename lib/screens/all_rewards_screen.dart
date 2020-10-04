@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:lol_rewarder/admob/ad_manager.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/widgets/all_rewards_gridview.dart';
 import 'package:lol_rewarder/widgets/app_drawer.dart';
@@ -46,8 +48,17 @@ class AllRewardsScreen extends StatelessWidget {
         ],
       ),
       drawer: AppDrawer(),
-      body: Center(
-        child: AllRewardsGridView(),
+      body: Stack(
+        children: [
+          AllRewardsGridView(),
+          Positioned(
+            bottom: _size.height * 0.05,
+            child: AdmobBanner(
+                adUnitId: AdManager.bannerAdUnitId,
+                adSize: AdmobBannerSize.FULL_BANNER
+            ),
+          )
+        ],
       ),
     );
   }
