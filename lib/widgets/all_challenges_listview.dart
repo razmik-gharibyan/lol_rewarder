@@ -46,21 +46,24 @@ class AllChallengesListView extends StatelessWidget {
           ),
           child: InkWell(
             child: Container(
-              child: Stack(
+              color: HexColor.fromHex("f0f0f0"),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
+                    width: _size.width * 0.6,
                     padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
                     alignment: Alignment.centerLeft,
-                    color: HexColor.fromHex("f0f0f0"),
                     child: Text(
                       _challengeTypeList[index].title,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
+                        fontSize: _size.height * 18 / ConstraintHelper.screenHeightCoe
                       ),
                     ),
                   ),
                   Container(
+                    width: _size.width * 0.3,
                     alignment: Alignment.bottomRight,
                     child: Image.asset(_challengeTypeList[index].imageAsset),
                   )

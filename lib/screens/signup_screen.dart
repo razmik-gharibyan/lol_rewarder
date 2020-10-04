@@ -86,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               style: TextStyle(
                                   color: Colors.amber,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 15 * _size.height / ConstraintHelper.screenHeightCoe
+                                  fontSize: 13 * _size.height / ConstraintHelper.screenHeightCoe
                               ),
                             ),
                           ),
@@ -103,6 +103,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 color: Colors.black87,
                               ),
                               Container(
+                                width: _size.width * 0.45,
                                 padding: EdgeInsets.all(_size.height * 5 / ConstraintHelper.screenHeightCoe),
                                 decoration: BoxDecoration(
                                   border: Border.all(
