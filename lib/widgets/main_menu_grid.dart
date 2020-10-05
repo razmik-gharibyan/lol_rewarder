@@ -7,7 +7,6 @@ import 'package:lol_rewarder/providers/challenge_provider.dart';
 import 'package:lol_rewarder/screens/all_challenges_screen.dart';
 import 'package:lol_rewarder/screens/all_rewards_screen.dart';
 import 'package:lol_rewarder/screens/challenge_screen.dart';
-import 'package:lol_rewarder/screens/choose_champion_screen.dart';
 import 'package:lol_rewarder/screens/my_rewards_screen.dart';
 
 class MainMenuGrid extends StatefulWidget {
