@@ -1,6 +1,7 @@
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/admob/ad_manager.dart';
+import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/widgets/app_drawer.dart';
 import 'package:lol_rewarder/widgets/main_menu_grid.dart';
 
@@ -23,7 +24,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     _bannerAd = BannerAd(
       adUnitId: AdManager.bannerAdUnitId,
-      size: AdSize.banner,
+      size: AdSize.smartBanner,
     );
     _loadBannerAd();
     super.initState();
@@ -69,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
   void _loadBannerAd() {
     _bannerAd
       ..load()
-      ..show(anchorType: AnchorType.bottom);
+      ..show(anchorType: AnchorType.bottom,anchorOffset: ConstraintHelper.appHeight * 0.1);
   }
 
 }
