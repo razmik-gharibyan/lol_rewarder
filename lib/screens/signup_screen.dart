@@ -82,7 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: Align(
                             alignment: Alignment.center,
                             child: Text(
-                              "PlAY GAMES | COMPLETE MISSIONS | EARN SKINS",
+                              "PlAY GAMES | COMPLETE CHALLENGES | EARN SKINS",
                               style: TextStyle(
                                   color: Colors.amber,
                                   fontWeight: FontWeight.bold,

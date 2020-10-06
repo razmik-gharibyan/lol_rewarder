@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/model/challenge.dart';
+import 'package:lol_rewarder/model/current_skin_holder.dart';
 import 'package:lol_rewarder/model/summoner.dart';
+import 'package:lol_rewarder/model/user.dart';
 import 'package:lol_rewarder/providers/auth_provider.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/providers/ddragon_provider.dart';
@@ -10,7 +13,6 @@ import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
 import 'package:lol_rewarder/screens/my_rewards_screen.dart';
-import 'package:lol_rewarder/widgets/buttons/get_reward_button.dart';
 
 class AppDrawer extends StatefulWidget {
 
@@ -29,6 +31,9 @@ class _AppDrawerState extends State<AppDrawer> {
   // Vars
   String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/10.19.1/img/profileicon/";
   Summoner _summoner = Summoner();
+  Challenge _challenge = Challenge();
+  CurrentSkinHolder _currentSkinHolder = CurrentSkinHolder();
+  User _user = User();
 
   @override
   void initState() {
@@ -159,6 +164,10 @@ class _AppDrawerState extends State<AppDrawer> {
                 ),
                 onTap: () async {
                   await _authProvider.logOutUser();
+                  _summoner.clear();
+                  _challenge.clear();
+                  _currentSkinHolder.clear();
+                  _user.clear();
                   Navigator.of(context).pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);
                 },
               ),

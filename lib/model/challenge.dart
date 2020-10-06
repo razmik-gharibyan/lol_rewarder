@@ -30,4 +30,10 @@ class Challenge {
     _challengeList = newValue;
   }
 
+  void clear() {
+    _type = null;
+    _data = null;
+    _challengeList = null;
+  }
+
 }

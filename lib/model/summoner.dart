@@ -60,4 +60,15 @@ class Summoner {
     _rewardList = newValue;
   }
 
+  void clear() {
+    _puuid = null;
+    _accountId = null;
+    _name = null;
+    _serverTag = null;
+    _iconId = null;
+    _summonerLevel = null;
+    _activeChallenge = null;
+    _rewardList = null;
+  }
+
 }

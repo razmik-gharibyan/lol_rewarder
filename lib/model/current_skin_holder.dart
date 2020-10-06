@@ -29,4 +29,11 @@ class CurrentSkinHolder {
   void setCurrentSkinName(String newValue) {
     _currentSkinName = newValue;
   }
+
+  void clear() {
+    _championName = null;
+    _skinList = null;
+    _currentSkinName = null;
+  }
+
 }

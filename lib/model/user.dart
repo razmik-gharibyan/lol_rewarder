@@ -16,4 +16,8 @@ class User {
     _uid = newValue;
   }
 
+  void clear() {
+    _uid = null;
+  }
+
 }
