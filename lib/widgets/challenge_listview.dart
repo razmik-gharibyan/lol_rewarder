@@ -91,7 +91,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
 
     return FutureBuilder(
       future: _lolProvider.getMatchListByAccountId(_summoner.accountId, _summoner.serverTag),
-      builder: (ct, result) => LayoutBuilder(
+      builder: (ct, result) => result.connectionState == ConnectionState.done ? LayoutBuilder(
         builder: (c, constraints) => Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -191,7 +191,12 @@ class _ChallengeListViewState extends State<ChallengeListView> {
             ],
           )
         ),
-      ),
+      )
+      : Center(
+        child: Platform.isAndroid
+            ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
+            : CupertinoActivityIndicator(),
+      )
     );
   }
 
@@ -205,7 +210,8 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     for(var match in matchList) {
       if(_isDisposed) {return;}
       // Check if match is acceptable for check with timestamp
-      if(_summoner.activeChallenge.activeChallengeTimestamp >= match.timestamp) {
+      if(_summoner.activeChallenge.activeChallengeTimestamp <= match.timestamp) {
+        print("timestamp ${match.timestamp}");
         final matchMain = await _lolProvider.getMatchByMatchId(match.gameId, _summoner.serverTag);
         for(var challenge in _challenge.challengeList) {
           switch (challenge.type) {

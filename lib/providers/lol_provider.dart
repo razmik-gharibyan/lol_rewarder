@@ -129,7 +129,7 @@ class LoLProvider with ChangeNotifier {
         mList = jsonResponse["matches"];
         mList.forEach((element) {
           //TODO change constant to timestamp
-          if(1550910508497 == element["timestamp"]) {
+          if(_summoner.activeChallenge.activeChallengeTimestamp == element["timestamp"]) {
             // Found timestamp to beginIndex search matchList with, stop loop and return beginIndex value
             final indexDifference = totalGames - beginIndex;
             if(indexDifference < 100) {
