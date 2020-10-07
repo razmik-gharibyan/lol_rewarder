@@ -60,7 +60,7 @@ class _AllRewardsGridViewState extends State<AllRewardsGridView> {
                     ),
                   ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,childAspectRatio: 1/1.6,crossAxisSpacing: 0,mainAxisSpacing: 0
+                      crossAxisCount: 4,childAspectRatio: 1/2,crossAxisSpacing: 0,mainAxisSpacing: 0
                   ),
                 ),
               ),

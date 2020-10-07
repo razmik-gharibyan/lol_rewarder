@@ -123,11 +123,11 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                         alignment: Alignment.centerLeft,
                         color: HexColor.fromHex("f0f0f0"),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              width: constraints.maxWidth * 0.62,
+                              width: constraints.maxWidth * 0.6,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +153,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                             _completeCountMap[_challenge.challengeList[index].type]
                                 ? Icon(Icons.check, color: Colors.amber,)
                                 : Container(
-                                    width: constraints.maxWidth * 0.15,
+                                    width: constraints.maxWidth * 0.16,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       crossAxisAlignment: CrossAxisAlignment.center,

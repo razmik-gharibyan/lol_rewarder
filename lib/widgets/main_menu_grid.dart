@@ -73,11 +73,13 @@ class _MainMenuGridState extends State<MainMenuGrid> {
                         height: _size.width * 0.1,
                         child: Image.asset(_menuItemList[index].imageAsset, fit: BoxFit.fill,),
                       ),
-                      Text(
-                        _menuItemList[index].title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: _size.height * 14 / ConstraintHelper.screenHeightCoe
+                      Expanded(
+                        child: Text(
+                          _menuItemList[index].title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: _size.height * 14 / ConstraintHelper.screenHeightCoe
+                          ),
                         ),
                       ),
                     ],
