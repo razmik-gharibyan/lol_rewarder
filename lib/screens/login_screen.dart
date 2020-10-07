@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: TextStyle(
                                   color: Colors.amber,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 13 * _size.height / ConstraintHelper.screenHeightCoe
+                                  fontSize: 11 * _size.height / ConstraintHelper.screenHeightCoe
                               ),
                             ),
                           ),

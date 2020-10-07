@@ -88,12 +88,15 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              "CONNECT SUMMONER ACCOUNT",
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 23 * _size.height / ConstraintHelper.screenHeightCoe
+                            Container(
+                              width: _size.width * 0.8,
+                              child: Text(
+                                "CONNECT SUMMONER ACCOUNT",
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 23 * _size.height / ConstraintHelper.screenHeightCoe
+                                ),
                               ),
                             ),
                             Container(
