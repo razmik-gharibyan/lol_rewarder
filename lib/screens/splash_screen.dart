@@ -41,7 +41,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void didChangeDependencies() async {
     if(_isInit) {
-      await _ddragonProvider.updateGameVersion();
+      try {
+        await _ddragonProvider.updateGameVersion();
+      } on SocketException catch (error) {
+        setState(() {
+          _isAuthFailed = true;
+        });
+      } catch (error) {
+        print("ERROR IN SPLASH SCREEN ${error.message}");
+      }
       await _initAdMob();
       _navigateFromSplashOperation();
       _isInit = false;
