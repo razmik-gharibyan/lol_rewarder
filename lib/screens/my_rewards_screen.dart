@@ -46,8 +46,17 @@ class MyRewardsScreen extends StatelessWidget {
         ],
       ),
       drawer: AppDrawer(),
-      body: Center(
-        child: MyRewardsGridView(),
+      body: Container(
+        height: _size.height,
+        child: Column(
+          children: [
+            SizedBox(height: _size.height * 0.1,),
+            Container(
+              height: _size.height * 0.75,
+              child: MyRewardsGridView(),
+            ),
+          ],
+        ),
       ),
     );
   }

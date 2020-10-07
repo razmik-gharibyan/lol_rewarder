@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/current_skin_holder.dart';
 import 'package:lol_rewarder/model/skin.dart';
 import 'package:lol_rewarder/model/summoner.dart';
@@ -28,6 +29,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
   // Singletons
   Summoner _summoner = Summoner();
   CurrentSkinHolder _currentSkinHolder = CurrentSkinHolder();
+  Challenge _challenge = Challenge();
   // Vars
   int _currentIndex = 0;
 
@@ -43,63 +45,69 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
 
     final _size = MediaQuery.of(context).size;
 
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            height: _size.height * 0.7,
-            child: PageView.builder(
-              controller: _pageController,
-              scrollDirection: Axis.horizontal,
-              onPageChanged: _onPageChanged,
-              itemBuilder: (ctx, index) => SliderItem(_currentSkinHolder.skinList[index],_currentSkinHolder.championName),
-              itemCount: _currentSkinHolder.skinList.length,
-            ),
-          ),
-          Container(
-            height: _size.height * 0.02,
-            child: Container(
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  for(int i = 0; i < _currentSkinHolder.skinList.length; i++)
-                    if(i == _currentIndex)
-                      SlideDot(true)
-                    else
-                      SlideDot(false)
-                ],
+    return LayoutBuilder(
+      builder: (c,constraints) => Container(
+        height: constraints.maxHeight,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: constraints.maxHeight * 0.8,
+              child: PageView.builder(
+                controller: _pageController,
+                scrollDirection: Axis.horizontal,
+                onPageChanged: _onPageChanged,
+                itemBuilder: (ctx, index) => SliderItem(_currentSkinHolder.skinList[index],_currentSkinHolder.championName),
+                itemCount: _currentSkinHolder.skinList.length,
               ),
             ),
-          ),
-          ButtonTheme(
-            minWidth: _size.height * 150 / ConstraintHelper.screenHeightCoe,
-            height: _size.height * 45 / ConstraintHelper.screenHeightCoe,
-            child: RaisedButton(
-              child: Text(
-                "GET SKIN",
-                style: TextStyle(
-                    fontSize: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
+            Container(
+              height: constraints.maxHeight * 0.02,
+              child: Container(
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    for(int i = 0; i < _currentSkinHolder.skinList.length; i++)
+                      if(i == _currentIndex)
+                        SlideDot(true)
+                      else
+                        SlideDot(false)
+                  ],
                 ),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
+            ),
+            Container(
+              height: constraints.maxHeight * 0.08,
+              child: ButtonTheme(
+                minWidth: _size.height * 150 / ConstraintHelper.screenHeightCoe,
+                height: _size.height * 45 / ConstraintHelper.screenHeightCoe,
+                child: RaisedButton(
+                  child: Text(
+                    "GET SKIN",
+                    style: TextStyle(
+                        fontSize: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                    ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  color: Colors.amber,
+                  textColor: Colors.white70,
+                  splashColor: Colors.amberAccent,
+                  onPressed: () {
+                    _showInformationDialog(context,_currentSkinHolder.skinList[_currentIndex],_currentSkinHolder.championName);
+                  },
+                )
               ),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              color: Colors.amber,
-              textColor: Colors.white70,
-              splashColor: Colors.amberAccent,
-              onPressed: () {
-                _showInformationDialog(context,_currentSkinHolder.skinList[_currentIndex],_currentSkinHolder.championName);
-              },
-            )
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -219,6 +227,10 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
   Future<void> _showSuccessSnackBar(BuildContext context,Skin skin,String champion) async {
     Navigator.of(context).popUntil((route) => route.settings.name == MainScreen.routeName);
     await _backendProvider.addRewardToSummonerRewardList(skin,champion);
+    _summoner.setActiveChallenge(null);
+    _challenge.clear();
+    _currentSkinHolder.clear();
+    await _backendProvider.updateSummoner();
     _challengeProvider.addSkinFunctionCallback();
   }
 

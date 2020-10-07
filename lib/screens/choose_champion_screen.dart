@@ -47,7 +47,16 @@ class ChooseChampionScreen extends StatelessWidget {
       ),
       drawer: AppDrawer(),
       body: Container(
-          child: ChooseChampionListView()
+        height: _size.height,
+        child: Column(
+          children: [
+            SizedBox(height: _size.height * 0.1,),
+            Container(
+              height: _size.height * 0.75,
+                child: ChooseChampionListView()
+            ),
+          ],
+        ),
       ),
     );
   }

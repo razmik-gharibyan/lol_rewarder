@@ -62,6 +62,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 ),
                 automaticallyImplyLeading: false,
               ),
+              SizedBox(height: _size.height * 0.1,),
               Padding(
                 padding: EdgeInsets.all(_size.height * 15 / ConstraintHelper.screenHeightCoe),
                 child: Column(
@@ -80,97 +81,105 @@ class _AppDrawerState extends State<AppDrawer> {
                 ),
               ),
               Divider(color: Colors.grey,),
-              ListTile(
-                title: Text(
-                  "Home",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
+              Container(
+                height: _size.height * 0.5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      child: Text(
+                          "Home",
+                          style: TextStyle(
+                              color: Colors.white
+                          ),
+                        ),
+                      onTap: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
+                      },
+                    ),
+                   InkWell(
+                     child: Text(
+                          "All Challenges",
+                          style: TextStyle(
+                              color: Colors.white
+                          ),
+                     ),
+                     onTap: () {
+                       Navigator.of(context).pushNamedAndRemoveUntil(
+                           AllChallengesScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
+                       );
+                     },
+                   ),
+                    InkWell(
+                      child: Text(
+                        "Active Challenge",
+                        style: TextStyle(
+                            color: Colors.white
+                        ),
+                      ),
+                      onTap: () async {
+                        if(_summoner.activeChallenge != null) {
+                          await _backendProvider.getChallengeDocumentById(_summoner.activeChallenge);
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              ChallengeScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
+                          );
+                        }else{
+                          setState(() {
+                            Scaffold.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("You don't have active challenge"),
+                                  duration: Duration(seconds: 3),
+                                )
+                            );
+                          });
+                        }},
+                    ),
+                    InkWell(
+                      child: Text(
+                          "Available Rewards",
+                          style: TextStyle(
+                              color: Colors.white
+                          ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            AllRewardsScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
+                        );
+                      },
+                    ),
+                    InkWell(
+                      child: Text(
+                          "My Rewards",
+                          style: TextStyle(
+                              color: Colors.white
+                          ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            MyRewardsScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
+                        );
+                      },
+                    ),
+                    InkWell(
+                      child: Text(
+                          "Log Out",
+                          style: TextStyle(
+                              color: Colors.white
+                          ),
+                      ),
+                      onTap: () async {
+                        await _authProvider.logOutUser();
+                        _summoner.clear();
+                        _challenge.clear();
+                        _currentSkinHolder.clear();
+                        _user.clear();
+                        Navigator.of(context).pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);
+                      },
+                    ),
+                  ],
                 ),
-                onTap: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(MainScreen.routeName, (route) => false);
-                },
-              ),
-              ListTile(
-                title: Text(
-                  "All Challenges",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      AllChallengesScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
-                  );
-                },
-              ),
-              ListTile(
-                title: Text(
-                  "Active Challenge",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
-                ),
-                onTap: () async {
-                  if(_summoner.activeChallenge != null) {
-                    await _backendProvider.getChallengeDocumentById(_summoner.activeChallenge);
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        ChallengeScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
-                    );
-                  }else{
-                    setState(() {
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("You don't have active challenge"),
-                          duration: Duration(seconds: 3),
-                        )
-                      );
-                    });
-                  }
-                },
-              ),
-              ListTile(
-                title: Text(
-                  "Available Rewards",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      AllRewardsScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
-                  );
-                },
-              ),
-              ListTile(
-                title: Text(
-                  "My Rewards",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      MyRewardsScreen.routeName, (route) => (route.settings.name == MainScreen.routeName)
-                  );
-                },
-              ),
-              ListTile(
-                title: Text(
-                  "Log Out",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
-                ),
-                onTap: () async {
-                  await _authProvider.logOutUser();
-                  _summoner.clear();
-                  _challenge.clear();
-                  _currentSkinHolder.clear();
-                  _user.clear();
-                  Navigator.of(context).pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);
-                },
-              ),
+              )
             ],),
           ),
       ),

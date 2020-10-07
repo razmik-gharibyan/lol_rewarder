@@ -39,6 +39,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
 
+    final _size = MediaQuery.of(context).size;
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -61,8 +63,17 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: Center(
-        child: MainMenuGrid(),
+      body: Container(
+        height: _size.height,
+        child: Column(
+          children: [
+            SizedBox(height: _size.height * 0.1),
+            Container(
+              height: _size.height * 0.75,
+              child: MainMenuGrid()
+            )
+          ],
+        ),
       ),
     );
   }
@@ -70,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
   void _loadBannerAd() {
     _bannerAd
       ..load()
-      ..show(anchorType: AnchorType.bottom,anchorOffset: ConstraintHelper.appHeight * 0.1);
+      ..show(anchorType: AnchorType.top,anchorOffset: ConstraintHelper.appBarHeight);
   }
 
 }

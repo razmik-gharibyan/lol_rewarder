@@ -55,6 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final _size = MediaQuery.of(context).size;
     ConstraintHelper.appWidth = _size.width;
     ConstraintHelper.appHeight = _size.height;
+    ConstraintHelper.appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
 
     return Scaffold(
       backgroundColor: Colors.white,

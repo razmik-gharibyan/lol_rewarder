@@ -98,7 +98,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                height: constraints.maxHeight * 0.7,
+                height: constraints.maxHeight * 0.8,
                 child: ListView.builder(
                   itemBuilder: (ctx, index) => Container(
                     height: _size.height * 0.17,
@@ -179,14 +179,17 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                   itemCount: _challenge.challengeList.length,
                 ),
               ),
-              ButtonTheme(
-                minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
-                height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
-                child: _summoner.activeChallenge == null
-                  ? StartChallengeButton(_size,result,_startChallengePressed)
-                  :_challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
-                    ? GetRewardButton(_size,_isAllChallengesComplete)
-                    : StartChallengeButton(_size,result,_startChallengePressed)
+              Container(
+                height: constraints.maxHeight * 0.1,
+                child: ButtonTheme(
+                  minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
+                  height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
+                  child: _summoner.activeChallenge == null
+                    ? StartChallengeButton(_size,result,_startChallengePressed)
+                    :_challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
+                      ? GetRewardButton(_size,_isAllChallengesComplete)
+                      : StartChallengeButton(_size,result,_startChallengePressed)
+                ),
               ),
             ],
           )

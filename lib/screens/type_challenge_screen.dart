@@ -56,8 +56,17 @@ class _TypeChallengeScreenState extends State<TypeChallengeScreen> {
         ),
         drawer: AppDrawer(),
         body: Container(
-            padding: EdgeInsets.only(top: _size.height * 15 / ConstraintHelper.screenHeightCoe),
-            child: TypeChallengeListView()
+          height: _size.height,
+          child: Column(
+            children: [
+              SizedBox(height: _size.height * 0.1,),
+              Container(
+                height: _size.height * 0.75,
+                  padding: EdgeInsets.only(top: _size.height * 15 / ConstraintHelper.screenHeightCoe),
+                  child: TypeChallengeListView()
+              ),
+            ],
+          ),
         ),
     );
   }
