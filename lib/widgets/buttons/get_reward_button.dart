@@ -67,17 +67,17 @@ class _GetRewardButtonState extends State<GetRewardButton> {
   }
 
   void _checkIfAllChallengesCompleted(BuildContext context) {
-    //if(widget.isAllChallengesComplete) {
+    if(widget.isAllChallengesComplete) {
       _interstitialAd.show();
       Navigator.of(context).pushNamed(ChooseChampionScreen.routeName);
-    //}else{
-      //Scaffold.of(context).showSnackBar(
-        //  SnackBar(
-          //  content: Text("Complete all challenges to unlock reward"),
-           // duration: Duration(seconds: 5),
-         // )
-     // );
-   // }
+    }else{
+      Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Complete all challenges to unlock reward"),
+            duration: Duration(seconds: 5),
+          )
+      );
+    }
   }
 
   void _loadInterstitialAd() {
