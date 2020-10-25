@@ -36,7 +36,7 @@ class _AllRewardsGridViewState extends State<AllRewardsGridView> {
                       padding: EdgeInsets.all(constraints.maxHeight * 8 / ConstraintHelper.screenHeightCoe),
                       child: Container(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
@@ -60,7 +60,7 @@ class _AllRewardsGridViewState extends State<AllRewardsGridView> {
                     ),
                   ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,childAspectRatio: 1/2,crossAxisSpacing: 0,mainAxisSpacing: 0
+                      crossAxisCount: 4,childAspectRatio: 0.45,crossAxisSpacing: 0,mainAxisSpacing: 1
                   ),
                 ),
               ),
