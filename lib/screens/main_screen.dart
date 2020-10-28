@@ -22,12 +22,12 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
+    super.initState();
     _bannerAd = BannerAd(
       adUnitId: AdManager.bannerAdUnitId,
       size: AdSize.smartBanner,
     );
     _loadBannerAd();
-    super.initState();
   }
 
   @override
@@ -63,16 +63,61 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: Container(
-        height: _size.height,
-        child: Column(
-          children: [
-            SizedBox(height: _size.height * 0.1),
-            Container(
-              height: _size.height * 0.75,
-              child: MainMenuGrid()
-            )
-          ],
+      body: LayoutBuilder(
+        builder: (c, constraints) => Container(
+          height: constraints.maxHeight,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: constraints.maxHeight * 0.1),
+              Container(
+                height: constraints.maxHeight * 0.45,
+                child: MainMenuGrid()
+              ),
+              Container(
+                height:constraints.maxHeight * 0.42,
+                //color: Colors.black54,
+                padding: EdgeInsets.symmetric(horizontal: _size.height * 5 / ConstraintHelper.screenHeightCoe),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "Information",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: _size.height * 18 / ConstraintHelper.screenHeightCoe,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber,
+                      ),
+                    ),
+                    Text(
+                      "* When starting a new challenge all previous challenge games statuses will be lost, only the games you play after"
+                          " starting a challenge will be calculated\n"
+                      "* Each month will have limited amount of rewards (skins) available for players to get, but that amount is never"
+                          " less then 50\n"
+                      "* If you have finished a challenge but can't get your reward because this months skins have already ended, don't worry"
+                          " wait until next month and then claim your reward\n"
+                      "* You can chose any skin for any champion you want, just make sure that the skin you want is available for purchase"
+                          " in official League store (for example if it's Victorious skin it can't be purchased)\n"
+                      "* After claiming a skin, it will be gifted to you. Gift will be sent to an registered League summoner within 24 hours"
+                          ", so make sure you have connected right account on right server",
+                      style: TextStyle(
+                          fontSize: _size.height * 12 / ConstraintHelper.screenHeightCoe,
+                          color: Colors.black54
+                      ),
+                    ),
+                    Text(
+                      "Thank you and good luck!",
+                      style: TextStyle(
+                        fontSize: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+                        color: Colors.black54
+                      ),
+                    )
+                  ],
+                )
+              )
+            ],
+          ),
         ),
       ),
     );

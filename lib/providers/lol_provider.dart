@@ -109,6 +109,54 @@ class LoLProvider with ChangeNotifier {
     return matchList;
   }
 
+  // Get first timestamp value, and use it as startPoint for upcoming games.
+  Future<int> getStartingPointGameTimestamp(String accountId,String serverTag) async {
+    final result = await http.get("https://$serverTag.api.riotgames.com/lol/match/v4/matchlists/by-account/"
+        "$accountId?beginIndex=0&endIndex=1&api_key=${LoLApiKey.API_KEY}",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+    int resultTimeStamp;
+    if(result.statusCode == 200) {
+      Map<String,dynamic> jsonResponse = json.decode(result.body);
+      List<dynamic> firstGameList = jsonResponse["matches"];
+      resultTimeStamp = firstGameList[0]["timestamp"];
+    }
+    return resultTimeStamp;
+  }
+
+  // Find matches that happened after last timestamp
+  Future<List<GameMain>> getNewMatchList(String accountId,String serverTag,int latestTimeStamp) async {
+    int beginIndex = 0;
+    int endIndex = 1;
+    List<GameMain> matchList = List<GameMain>();
+    List<dynamic> mList = List<dynamic>();
+    bool loopStop = true;
+    while(loopStop) {
+      final result = await http.get("https://$serverTag.api.riotgames.com/lol/match/v4/matchlists/by-account/"
+          "$accountId?beginIndex=$beginIndex&endIndex=$endIndex&api_key=${LoLApiKey.API_KEY}",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+      if(result.statusCode == 200) {
+        Map<String,dynamic> jsonResponse = json.decode(result.body);
+        mList = jsonResponse["matches"];
+        if(mList[0]["timestamp"] == _summoner.activeChallenge.activeChallengeTimestamp) {
+          // If timestamp found, then stop searching for more games.
+          loopStop = false;
+        }else{
+          // Timestamp not found yet, add current game to new matchlist, and go check next match
+          matchList.add(GameMain(mList[0]["gameId"], mList[0]["timestamp"]));
+          beginIndex++;
+          endIndex++;
+        }
+      }
+    }
+    return matchList;
+  }
+
   Future<BeginEndIndex> getBeginIndexForTimestampMatchList(String accountId, String serverTag) async {
     int beginIndex = 0;
     int totalGames = 0;
