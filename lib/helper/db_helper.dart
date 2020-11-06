@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
+const String path = "lol_rewarder.db";
 const String table = "games";
 const String columnId = "_id";
 const String columnTowerKills ="towerKills";
@@ -17,7 +18,7 @@ class GameHelper {
   int kills;
   int assists;
 
-  GameHelper();
+  GameHelper({this.towerKills,this.gameDuration,this.champion,this.kills,this.assists});
 
   Map<String,dynamic> toMap() {
     var map = <String,dynamic> {
@@ -46,9 +47,15 @@ class GameHelper {
 
 class DBHelperProvider {
 
+  static final DBHelperProvider _dbHelperProvider = DBHelperProvider.privateConstructor();
+  factory DBHelperProvider() {
+    return _dbHelperProvider;
+  }
+  DBHelperProvider.privateConstructor();
+
   Database db;
 
-  Future open(String path) async {
+  Future open() async {
     db = await openDatabase(path,version: 1,
         onCreate: (Database db,int version) async {
           await db.execute('''

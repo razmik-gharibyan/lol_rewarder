@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:lol_rewarder/helper/champion_id_helper.dart';
+import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/lol_api_key.dart';
 import 'package:lol_rewarder/model/assist_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
@@ -17,11 +18,9 @@ import 'package:lol_rewarder/model/tower_challenge.dart';
 class LoLProvider with ChangeNotifier {
 
   static final LoLProvider _loLProvider = LoLProvider.privateConstructor();
-
   factory LoLProvider() {
     return _loLProvider;
   }
-
   LoLProvider.privateConstructor();
 
   // Constants
@@ -35,6 +34,7 @@ class LoLProvider with ChangeNotifier {
   // Singleton
   Summoner _summoner = Summoner();
   Challenge _challenge = Challenge();
+  DBHelperProvider _dbHelperProvider = DBHelperProvider();
 
   Future<void> getSummonerInfoByName(String summonerName,String serverTag) async {
     String serverKeyName;
@@ -147,7 +147,7 @@ class LoLProvider with ChangeNotifier {
           // If timestamp found, then stop searching for more games.
           loopStop = false;
         }else{
-          // Timestamp not found yet, add current game to new matchlist, and go check next match
+          // Timestamp not found yet, add current game to new match list, and go check next match
           matchList.add(GameMain(mList[0]["gameId"], mList[0]["timestamp"]));
           beginIndex++;
           endIndex++;
@@ -253,6 +253,8 @@ class LoLProvider with ChangeNotifier {
       final Map<String,dynamic> stats = participant["stats"];
       final int gameDuration = jsonResponse["gameDuration"];
       final int queueId = jsonResponse["queueId"];
+      final int kills = stats["kills"];
+      final int assists = stats["assists"];
       String champion;
       String win;
       int towerKills;
@@ -270,6 +272,11 @@ class LoLProvider with ChangeNotifier {
           return;
         }
       });
+      if(win == "Win" && queueId == 420) {
+        // Game was won and queue was ranked game (5v5) in summoners rift
+        final gameHelper = GameHelper(towerKills: towerKills,gameDuration: gameDuration,champion: champion,kills: kills,assists: assists);
+        await _dbHelperProvider.insertData(gameHelper);
+      }
       return MatchMain(jsonResponse, stats, gameDuration, queueId, teamId, champion, towerKills, win);
     }
     return null;

@@ -2,6 +2,7 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/admob/ad_manager.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/widgets/app_drawer.dart';
 import 'package:lol_rewarder/widgets/main_menu_grid.dart';
 
@@ -17,8 +18,10 @@ class _MainScreenState extends State<MainScreen> {
 
   // AdMob
   BannerAd _bannerAd;
-
+  // Keys
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+  // Tools
+  final DBHelperProvider _dbHelperProvider = DBHelperProvider();
 
   @override
   void initState() {
@@ -28,11 +31,13 @@ class _MainScreenState extends State<MainScreen> {
       size: AdSize.smartBanner,
     );
     _loadBannerAd();
+    _dbHelperProvider.open();
   }
 
   @override
   void dispose() {
     _bannerAd?.dispose();
+    _dbHelperProvider.close();
     super.dispose();
   }
 
