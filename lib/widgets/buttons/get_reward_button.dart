@@ -73,7 +73,7 @@ class _GetRewardButtonState extends State<GetRewardButton> {
     }else{
       Scaffold.of(context).showSnackBar(
           SnackBar(
-            content: Text("Complete all challenges to unlock reward"),
+            content: Text("Complete all challenges to unlock your reward"),
             duration: Duration(seconds: 5),
           )
       );

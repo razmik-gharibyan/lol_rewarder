@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/game_main.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
+import 'package:lol_rewarder/providers/lol_provider.dart';
 
 class StartChallengeButton extends StatelessWidget {
 
@@ -22,6 +24,8 @@ class StartChallengeButton extends StatelessWidget {
   Challenge _challenge = Challenge();
   // Tools
   final _backendProvider = BackendProvider();
+  final _lolProvider = LoLProvider();
+  final _dbHelperProvider = DBHelperProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +105,11 @@ class StartChallengeButton extends StatelessWidget {
   }
 
   Future<void> _updateActiveChallenge(dynamic data) async {
-    final int latestTimestamp = (data as List<GameMain>).first.timestamp;
+    final latestTimestamp = await _lolProvider.getStartingPointGameTimestamp(_summoner.accountId, _summoner.serverTag);
     _summoner.setActiveChallenge(ActiveChallenge(_challenge.data.documentID, _challenge.type, latestTimestamp));
     await _backendProvider.updateSummoner();
+    // Delete table with previous games
+    await _dbHelperProvider.deleteGames();
     startChallengePressed();
   }
 }

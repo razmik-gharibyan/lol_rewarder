@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:lol_rewarder/extensions/hex_to_rgb.dart';
 import 'package:lol_rewarder/helper/calc_helper.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/game_main.dart';
 import 'package:lol_rewarder/model/lol_index.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/challenge_provider.dart';
 import 'package:lol_rewarder/providers/lol_provider.dart';
+import 'package:lol_rewarder/providers/match_provider.dart';
 import 'package:lol_rewarder/widgets/buttons/get_reward_button.dart';
 import 'package:lol_rewarder/widgets/buttons/start_challenge_button.dart';
 
@@ -27,6 +29,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   // Tools
   final _challengeProvider = ChallengeProvider();
   final _lolProvider = LoLProvider();
+  final _matchProvider = MatchProvider();
   // Vars
   Map<String,int> _progressCountMap = {
     "tower": 0, "kill": 0, "assist": 0, "time": 0
@@ -45,7 +48,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     if(_summoner.activeChallenge == null) {
       _isLoading = false;
     }else{
-      _isLoading = _challenge.data.documentID == _summoner.activeChallenge.activeChallengeId; // If opened challenge is already active;
+      _isLoading = _challenge.data.documentID == _summoner.activeChallenge.activeChallengeId; // If opened challenge is already active
     }
     WidgetsBinding.instance
         .addPostFrameCallback((_) {
@@ -64,17 +67,19 @@ class _ChallengeListViewState extends State<ChallengeListView> {
 
   @override
   void didChangeDependencies() async {
+    super.didChangeDependencies();
     if(_isInit) {
       if(_isLoading) {
         await _getChallengeProgressByType();
         if(!_isDisposed) {
           _isAllChallengesComplete = _checkRequiredChallengesComplete(_completeCountMap);
           _isInit = false;
-          setState(() {});
+          setState(() {
+            _isLoading = false;
+          });
         }
       }
     }
-    super.didChangeDependencies();
   }
 
 
@@ -204,7 +209,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   }
 
   Future<void> _getChallengeProgressByType() async {
-    final List<GameMain> matchList = await _getCorrectMatchList();
+    final List<GameHelper> matchList = await _matchProvider.requestMatchList();
     // Find challenge type, and check progress for it
     int towerCount = 0;
     int killCount = 0;
@@ -212,29 +217,24 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     int timeCount = 0;
     for(var match in matchList) {
       if(_isDisposed) {return;}
-      // Check if match is acceptable for check with timestamp
-      if(_summoner.activeChallenge.activeChallengeTimestamp <= match.timestamp) {
-        print("timestamp ${match.timestamp}");
-        final matchMain = await _lolProvider.getMatchByMatchId(match.gameId, _summoner.serverTag);
-        for(var challenge in _challenge.challengeList) {
-          switch (challenge.type) {
-            case "tower":
-              // Return true if challenge accomplished, false if not
-              if (await _lolProvider.getTowerChallenge(matchMain)) towerCount++;
-              break;
-            case "kill":
-              // Return true if challenge accomplished, false if not
-              if (await _lolProvider.getKillChallenge(matchMain)) killCount++;
-              break;
-            case "assist":
-              // Return true if challenge accomplished, false if not
-              if (await _lolProvider.getAssistChallenge(matchMain)) assistCount++;
-              break;
-            case "time":
-              // Return true if challenge accomplished, false if not
-              if (await _lolProvider.getTimeChallenge(matchMain)) timeCount++;
-              break;
-          }
+      for(var challenge in _challenge.challengeList) {
+        switch (challenge.type) {
+          case "tower":
+            // Return true if challenge accomplished, false if not
+            if (await _lolProvider.getTowerChallenge(match)) towerCount++;
+            break;
+          case "kill":
+            // Return true if challenge accomplished, false if not
+            if (await _lolProvider.getKillChallenge(match)) killCount++;
+            break;
+          case "assist":
+            // Return true if challenge accomplished, false if not
+            if (await _lolProvider.getAssistChallenge(match)) assistCount++;
+            break;
+          case "time":
+            // Return true if challenge accomplished, false if not
+            if (await _lolProvider.getTimeChallenge(match)) timeCount++;
+            break;
         }
       }
     }
@@ -243,51 +243,6 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     _progressCountMap["kill"] = killCount;
     _progressCountMap["assist"] = assistCount;
     _progressCountMap["time"] = timeCount;
-    _isLoading = false;
-  }
-
-  Future<List<GameMain>> _getCorrectMatchList() async {
-    final BeginEndIndex indexes = await _lolProvider.getBeginIndexForTimestampMatchList(_summoner.accountId, _summoner.serverTag);
-    List<GameMain> allMatchList = List<GameMain>();
-    int beginIndexForLoop = CalcHelper().getCountFromBeginIndex(indexes.beginIndex);
-    if(indexes.endIndex == 0) {
-      // If endIndex == 0 (was not found)
-      int beginIndex = indexes.beginIndex;
-      int endIndex = indexes.endIndex;
-      BeginEndIndex currentIndexes = BeginEndIndex(beginIndex, endIndex);
-      // Use for loop to go from beginIndex match to latest match with -100 match subtract (latest game user played)
-      for(int i=0; i<beginIndexForLoop + 1; i++) {
-        if(_isDisposed) {break;}
-        final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
-            _summoner.accountId, _summoner.serverTag, currentIndexes);
-        allMatchList.addAll(matchList);
-        beginIndex = beginIndex - 100;
-        currentIndexes = BeginEndIndex(beginIndex, endIndex);
-      }
-    }else{
-      // If endIndex != 0 , endIndex found
-      int beginIndex = indexes.beginIndex;
-      int endIndex = indexes.endIndex;
-      BeginEndIndex currentIndexes = BeginEndIndex(beginIndex, endIndex);
-      for(int i=0; i<beginIndexForLoop + 1; i++) {
-        if(_isDisposed) {break;}
-        if(endIndex != 0) {
-          final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
-              _summoner.accountId, _summoner.serverTag, currentIndexes);
-          allMatchList.addAll(matchList);
-          beginIndex = beginIndex - 100;
-          endIndex = 0;
-          currentIndexes = BeginEndIndex(beginIndex,endIndex);
-        }else{
-          final List<GameMain> matchList = await _lolProvider.getMatchListByBeginEndIndexes(
-              _summoner.accountId, _summoner.serverTag, currentIndexes);
-          allMatchList.addAll(matchList);
-          beginIndex = beginIndex - 100;
-          currentIndexes = BeginEndIndex(beginIndex, endIndex);
-        }
-      }
-    }
-    return allMatchList;
   }
 
   String _showProgress(String type) {
@@ -353,18 +308,12 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     setState(() {
       Scaffold.of(context).showSnackBar(
           SnackBar(
-            content: Text("Wait while progress is being loaded, this may take a few minutes"),
+            content: Text("A new challenge started, you previous matches will be ignored"),
             duration: Duration(seconds: 20),
           )
       );
       _isLoading = true;
     });
-    await _getChallengeProgressByType();
-    if(!_isDisposed) {
-      _isAllChallengesComplete = _checkRequiredChallengesComplete(_completeCountMap);
-      _isInit = false;
-      setState(() {});
-    }
   }
 
 }
