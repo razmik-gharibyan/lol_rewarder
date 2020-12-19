@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:lol_rewarder/helper/champion_id_helper.dart';
+import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/lol_api_key.dart';
 import 'package:lol_rewarder/model/assist_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
@@ -17,11 +18,9 @@ import 'package:lol_rewarder/model/tower_challenge.dart';
 class LoLProvider with ChangeNotifier {
 
   static final LoLProvider _loLProvider = LoLProvider.privateConstructor();
-
   factory LoLProvider() {
     return _loLProvider;
   }
-
   LoLProvider.privateConstructor();
 
   // Constants
@@ -35,6 +34,7 @@ class LoLProvider with ChangeNotifier {
   // Singleton
   Summoner _summoner = Summoner();
   Challenge _challenge = Challenge();
+  DBHelperProvider _dbHelperProvider = DBHelperProvider();
 
   Future<void> getSummonerInfoByName(String summonerName,String serverTag) async {
     String serverKeyName;
@@ -147,7 +147,7 @@ class LoLProvider with ChangeNotifier {
           // If timestamp found, then stop searching for more games.
           loopStop = false;
         }else{
-          // Timestamp not found yet, add current game to new matchlist, and go check next match
+          // Timestamp not found yet, add current game to new match list, and go check next match
           matchList.add(GameMain(mList[0]["gameId"], mList[0]["timestamp"]));
           beginIndex++;
           endIndex++;
@@ -225,7 +225,7 @@ class LoLProvider with ChangeNotifier {
     return matchList;
   }
 
-  Future<MatchMain> getMatchByMatchId(int matchId,String serverTag) async {
+  Future<GameHelper> getMatchByMatchId(int matchId,String serverTag) async {
     Map<String,dynamic> jsonResponse = Map<String,dynamic>();
     final result = await http.get(
       "https://$serverTag.api.riotgames.com/lol/match/v4/matches/$matchId?api_key=${LoLApiKey.API_KEY}",
@@ -253,6 +253,8 @@ class LoLProvider with ChangeNotifier {
       final Map<String,dynamic> stats = participant["stats"];
       final int gameDuration = jsonResponse["gameDuration"];
       final int queueId = jsonResponse["queueId"];
+      final int kills = stats["kills"];
+      final int assists = stats["assists"];
       String champion;
       String win;
       int towerKills;
@@ -270,97 +272,69 @@ class LoLProvider with ChangeNotifier {
           return;
         }
       });
-      return MatchMain(jsonResponse, stats, gameDuration, queueId, teamId, champion, towerKills, win);
+      if(win == "Win" && queueId == 420) {
+        // Game was won and queue was ranked game (5v5) in summoners rift
+        return GameHelper(gameId: matchId,towerKills: towerKills,gameDuration: gameDuration,champion: champion,kills: kills,assists: assists);
+      }
+      return null;
     }
     return null;
   }
 
-  Future<bool> getTowerChallenge(MatchMain matchMain) async {
-    if(matchMain != null) {
-      // Get current challenge information from server
-      TowerChallenge towerChallenge;
-      _challenge.challengeList.forEach((element) {
-        if(element.type == "tower") {
-          towerChallenge = element;
-        }
-      });
-      // Check if summoner team was winner team or not and if game was ranked 5 v 5 in summoners rift (queueId = 420)
-      // also check if champion is same as challenge required champion, and if challenge requirments met
-      if(matchMain.win == "Win"
-          && matchMain.queueId == 420
-          && matchMain.champion == towerChallenge.champion
-          && matchMain.towerKills == 11) {
-        return true;
-      }else{
-        return false;
+  Future<bool> getTowerChallenge(GameHelper gameHelper) async {
+    TowerChallenge towerChallenge;
+    _challenge.challengeList.forEach((element) {
+      if(element.type == "tower") {
+        towerChallenge = element;
       }
+    });
+    // Check if champion is same as challenge required champion, and if challenge requirements met
+    if(gameHelper.champion == towerChallenge.champion && gameHelper.towerKills == 11) {
+      return true;
     }
+    return false;
   }
 
-  Future<bool> getKillChallenge(MatchMain matchMain) async {
-    if(matchMain != null) {
-      // Get current challenge information from server
-      KillChallenge killChallenge;
-      _challenge.challengeList.forEach((element) {
-        if(element.type == "kill") {
-          killChallenge = element;
-        }
-      });
-      // Check if summoner team was winner team or not and if game was ranked 5 v 5 in summoners rift (queueId == 420)
-      // also check if champion is same as challenge required champion, and if challenge requirments met
-      if(matchMain.win == "Win"
-          && matchMain.queueId == 420
-          && matchMain.champion == killChallenge.champion
-          && matchMain.stats["kills"] >= killChallenge.killTotal) {
-        return true;
-      }else{
-        return false;
+  Future<bool> getKillChallenge(GameHelper gameHelper) async {
+    KillChallenge killChallenge;
+    _challenge.challengeList.forEach((element) {
+      if(element.type == "kill") {
+        killChallenge = element;
       }
+    });
+    // Check if champion is same as challenge required champion, and if challenge requirements met
+    if(gameHelper.champion == killChallenge.champion && gameHelper.kills >= killChallenge.killTotal) {
+      return true;
     }
+    return false;
   }
 
-  Future<bool> getAssistChallenge(MatchMain matchMain) async {
-    if(matchMain != null) {
-      // Get current challenge information from server
-      AssistChallenge assistChallenge;
-      _challenge.challengeList.forEach((element) {
-        if(element.type == "assist") {
-          assistChallenge = element;
-        }
-      });
-      // Check if summoner team was winner team or not and if game was ranked 5 v 5 in summoners rift (queueId == 420)
-      // also check if champion is same as challenge required champion, and if challenge requirments met
-      if(matchMain.win == "Win"
-          && matchMain.queueId == 420
-          && matchMain.champion == assistChallenge.champion
-          && matchMain.stats["assists"] >= assistChallenge.assistTotal) {
-       return true;
-      }else{
-        return false;
+  Future<bool> getAssistChallenge(GameHelper gameHelper) async {
+    AssistChallenge assistChallenge;
+    _challenge.challengeList.forEach((element) {
+      if(element.type == "assist") {
+        assistChallenge = element;
       }
+    });
+    // Check if champion is same as challenge required champion, and if challenge requirments met
+    if(gameHelper.champion == assistChallenge.champion && gameHelper.assists >= assistChallenge.assistTotal) {
+      return true;
     }
+    return false;
   }
 
-  Future<bool> getTimeChallenge(MatchMain matchMain) async {
-    if(matchMain != null) {
-      // Get current challenge information from server
-      TimeChallenge timeChallenge;
-      _challenge.challengeList.forEach((element) {
-        if(element.type == "time") {
-          timeChallenge = element;
-        }
-      });
-      // Check if summoner team was winner team or not and if game was ranked 5 v 5 in summoners rift (queueId == 420)
-      // also check if champion is same as challenge required champion, and if challenge requirments met
-      if(matchMain.win == "Win"
-          && matchMain.queueId == 420
-          && matchMain.champion == timeChallenge.champion
-          && matchMain.gameDuration <= timeChallenge.gameUnder * 60) {
-        return true;
-      }else{
-        return false;
+  Future<bool> getTimeChallenge(GameHelper gameHelper) async {
+    TimeChallenge timeChallenge;
+    _challenge.challengeList.forEach((element) {
+      if(element.type == "time") {
+        timeChallenge = element;
       }
+    });
+    // Check if champion is same as challenge required champion, and if challenge requirments met
+    if(gameHelper.champion == timeChallenge.champion && gameHelper.gameDuration <= timeChallenge.gameUnder * 60) {
+      return true;
     }
+    return false;
   }
 
 }

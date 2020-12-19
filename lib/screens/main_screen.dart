@@ -2,8 +2,15 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/admob/ad_manager.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/helper/db_helper.dart';
+import 'package:lol_rewarder/model/active_challenge.dart';
+import 'package:lol_rewarder/model/summoner.dart';
+import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/widgets/app_drawer.dart';
 import 'package:lol_rewarder/widgets/main_menu_grid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:lol_rewarder/globals.dart' as globals;
 
 class MainScreen extends StatefulWidget {
 
@@ -17,8 +24,15 @@ class _MainScreenState extends State<MainScreen> {
 
   // AdMob
   BannerAd _bannerAd;
-
+  // Keys
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+  // Tools
+  final DBHelperProvider _dbHelperProvider = DBHelperProvider();
+  final BackendProvider _backendProvider = BackendProvider();
+  Summoner _summoner = Summoner();
+  SharedPreferences _preferences;
+  // Vars
+  bool _isInit = true;
 
   @override
   void initState() {
@@ -28,11 +42,23 @@ class _MainScreenState extends State<MainScreen> {
       size: AdSize.smartBanner,
     );
     _loadBannerAd();
+    _dbHelperProvider.open();
+  }
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if(_isInit) {
+      _preferences = await SharedPreferences.getInstance();
+      _updateLatestTimestamp();
+      _isInit = false;
+    }
   }
 
   @override
   void dispose() {
     _bannerAd?.dispose();
+    _dbHelperProvider.close();
     super.dispose();
   }
 
@@ -127,6 +153,15 @@ class _MainScreenState extends State<MainScreen> {
     _bannerAd
       ..load()
       ..show(anchorType: AnchorType.top,anchorOffset: ConstraintHelper.appBarHeight);
+  }
+
+  void _updateLatestTimestamp() async {
+    final latestTimestamp = _preferences.getInt(globals.TIMESTAMP);
+    if(_summoner.activeChallenge.activeChallengeTimestamp != latestTimestamp) {
+      _summoner.setActiveChallenge(ActiveChallenge(
+          _summoner.activeChallenge.activeChallengeId, _summoner.activeChallenge.activeChallengeType, latestTimestamp));
+      await _backendProvider.updateSummoner();
+    }
   }
 
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/game_main.dart';
@@ -13,9 +14,10 @@ import 'package:lol_rewarder/providers/lol_provider.dart';
 class StartChallengeButton extends StatelessWidget {
 
   Size size;
+  dynamic result;
   Function startChallengePressed;
 
-  StartChallengeButton(this.size, this.startChallengePressed);
+  StartChallengeButton(this.size,this.result,this.startChallengePressed);
 
   // Singletons
   Summoner _summoner = Summoner();
@@ -23,6 +25,7 @@ class StartChallengeButton extends StatelessWidget {
   // Tools
   final _backendProvider = BackendProvider();
   final _lolProvider = LoLProvider();
+  final _dbHelperProvider = DBHelperProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +75,7 @@ class StartChallengeButton extends StatelessWidget {
                 style: TextStyle(color: Colors.black),
               ),
               onPressed: () async {
-                await _updateActiveChallenge();
+                await _updateActiveChallenge(result.data);
                 Navigator.of(ctx).pop();
               },
             )
@@ -92,7 +95,7 @@ class StartChallengeButton extends StatelessWidget {
             FlatButton(
               child: Text("YES"),
               onPressed: () async {
-                await _updateActiveChallenge();
+                await _updateActiveChallenge(result.data);
                 Navigator.of(ctx).pop();
               },
             ),
@@ -101,10 +104,12 @@ class StartChallengeButton extends StatelessWidget {
     );
   }
 
-  Future<void> _updateActiveChallenge() async {
-    final int latestTimestamp = await _lolProvider.getStartingPointGameTimestamp(_summoner.accountId, _summoner.serverTag);
+  Future<void> _updateActiveChallenge(dynamic data) async {
+    final latestTimestamp = await _lolProvider.getStartingPointGameTimestamp(_summoner.accountId, _summoner.serverTag);
     _summoner.setActiveChallenge(ActiveChallenge(_challenge.data.documentID, _challenge.type, latestTimestamp));
     await _backendProvider.updateSummoner();
+    // Delete table with previous games
+    await _dbHelperProvider.deleteGames();
     startChallengePressed();
   }
 }
