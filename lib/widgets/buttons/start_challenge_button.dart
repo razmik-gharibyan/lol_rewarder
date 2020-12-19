@@ -14,10 +14,9 @@ import 'package:lol_rewarder/providers/lol_provider.dart';
 class StartChallengeButton extends StatelessWidget {
 
   Size size;
-  dynamic result;
   Function startChallengePressed;
 
-  StartChallengeButton(this.size,this.result,this.startChallengePressed);
+  StartChallengeButton(this.size,this.startChallengePressed);
 
   // Singletons
   Summoner _summoner = Summoner();
@@ -75,7 +74,7 @@ class StartChallengeButton extends StatelessWidget {
                 style: TextStyle(color: Colors.black),
               ),
               onPressed: () async {
-                await _updateActiveChallenge(result.data);
+                await _updateActiveChallenge();
                 Navigator.of(ctx).pop();
               },
             )
@@ -95,7 +94,7 @@ class StartChallengeButton extends StatelessWidget {
             FlatButton(
               child: Text("YES"),
               onPressed: () async {
-                await _updateActiveChallenge(result.data);
+                await _updateActiveChallenge();
                 Navigator.of(ctx).pop();
               },
             ),
@@ -104,7 +103,7 @@ class StartChallengeButton extends StatelessWidget {
     );
   }
 
-  Future<void> _updateActiveChallenge(dynamic data) async {
+  Future<void> _updateActiveChallenge() async {
     final latestTimestamp = await _lolProvider.getStartingPointGameTimestamp(_summoner.accountId, _summoner.serverTag);
     _summoner.setActiveChallenge(ActiveChallenge(_challenge.data.documentID, _challenge.type, latestTimestamp));
     await _backendProvider.updateSummoner();
