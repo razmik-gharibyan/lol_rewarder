@@ -156,11 +156,13 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _updateLatestTimestamp() async {
-    final latestTimestamp = _preferences.getInt(globals.TIMESTAMP);
-    if(_summoner.activeChallenge.activeChallengeTimestamp != latestTimestamp) {
-      _summoner.setActiveChallenge(ActiveChallenge(
-          _summoner.activeChallenge.activeChallengeId, _summoner.activeChallenge.activeChallengeType, latestTimestamp));
-      await _backendProvider.updateSummoner();
+    if (_preferences.containsKey(globals.TIMESTAMP)) {
+      final latestTimestamp = _preferences.getInt(globals.TIMESTAMP);
+      if(_summoner.activeChallenge.activeChallengeTimestamp != latestTimestamp) {
+        _summoner.setActiveChallenge(ActiveChallenge(
+            _summoner.activeChallenge.activeChallengeId, _summoner.activeChallenge.activeChallengeType, latestTimestamp));
+        await _backendProvider.updateSummoner();
+      }
     }
   }
 

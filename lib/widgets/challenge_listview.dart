@@ -304,7 +304,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
             duration: Duration(seconds: 20),
           )
       );
-      _isLoading = true;
+      _isLoading = false;
     });
   }
 

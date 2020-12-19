@@ -10,6 +10,8 @@ import 'package:lol_rewarder/model/game_main.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
 import 'package:lol_rewarder/providers/lol_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:lol_rewarder/globals.dart' as globals;
 
 class StartChallengeButton extends StatelessWidget {
 
@@ -105,10 +107,16 @@ class StartChallengeButton extends StatelessWidget {
 
   Future<void> _updateActiveChallenge() async {
     final latestTimestamp = await _lolProvider.getStartingPointGameTimestamp(_summoner.accountId, _summoner.serverTag);
-    _summoner.setActiveChallenge(ActiveChallenge(_challenge.data.documentID, _challenge.type, latestTimestamp));
-    await _backendProvider.updateSummoner();
-    // Delete table with previous games
-    await _dbHelperProvider.deleteGames();
-    startChallengePressed();
+    if (latestTimestamp != null) {
+      var _preferences = await SharedPreferences.getInstance();
+      _preferences.setInt(globals.TIMESTAMP, latestTimestamp);
+      _summoner.setActiveChallenge(ActiveChallenge(_challenge.data.documentID, _challenge.type, latestTimestamp));
+      await _backendProvider.updateSummoner();
+      // Delete table with previous games
+      await _dbHelperProvider.deleteGames();
+      startChallengePressed();
+    } else {
+      print("time stamp is null");
+    }
   }
 }

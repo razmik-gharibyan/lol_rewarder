@@ -95,7 +95,7 @@ class DBHelperProvider {
     if(mapList.isNotEmpty) {
       return mapList.map((e) => GameHelper.fromMap(e)).toList();
     }
-    return null;
+    return Future.value(List<GameHelper>());
   }
 
   Future<int> deleteGames() async {
