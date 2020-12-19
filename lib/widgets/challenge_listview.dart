@@ -89,9 +89,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
 
     final _size = MediaQuery.of(context).size;
 
-    return FutureBuilder(
-      future: _lolProvider.getMatchListByAccountId(_summoner.accountId, _summoner.serverTag),
-      builder: (ct, result) => result.connectionState == ConnectionState.done ? LayoutBuilder(
+    return LayoutBuilder(
         builder: (c, constraints) => Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -185,22 +183,16 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                   minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
                   height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
                   child: _summoner.activeChallenge == null
-                    ? StartChallengeButton(_size,result,_startChallengePressed)
+                    ? StartChallengeButton(_size,_startChallengePressed)
                     :_challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
                       ? GetRewardButton(_size,_isAllChallengesComplete)
-                      : StartChallengeButton(_size,result,_startChallengePressed)
+                      : StartChallengeButton(_size,_startChallengePressed)
                 ),
               ),
             ],
           )
         ),
-      )
-      : Center(
-        child: Platform.isAndroid
-            ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
-            : CupertinoActivityIndicator(),
-      )
-    );
+      );
   }
 
   Future<void> _getChallengeProgressByType() async {

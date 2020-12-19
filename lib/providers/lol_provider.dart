@@ -143,7 +143,7 @@ class LoLProvider with ChangeNotifier {
       if(result.statusCode == 200) {
         Map<String,dynamic> jsonResponse = json.decode(result.body);
         mList = jsonResponse["matches"];
-        if(mList[0]["timestamp"] == _summoner.activeChallenge.activeChallengeTimestamp) {
+        if(mList[0]["timestamp"] == latestTimeStamp) {
           // If timestamp found, then stop searching for more games.
           loopStop = false;
         }else{
