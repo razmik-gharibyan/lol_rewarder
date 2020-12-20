@@ -32,8 +32,8 @@ class MatchProvider with ChangeNotifier {
         }
         await _sharedPreferences.setInt(globals.TIMESTAMP, match.timestamp);
       });
-      await _sharedPreferences.setInt(globals.TIMESTAMP, newMatchList.first.timestamp);
-      _summoner.setActiveChallenge(ActiveChallenge(_challenge.data.documentID, _challenge.type, newMatchList.first.timestamp));
+      await _sharedPreferences.setInt(globals.TIMESTAMP, newMatchList.last.timestamp);
+      _summoner.setActiveChallenge(ActiveChallenge(_challenge.data.documentID, _challenge.type, newMatchList.last.timestamp));
       await _backendProvider.updateSummoner();
     }
     return await _dbHelperProvider.getGames();
