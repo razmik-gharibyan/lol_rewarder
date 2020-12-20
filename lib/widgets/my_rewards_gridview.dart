@@ -11,7 +11,7 @@ class MyRewardsGridView extends StatefulWidget {
 class _MyRewardsGridViewState extends State<MyRewardsGridView> {
 
   // Constants
-  final String skinPathUrl = "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/";
+  final String skinPathUrl = "https://ddragon.leagueoflegends.com/cdn/img/champion/loading/";
   // Tools
   final _backendProvider = BackendProvider();
   // Singletons

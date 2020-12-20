@@ -27,7 +27,7 @@ class DDragonProvider {
   }
 
   Future<List<Skin>> getSkinListForChampion(String championName) async {
-    final result = await http.get("http://ddragon.leagueoflegends.com/cdn/$gameVersion/data/en_US/champion/$championName.json",
+    final result = await http.get("https://ddragon.leagueoflegends.com/cdn/$gameVersion/data/en_US/champion/$championName.json",
       headers: {
         "Content-Type": "application/json",
       },

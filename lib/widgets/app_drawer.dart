@@ -29,7 +29,7 @@ class _AppDrawerState extends State<AppDrawer> {
   final _backendProvider = BackendProvider();
   final _ddragonProvider = DDragonProvider();
   // Vars
-  String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/10.19.1/img/profileicon/";
+  String _iconFinderUrl = "https://ddragon.leagueoflegends.com/cdn/10.19.1/img/profileicon/";
   Summoner _summoner = Summoner();
   Challenge _challenge = Challenge();
   CurrentSkinHolder _currentSkinHolder = CurrentSkinHolder();
@@ -37,7 +37,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   void initState() {
-    _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/${_ddragonProvider.gameVersion}/img/profileicon/";
+    _iconFinderUrl = "https://ddragon.leagueoflegends.com/cdn/${_ddragonProvider.gameVersion}/img/profileicon/";
     super.initState();
   }
 
