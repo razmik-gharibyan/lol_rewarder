@@ -93,7 +93,7 @@ class DBHelperProvider {
 
   Future<List<GameHelper>> getGames() async {
     List<Map> mapList = await db.query(table,
-      columns: [columnId,columnTowerKills,columnGameDuration,columnChampion,columnKills,columnAssists]
+      columns: [columnId, columnGameId, columnTowerKills, columnGameDuration, columnChampion, columnKills, columnAssists]
     );
     if(mapList.isNotEmpty) {
       return mapList.map((e) => GameHelper.fromMap(e)).toList();
