@@ -156,8 +156,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _updateLatestTimestamp() async {
-    //TODO uncomment part below it's commented for testing purposes only
-    /*
     if (_preferences.containsKey(globals.TIMESTAMP)) {
       final latestTimestamp = _preferences.getInt(globals.TIMESTAMP);
       if(_summoner.activeChallenge.activeChallengeTimestamp != latestTimestamp) {
@@ -166,8 +164,6 @@ class _MainScreenState extends State<MainScreen> {
         await _backendProvider.updateSummoner();
       }
     }
-
-     */
   }
 
 }

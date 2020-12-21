@@ -36,7 +36,7 @@ class MatchProvider with ChangeNotifier {
         // Check if match was won and queue was ranked 5 v 5 summoners rift, if yes then write match to db
         final gameHelper = await _lolProvider.getMatchByMatchId(match.gameId, _summoner.serverTag);
         if(gameHelper != null) {
-          await _dbHelperProvider.insertData(gameHelper);
+          await _dbHelperProvider.insertDataIfDontExists(gameHelper);
         }
         await _sharedPreferences.setInt(globals.TIMESTAMP, match.timestamp);
       }

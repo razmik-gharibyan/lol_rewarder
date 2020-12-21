@@ -39,7 +39,7 @@ class GameHelper {
 
   GameHelper.fromMap(Map<String,dynamic> map) {
     id = map[columnId];
-    gameId = map[gameId];
+    gameId = map[columnGameId];
     towerKills = map[columnTowerKills];
     gameDuration = map[columnGameDuration];
     champion = map[columnChampion];
@@ -82,9 +82,12 @@ class DBHelperProvider {
   
   Future<void> insertDataIfDontExists(GameHelper helper) async {
     db.transaction((txn) async {
-      return await txn.rawInsert('IF NOT EXISTS(SELECT 1 FROM $table WHERE $columnGameId=${helper.gameId})'
+      return await txn.rawInsert(
           'INSERT INTO $table($columnGameId, $columnTowerKills, $columnGameDuration, $columnChampion, $columnKills, $columnAssists) '
-          'VALUES(${helper.gameId}, ${helper.towerKills}, ${helper.gameDuration}, ${helper.champion}, ${helper.kills}, ${helper.assists})');
+          'SELECT * FROM (SELECT ${helper.gameId}, ${helper.towerKills}, ${helper.gameDuration}, "${helper.champion}", ${helper.kills}, ${helper.assists}) AS "values"'
+          //'VALUES(${helper.gameId}, ${helper.towerKills}, ${helper.gameDuration}, "${helper.champion}", ${helper.kills}, ${helper.assists})'
+          'WHERE NOT EXISTS(SELECT ${helper.gameId} FROM $table WHERE $columnGameId=${helper.gameId})'
+      );
     });
   }
 
