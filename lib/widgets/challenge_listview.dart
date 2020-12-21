@@ -108,98 +108,117 @@ class _ChallengeListViewState extends State<ChallengeListView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                height: constraints.maxHeight * 0.8,
-                child: ListView.builder(
-                  itemBuilder: (ctx, index) => Container(
-                    height: _size.height * 0.17,
-                    margin: EdgeInsets.only(
-                      bottom: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-                      left: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-                      right: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-                    ),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.4),
-                            spreadRadius: 2,
-                            blurRadius: 7,
-                            offset: Offset(0, 2), // changes position of shadow
-                          ),
-                        ]
-                    ),
-                    child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: _size.height * 25 / ConstraintHelper.screenHeightCoe),
-                        alignment: Alignment.centerLeft,
-                        color: HexColor.fromHex("f0f0f0"),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: constraints.maxWidth * 0.6,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${_challenge.challengeList[index].type.toString().toUpperCase()} CHALLENGE",
-                                    style: TextStyle(
-                                      color: Colors.amber,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
-                                    ),
-                                  ),
-                                  Text(
-                                    _challengeProvider.convertTypeToChallengeText(_challenge.challengeList[index]),
-                                    style: TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: _size.height * 14 / ConstraintHelper.screenHeightCoe
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            _completeCountMap[_challenge.challengeList[index].type]
-                                ? Icon(Icons.check, color: Colors.amber,)
-                                : Container(
-                                    width: constraints.maxWidth * 0.16,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Progress",
-                                          style: TextStyle(
-                                            fontSize: _size.height * 13 / ConstraintHelper.screenHeightCoe
-                                          ),
-                                        ),
-                                        _isLoading
-                                          ? Platform.isAndroid
-                                              ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
-                                              : CupertinoActivityIndicator()
-                                          : Text(_showProgress(_challenge.challengeList[index].type))
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+              Expanded(
+                flex: 9,
+                child: Container(
+                  child: ListView.builder(
+                    itemBuilder: (ctx, index) => Container(
+                      height: _size.height * 0.17,
+                      margin: EdgeInsets.only(
+                        bottom: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+                        left: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+                        right: _size.height * 15 / ConstraintHelper.screenHeightCoe,
                       ),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.4),
+                              spreadRadius: 2,
+                              blurRadius: 7,
+                              offset: Offset(0, 2), // changes position of shadow
+                            ),
+                          ]
+                      ),
+                      child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: _size.height * 25 / ConstraintHelper.screenHeightCoe),
+                          alignment: Alignment.centerLeft,
+                          color: HexColor.fromHex("f0f0f0"),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 5,
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${_challenge.challengeList[index].type.toString().toUpperCase()} CHALLENGE",
+                                        style: TextStyle(
+                                          color: Colors.amber,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe
+                                        ),
+                                      ),
+                                      Text(
+                                        _challengeProvider.convertTypeToChallengeText(_challenge.challengeList[index]),
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: _size.height * 14 / ConstraintHelper.screenHeightCoe
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              _completeCountMap[_challenge.challengeList[index].type]
+                                  ? Flexible(
+                                      flex: 1,
+                                      child: Center(
+                                        child: Icon(Icons.check, color: Colors.amber,)
+                                      ),
+                                    )
+                                  : Flexible(
+                                      flex: 1,
+                                      child: Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              flex: 2,
+                                              child: Text(
+                                                "Progress",
+                                                style: TextStyle(
+                                                  fontSize: _size.height * 13 / ConstraintHelper.screenHeightCoe
+                                                ),
+                                              ),
+                                            ),
+                                            Flexible(
+                                              flex: 4,
+                                              child: _isLoading
+                                                  ? Platform.isAndroid
+                                                  ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
+                                                  : CupertinoActivityIndicator()
+                                                  : Text(_showProgress(_challenge.challengeList[index].type)),
+                                            )
+                                    ],
+                                ),
+                              ),
+                                  )
+                            ],
+                          ),
+                        ),
+                    ),
+                    itemCount: _challenge.challengeList.length,
                   ),
-                  itemCount: _challenge.challengeList.length,
                 ),
               ),
-              Container(
-                height: constraints.maxHeight * 0.1,
-                child: ButtonTheme(
-                  minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
-                  height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
-                  child: _summoner.activeChallenge == null
-                    ? StartChallengeButton(_size,_startChallengePressed)
-                    :_challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
-                      ? GetRewardButton(_size,_isAllChallengesComplete)
-                      : StartChallengeButton(_size,_startChallengePressed)
+              Flexible(
+                flex: 3,
+                child: Container(
+                  child: ButtonTheme(
+                    minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
+                    height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
+                    child: _summoner.activeChallenge == null
+                      ? StartChallengeButton(_size,_startChallengePressed)
+                      :_challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
+                        ? GetRewardButton(_size,_isAllChallengesComplete)
+                        : StartChallengeButton(_size,_startChallengePressed)
+                  ),
                 ),
               ),
             ],

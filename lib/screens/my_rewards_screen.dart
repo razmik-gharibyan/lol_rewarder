@@ -16,46 +16,50 @@ class MyRewardsScreen extends StatelessWidget {
 
     final _size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Colors.black87,
-        leading: IconButton(
-          icon: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
-          color: Colors.white,
-          iconSize: _size.height * 25 / ConstraintHelper.screenHeightCoe,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: [
-          RaisedButton(
-            color: Colors.transparent,
-            child: Text(
-              "OPEN MENU",
-              style: TextStyle(
-                  color: Colors.white
-              ),
-            ),
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          backgroundColor: Colors.black87,
+          leading: IconButton(
+            icon: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
+            color: Colors.white,
+            iconSize: _size.height * 25 / ConstraintHelper.screenHeightCoe,
             onPressed: () {
-              if(!_scaffoldKey.currentState.isDrawerOpen) {
-                _scaffoldKey.currentState.openDrawer();
-              }
+              Navigator.of(context).pop();
             },
-          )
-        ],
-      ),
-      drawer: AppDrawer(),
-      body: Container(
-        height: _size.height,
-        child: Column(
-          children: [
-            SizedBox(height: _size.height * 0.1,),
-            Container(
-              height: _size.height * 0.75,
-              child: MyRewardsGridView(),
-            ),
+          ),
+          actions: [
+            RaisedButton(
+              color: Colors.transparent,
+              child: Text(
+                "OPEN MENU",
+                style: TextStyle(
+                    color: Colors.white
+                ),
+              ),
+              onPressed: () {
+                if(!_scaffoldKey.currentState.isDrawerOpen) {
+                  _scaffoldKey.currentState.openDrawer();
+                }
+              },
+            )
           ],
+        ),
+        drawer: AppDrawer(),
+        body: Container(
+          height: _size.height,
+          child: Column(
+            children: [
+              Spacer(flex: 1,),
+              Expanded(
+                flex: 9,
+                child: Container(
+                  child: MyRewardsGridView(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

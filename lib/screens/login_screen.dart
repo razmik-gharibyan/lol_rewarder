@@ -40,294 +40,296 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final _size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Container(
-          height: _size.height,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.dstATop),
-              image: AssetImage("assets/images/background_pattern.png"),
-              fit: BoxFit.cover,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Container(
+            height: _size.height,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.dstATop),
+                image: AssetImage("assets/images/background_pattern.png"),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: _size.height * 0.05,
-                  ),
-                  Container(
-                    height: _size.height * 0.25,
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "LOLRewarder",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 40 * _size.height / ConstraintHelper.screenHeightCoe
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: _size.height * 0.05,
+                    ),
+                    Container(
+                      height: _size.height * 0.25,
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "LOLRewarder",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 40 * _size.height / ConstraintHelper.screenHeightCoe
+                            ),
                           ),
-                        ),
-                        Container(
-                          width: _size.width * 0.9,
-                          height: _size.height * 0.05,
-                          padding: EdgeInsets.all(5 * _size.height / ConstraintHelper.screenHeightCoe),
-                          color: Colors.black87,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "PlAY GAMES | COMPLETE CHALLENGES | EARN SKINS",
-                              style: TextStyle(
-                                  color: Colors.amber,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11 * _size.height / ConstraintHelper.screenHeightCoe
+                          Container(
+                            width: _size.width * 0.9,
+                            height: _size.height * 0.05,
+                            padding: EdgeInsets.all(5 * _size.height / ConstraintHelper.screenHeightCoe),
+                            color: Colors.black87,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "PlAY GAMES | COMPLETE CHALLENGES | EARN SKINS",
+                                style: TextStyle(
+                                    color: Colors.amber,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11 * _size.height / ConstraintHelper.screenHeightCoe
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: _size.width * 0.9,
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          Container(
+                            width: _size.width * 0.9,
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  width: _size.width * 0.2,
+                                  height: _size.height * 0.001,
+                                  color: Colors.black87,
+                                ),
+                                Container(
+                                  width: _size.width * 0.45,
+                                  padding: EdgeInsets.all(_size.height * 5 / ConstraintHelper.screenHeightCoe),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: _size.height * 0.001,
+                                        color: Colors.black87
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "Login to your account",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17 * _size.height / ConstraintHelper.screenHeightCoe
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: _size.width * 0.2,
+                                  height: _size.height * 0.001,
+                                  color: Colors.black87,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: _size.width * 0.8,
+                      height: _size.height * 0.3,
+                      alignment: Alignment.center,
+                      child: Form(
+                        key: _formKey,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                width: _size.width * 0.2,
-                                height: _size.height * 0.001,
-                                color: Colors.black87,
-                              ),
-                              Container(
-                                width: _size.width * 0.45,
-                                padding: EdgeInsets.all(_size.height * 5 / ConstraintHelper.screenHeightCoe),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: _size.height * 0.001,
-                                      color: Colors.black87
-                                  ),
-                                ),
-                                child: Text(
-                                  "Login to your account",
-                                  textAlign: TextAlign.center,
+                                height: _size.height * 0.13,
+                                child: TextFormField(
                                   style: TextStyle(
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17 * _size.height / ConstraintHelper.screenHeightCoe
+                                    fontSize: (_size.height * 14) / ConstraintHelper.screenHeightCoe,
                                   ),
+                                  cursorColor: Colors.black87,
+                                  decoration: InputDecoration(
+                                      labelText: "E-mail",
+                                      prefixIcon: Icon(
+                                        Icons.email,
+                                        size: _size.height * 25 / ConstraintHelper.screenHeightCoe,
+                                        color: Colors.grey,
+                                      ),
+                                      labelStyle: TextStyle(
+                                          fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe,
+                                          color: Colors.black87
+                                      ),
+                                      isDense: true,
+                                      contentPadding: _emailValid ? EdgeInsets.symmetric(vertical: 2) : EdgeInsets.only(bottom: 2),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black87),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.amber),
+                                      ),
+                                      border: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black87),
+                                      ),
+                                      errorStyle: TextStyle(
+                                        fontSize: (_size.height * 14) / ConstraintHelper.screenHeightCoe,
+                                      )
+                                  ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  validator: (value) {
+                                    if(value.isEmpty) {
+                                      _emailValid = false;
+                                      return "Please enter e-mail address";
+                                    }else if (!value.contains('@') || !value.contains('.')) {
+                                      _emailValid = false;
+                                      return "Please enter a valid e-mail address";
+                                    }else if (value.contains('@') && value.contains('.')) {
+                                      final index = value.indexOf('@');
+                                      final dotIndex = value.indexOf('.');
+                                      final midWord = value.substring(index,dotIndex);
+                                      final afterWord = value.substring(dotIndex);
+                                      if(midWord.length == 1 || afterWord == 1) {
+                                        _emailValid = false;
+                                        return "Please enter a valid e-mail address";
+                                      }
+                                    }
+                                  },
+                                  onSaved: (value) {
+                                    _authData['email'] = value;
+                                  },
                                 ),
                               ),
                               Container(
-                                width: _size.width * 0.2,
-                                height: _size.height * 0.001,
-                                color: Colors.black87,
+                                height: _size.height * 0.13,
+                                child: TextFormField(
+                                  controller: _passwordController,
+                                  obscureText: true,
+                                  style: TextStyle(
+                                    fontSize: (_size.height * 14) / ConstraintHelper.screenHeightCoe,
+                                  ),
+                                  cursorColor: Colors.black87,
+                                  decoration: InputDecoration(
+                                      labelText: "Password",
+                                      prefixIcon: Icon(
+                                        Icons.lock,
+                                        size: _size.height * 25 / ConstraintHelper.screenHeightCoe,
+                                        color: Colors.grey,
+                                      ),
+                                      labelStyle: TextStyle(
+                                          fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe,
+                                          color: Colors.black87
+                                      ),
+                                      isDense: true,
+                                      contentPadding: _passwordValid ? EdgeInsets.symmetric(vertical: 2) : EdgeInsets.only(bottom: 2),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black87),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.amber),
+                                      ),
+                                      border: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black87),
+                                      ),
+                                      errorStyle: TextStyle(
+                                        fontSize: (_size.height * 14) / ConstraintHelper.screenHeightCoe,
+                                      )
+                                  ),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      _passwordValid = false;
+                                      return "Please enter password";
+                                    } else if (value.length < 5) {
+                                      _passwordValid = false;
+                                      return "Password is too short";
+                                    }
+                                  },
+                                  onSaved: (value) {
+                                    _authData['password'] = value;
+                                  },
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: _size.width * 0.8,
-                    height: _size.height * 0.3,
-                    alignment: Alignment.center,
-                    child: Form(
-                      key: _formKey,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: _size.height * 0.13,
-                              child: TextFormField(
-                                style: TextStyle(
-                                  fontSize: (_size.height * 14) / ConstraintHelper.screenHeightCoe,
-                                ),
-                                cursorColor: Colors.black87,
-                                decoration: InputDecoration(
-                                    labelText: "E-mail",
-                                    prefixIcon: Icon(
-                                      Icons.email,
-                                      size: _size.height * 25 / ConstraintHelper.screenHeightCoe,
-                                      color: Colors.grey,
-                                    ),
-                                    labelStyle: TextStyle(
-                                        fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe,
-                                        color: Colors.black87
-                                    ),
-                                    isDense: true,
-                                    contentPadding: _emailValid ? EdgeInsets.symmetric(vertical: 2) : EdgeInsets.only(bottom: 2),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black87),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.amber),
-                                    ),
-                                    border: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black87),
-                                    ),
-                                    errorStyle: TextStyle(
-                                      fontSize: (_size.height * 14) / ConstraintHelper.screenHeightCoe,
-                                    )
-                                ),
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (value) {
-                                  if(value.isEmpty) {
-                                    _emailValid = false;
-                                    return "Please enter e-mail address";
-                                  }else if (!value.contains('@') || !value.contains('.')) {
-                                    _emailValid = false;
-                                    return "Please enter a valid e-mail address";
-                                  }else if (value.contains('@') && value.contains('.')) {
-                                    final index = value.indexOf('@');
-                                    final dotIndex = value.indexOf('.');
-                                    final midWord = value.substring(index,dotIndex);
-                                    final afterWord = value.substring(dotIndex);
-                                    if(midWord.length == 1 || afterWord == 1) {
-                                      _emailValid = false;
-                                      return "Please enter a valid e-mail address";
-                                    }
-                                  }
-                                },
-                                onSaved: (value) {
-                                  _authData['email'] = value;
-                                },
-                              ),
-                            ),
-                            Container(
-                              height: _size.height * 0.13,
-                              child: TextFormField(
-                                controller: _passwordController,
-                                obscureText: true,
-                                style: TextStyle(
-                                  fontSize: (_size.height * 14) / ConstraintHelper.screenHeightCoe,
-                                ),
-                                cursorColor: Colors.black87,
-                                decoration: InputDecoration(
-                                    labelText: "Password",
-                                    prefixIcon: Icon(
-                                      Icons.lock,
-                                      size: _size.height * 25 / ConstraintHelper.screenHeightCoe,
-                                      color: Colors.grey,
-                                    ),
-                                    labelStyle: TextStyle(
-                                        fontSize: _size.height * 20 / ConstraintHelper.screenHeightCoe,
-                                        color: Colors.black87
-                                    ),
-                                    isDense: true,
-                                    contentPadding: _passwordValid ? EdgeInsets.symmetric(vertical: 2) : EdgeInsets.only(bottom: 2),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black87),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.amber),
-                                    ),
-                                    border: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black87),
-                                    ),
-                                    errorStyle: TextStyle(
-                                      fontSize: (_size.height * 14) / ConstraintHelper.screenHeightCoe,
-                                    )
-                                ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    _passwordValid = false;
-                                    return "Please enter password";
-                                  } else if (value.length < 5) {
-                                    _passwordValid = false;
-                                    return "Password is too short";
-                                  }
-                                },
-                                onSaved: (value) {
-                                  _authData['password'] = value;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    height: _size.height * 0.1,
-                    alignment: Alignment.center,
-                    child: ButtonTheme(
-                      minWidth: _size.height * 250 / ConstraintHelper.screenHeightCoe,
-                      height: _size.height * 40 / ConstraintHelper.screenHeightCoe,
-                      child: RaisedButton(
-                        child: Text(
-                          "Log In",
-                          style: TextStyle(
-                            fontSize: _size.height * 17 / ConstraintHelper.screenHeightCoe,
+                    Container(
+                      height: _size.height * 0.1,
+                      alignment: Alignment.center,
+                      child: ButtonTheme(
+                        minWidth: _size.height * 250 / ConstraintHelper.screenHeightCoe,
+                        height: _size.height * 40 / ConstraintHelper.screenHeightCoe,
+                        child: RaisedButton(
+                          child: Text(
+                            "Log In",
+                            style: TextStyle(
+                              fontSize: _size.height * 17 / ConstraintHelper.screenHeightCoe,
+                            ),
                           ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0),
+                          ),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          color: Colors.black87,
+                          textColor: Colors.white70,
+                          splashColor: Colors.amber,
+                          onPressed: _submit,
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        color: Colors.black87,
-                        textColor: Colors.white70,
-                        splashColor: Colors.amber,
-                        onPressed: _submit,
                       ),
                     ),
-                  ),
-                  Container(
-                    width: _size.width * 0.7,
-                    height: _size.height * 0.2,
-                    alignment: Alignment.center,
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Do not have account?",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: _size.height * 15 / ConstraintHelper.screenHeightCoe
+                    Container(
+                      width: _size.width * 0.7,
+                      height: _size.height * 0.2,
+                      alignment: Alignment.center,
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Do not have account?",
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: _size.height * 15 / ConstraintHelper.screenHeightCoe
+                                    ),
                                   ),
-                                ),
-                                ButtonTheme(
-                                  minWidth: _size.height * 50 / ConstraintHelper.screenHeightCoe,
-                                  height: _size.height * 30 / ConstraintHelper.screenHeightCoe,
-                                  child: RaisedButton(
-                                    child: Text(
-                                      "CREATE NEW ACCOUNT",
-                                      style: TextStyle(
-                                        fontSize: _size.height * 14 / ConstraintHelper.screenHeightCoe,
+                                  ButtonTheme(
+                                    minWidth: _size.height * 50 / ConstraintHelper.screenHeightCoe,
+                                    height: _size.height * 30 / ConstraintHelper.screenHeightCoe,
+                                    child: RaisedButton(
+                                      child: Text(
+                                        "CREATE NEW ACCOUNT",
+                                        style: TextStyle(
+                                          fontSize: _size.height * 14 / ConstraintHelper.screenHeightCoe,
+                                        ),
                                       ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(0),
+                                      ),
+                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      color: Colors.black87,
+                                      textColor: Colors.white70,
+                                      splashColor: Colors.amber,
+                                      onPressed: () {
+                                        Navigator.of(context).pushReplacementNamed(SignUpScreen.routeName);
+                                      },
                                     ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(0),
-                                    ),
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    color: Colors.black87,
-                                    textColor: Colors.white70,
-                                    splashColor: Colors.amber,
-                                    onPressed: () {
-                                      Navigator.of(context).pushReplacementNamed(SignUpScreen.routeName);
-                                    },
                                   ),
-                                ),
-                              ]
-                          )
-                    ),
-                ],
-              ),
-              _isLoading ? Center(
-                child: Platform.isAndroid
-                    ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
-                    : CupertinoActivityIndicator(),
-              ) : Center()
-            ],
+                                ]
+                            )
+                      ),
+                  ],
+                ),
+                _isLoading ? Center(
+                  child: Platform.isAndroid
+                      ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
+                      : CupertinoActivityIndicator(),
+                ) : Center()
+              ],
+            ),
           ),
         ),
       ),

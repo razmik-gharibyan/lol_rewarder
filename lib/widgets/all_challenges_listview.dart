@@ -27,7 +27,6 @@ class AllChallengesListView extends StatelessWidget {
     return Container(
       child: ListView.builder(
         itemBuilder: (ctx, index) => Container(
-          height: _size.height * 0.115,
           margin: EdgeInsets.only(
             bottom: _size.height * 15 / ConstraintHelper.screenHeightCoe,
             left: _size.height * 15 / ConstraintHelper.screenHeightCoe,
@@ -50,22 +49,26 @@ class AllChallengesListView extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: _size.width * 0.6,
-                    padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      _challengeTypeList[index].title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: _size.height * 18 / ConstraintHelper.screenHeightCoe
+                  Flexible(
+                    flex: 6,
+                    child: Container(
+                      padding: EdgeInsets.only(left: _size.height * 25 / ConstraintHelper.screenHeightCoe),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        _challengeTypeList[index].title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: _size.height * 18 / ConstraintHelper.screenHeightCoe
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    width: _size.width * 0.3,
-                    alignment: Alignment.bottomRight,
-                    child: Image.asset(_challengeTypeList[index].imageAsset),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      alignment: Alignment.bottomRight,
+                      child: Image.asset(_challengeTypeList[index].imageAsset),
+                    ),
                   )
                 ],
               ),

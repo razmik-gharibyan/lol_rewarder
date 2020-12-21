@@ -65,24 +65,26 @@ class _SplashScreenState extends State<SplashScreen> {
     ConstraintHelper.appHeight = _size.height;
     ConstraintHelper.appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: _isAuthFailed
-            ? RaisedButton(
-                color: Colors.black87,
-                child: Text(
-                  "TRY AGAIN",
-                  style: TextStyle(
-                    color: Colors.white70
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: _isAuthFailed
+              ? RaisedButton(
+                  color: Colors.black87,
+                  child: Text(
+                    "TRY AGAIN",
+                    style: TextStyle(
+                      color: Colors.white70
+                    ),
                   ),
-                ),
-                onPressed: _navigateFromSplashOperation
-              )
-            : Platform.isAndroid
-              ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
-              : CupertinoActivityIndicator(),
-      )
+                  onPressed: _navigateFromSplashOperation
+                )
+              : Platform.isAndroid
+                ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),)
+                : CupertinoActivityIndicator(),
+        )
+      ),
     );
   }
 

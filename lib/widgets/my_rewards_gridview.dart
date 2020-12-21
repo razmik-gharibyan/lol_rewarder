@@ -49,21 +49,23 @@ class _MyRewardsGridViewState extends State<MyRewardsGridView> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: constraint.maxWidth * 0.3,
-                        height: constraint.maxHeight * 0.35,
-                        child: Image.network("$skinPathUrl${_summoner.rewardList[index]["champion"]}_"
-                            "${_summoner.rewardList[index]["num"]}.jpg", fit: BoxFit.fill,),
+                      Expanded(
+                        flex: 14,
+                        child: Container(
+                          child: Image.network("$skinPathUrl${_summoner.rewardList[index]["champion"]}_"
+                              "${_summoner.rewardList[index]["num"]}.jpg", fit: BoxFit.fill,),
+                        ),
                       ),
                        Expanded(
-                          child: Text(
-                            _summoner.rewardList[index]["name"],
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: _size.height * 12 / ConstraintHelper.screenHeightCoe
-                            ),
+                         flex: 1,
+                         child: Text(
+                          _summoner.rewardList[index]["name"],
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: _size.height * 12 / ConstraintHelper.screenHeightCoe
                           ),
-                        ),
+                         ),
+                       ),
                     ],
                   ),
               ),

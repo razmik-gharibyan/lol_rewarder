@@ -14,7 +14,7 @@ class SliderItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     // Constants
-    final String skinPathUrl = "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/";
+    final String skinPathUrl = "https://ddragon.leagueoflegends.com/cdn/img/champion/loading/";
 
     final _mediaQuery = MediaQuery.of(context);
 

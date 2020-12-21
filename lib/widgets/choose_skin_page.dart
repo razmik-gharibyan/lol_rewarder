@@ -47,63 +47,68 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
 
     return LayoutBuilder(
       builder: (c,constraints) => Container(
-        height: constraints.maxHeight,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              height: constraints.maxHeight * 0.8,
-              child: PageView.builder(
-                controller: _pageController,
-                scrollDirection: Axis.horizontal,
-                onPageChanged: _onPageChanged,
-                itemBuilder: (ctx, index) => SliderItem(_currentSkinHolder.skinList[index],_currentSkinHolder.championName),
-                itemCount: _currentSkinHolder.skinList.length,
-              ),
-            ),
-            Container(
-              height: constraints.maxHeight * 0.02,
+            Expanded(
+              flex: 16,
               child: Container(
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    for(int i = 0; i < _currentSkinHolder.skinList.length; i++)
-                      if(i == _currentIndex)
-                        SlideDot(true)
-                      else
-                        SlideDot(false)
-                  ],
+                child: PageView.builder(
+                  controller: _pageController,
+                  scrollDirection: Axis.horizontal,
+                  onPageChanged: _onPageChanged,
+                  itemBuilder: (ctx, index) => SliderItem(_currentSkinHolder.skinList[index],_currentSkinHolder.championName),
+                  itemCount: _currentSkinHolder.skinList.length,
                 ),
               ),
             ),
-            Container(
-              height: constraints.maxHeight * 0.08,
-              child: ButtonTheme(
-                minWidth: _size.height * 150 / ConstraintHelper.screenHeightCoe,
-                height: _size.height * 45 / ConstraintHelper.screenHeightCoe,
-                child: RaisedButton(
-                  child: Text(
-                    "GET SKIN",
-                    style: TextStyle(
-                        fontSize: _size.height * 15 / ConstraintHelper.screenHeightCoe,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
+            Expanded(
+              flex: 1,
+              child: Container(
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      for(int i = 0; i < _currentSkinHolder.skinList.length; i++)
+                        if(i == _currentIndex)
+                          SlideDot(true)
+                        else
+                          SlideDot(false)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Flexible(
+              flex: 3,
+              child: Container(
+                child: ButtonTheme(
+                  minWidth: _size.height * 150 / ConstraintHelper.screenHeightCoe,
+                  height: _size.height * 45 / ConstraintHelper.screenHeightCoe,
+                  child: RaisedButton(
+                    child: Text(
+                      "GET SKIN",
+                      style: TextStyle(
+                          fontSize: _size.height * 15 / ConstraintHelper.screenHeightCoe,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                      ),
                     ),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  color: Colors.amber,
-                  textColor: Colors.white70,
-                  splashColor: Colors.amberAccent,
-                  onPressed: () {
-                    _showInformationDialog(context,_currentSkinHolder.skinList[_currentIndex],_currentSkinHolder.championName);
-                  },
-                )
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    color: Colors.amber,
+                    textColor: Colors.white70,
+                    splashColor: Colors.amberAccent,
+                    onPressed: () {
+                      _showInformationDialog(context,_currentSkinHolder.skinList[_currentIndex],_currentSkinHolder.championName);
+                    },
+                  )
+                ),
               ),
             ),
           ],
