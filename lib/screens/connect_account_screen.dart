@@ -25,7 +25,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
 
   // Constants
   final List<String> _serverTagList = ["BR","EUW","EUN","JP","KR","NA","LAN","LAS","OC","RU","TR"];
-  String _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/10.19.1/img/profileicon/";
+  String _iconFinderUrl = "https://ddragon.leagueoflegends.com/cdn/10.19.1/img/profileicon/";
   // Custom Exception constants
   final String _summonerNotFoundCustomExceptionMsg = "SUMMONER_NOT_FOUND";
   // Tools
@@ -41,7 +41,7 @@ class _ConnectAccountScreenState extends State<ConnectAccountScreen> {
 
   @override
   void initState() {
-    _iconFinderUrl = "http://ddragon.leagueoflegends.com/cdn/${_ddragonProvider.gameVersion}/img/profileicon/";
+    _iconFinderUrl = "https://ddragon.leagueoflegends.com/cdn/${_ddragonProvider.gameVersion}/img/profileicon/";
     super.initState();
   }
 
