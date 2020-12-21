@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -30,6 +31,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   final _challengeProvider = ChallengeProvider();
   final _lolProvider = LoLProvider();
   final _matchProvider = MatchProvider();
+  StreamController _controller = StreamController<bool>();
   // Vars
   Map<String,int> _progressCountMap = {
     "tower": 0, "kill": 0, "assist": 0, "time": 0
@@ -72,10 +74,15 @@ class _ChallengeListViewState extends State<ChallengeListView> {
       if(_isLoading) {
         await _getChallengeProgressByType();
         if(!_isDisposed) {
-          _isAllChallengesComplete = _checkRequiredChallengesComplete(_completeCountMap);
           _isInit = false;
           setState(() {
             _isLoading = false;
+          });
+          _controller.stream.listen((event) {
+            _isAllChallengesComplete = _checkRequiredChallengesComplete(_completeCountMap);
+            setState(() {
+              _isLoading = false;
+            });
           });
         }
       }
@@ -86,6 +93,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   @override
   void dispose() {
     _isDisposed = true;
+    _controller.close();
     super.dispose();
   }
 
@@ -207,6 +215,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     int killCount = 0;
     int assistCount = 0;
     int timeCount = 0;
+    print("matchlist lenght is ${matchList.length}");
     for(var match in matchList) {
       if(_isDisposed) {return;}
       for(var challenge in _challenge.challengeList) {
@@ -235,9 +244,12 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     _progressCountMap["kill"] = killCount;
     _progressCountMap["assist"] = assistCount;
     _progressCountMap["time"] = timeCount;
+    for (var challenge in _challenge.challengeList) {
+      _calculateProgress(challenge.type);
+    }
   }
 
-  String _showProgress(String type) {
+  String _calculateProgress(String type) {
     String progressText;
     switch (type) {
       case "tower":
@@ -285,6 +297,10 @@ class _ChallengeListViewState extends State<ChallengeListView> {
         });
     }
     return progressText;
+  }
+
+  String _showProgress(String type) {
+    return _calculateProgress(type);
   }
 
   bool _checkRequiredChallengesComplete(Map<String,bool> completeCountMap) {

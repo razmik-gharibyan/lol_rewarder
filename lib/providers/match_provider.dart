@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
@@ -20,23 +22,28 @@ class MatchProvider with ChangeNotifier {
   final _backendProvider = BackendProvider();
 
   Future<List<GameHelper>> requestMatchList() async {
-    final SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
     List<GameMain> newMatchList = await _lolProvider.getNewMatchList(_summoner.accountId, _summoner.serverTag, _summoner.activeChallenge.activeChallengeTimestamp);
     newMatchList = newMatchList.reversed.toList();
+    print("newmatchlist length is ${newMatchList.length}");
+    await _addMatchesToDBHelper(newMatchList);
+    return await _dbHelperProvider.getGames();
+  }
+
+  Future<void> _addMatchesToDBHelper(List<GameMain> newMatchList) async {
+    final SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
     if(newMatchList.isNotEmpty) {
-      newMatchList.forEach((match) async {
+      for (var match in newMatchList) {
         // Check if match was won and queue was ranked 5 v 5 summoners rift, if yes then write match to db
         final gameHelper = await _lolProvider.getMatchByMatchId(match.gameId, _summoner.serverTag);
         if(gameHelper != null) {
           await _dbHelperProvider.insertData(gameHelper);
         }
         await _sharedPreferences.setInt(globals.TIMESTAMP, match.timestamp);
-      });
+      }
       await _sharedPreferences.setInt(globals.TIMESTAMP, newMatchList.last.timestamp);
       _summoner.setActiveChallenge(ActiveChallenge(_challenge.data.documentID, _challenge.type, newMatchList.last.timestamp));
       await _backendProvider.updateSummoner();
     }
-    return await _dbHelperProvider.getGames();
   }
 
 }
