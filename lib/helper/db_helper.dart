@@ -1,7 +1,7 @@
+import 'package:lol_rewarder/model/summoner.dart';
 import 'package:sqflite/sqflite.dart';
 
 const String path = "lol_rewarder.db";
-const String table = "games";
 const String columnId = "_id";
 const String columnGameId ="gameId";
 const String columnTowerKills ="towerKills";
@@ -56,10 +56,14 @@ class DBHelperProvider {
     return _dbHelperProvider;
   }
   DBHelperProvider.privateConstructor();
-
+  // Tools
   Database db;
+  Summoner _summoner = Summoner();
+  // Vars
+  String table = "games";
 
   void open() async {
+    table = _summoner.accountId;
     db = await openDatabase(path,version: 1,
         onCreate: (Database db,int version) async {
           await db.execute('''
@@ -72,7 +76,25 @@ class DBHelperProvider {
             $columnKills integer not null,
             $columnAssists integer not null)
           ''');
-        });
+        }, onOpen: (db) async {
+          if (!await isTableExists(db)) {
+            await db.execute('''
+            create table $table (
+            $columnId integer primary key autoincrement,
+            $columnGameId integer not null,
+            $columnTowerKills integer not null,
+            $columnGameDuration integer not null,
+            $columnChampion text not null,
+            $columnKills integer not null,
+            $columnAssists integer not null)
+          ''');
+          }
+        },);
+  }
+
+  Future<bool> isTableExists(Database db) async {
+    var result = await db.query('sqlite_master', where: 'name = ?', whereArgs: ['$table']);
+    return result.isNotEmpty;
   }
 
   Future<GameHelper> insertData(GameHelper helper) async {
@@ -80,7 +102,7 @@ class DBHelperProvider {
     return helper;
   }
   
-  Future<void> insertDataIfDontExists(GameHelper helper) async {
+  Future<void> insertDataIfNotExists(GameHelper helper) async {
     db.transaction((txn) async {
       return await txn.rawInsert(
           'INSERT INTO $table($columnGameId, $columnTowerKills, $columnGameDuration, $columnChampion, $columnKills, $columnAssists) '
