@@ -160,11 +160,6 @@ class _MainScreenState extends State<MainScreen> {
                     )
                   ),
                 ),
-                FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChooseChampionScreen()));
-                  },
-                )
               ],
             ),
           ),
