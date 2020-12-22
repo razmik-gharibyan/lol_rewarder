@@ -13,6 +13,9 @@ import 'package:lol_rewarder/screens/challenge_screen.dart';
 import 'package:lol_rewarder/screens/login_screen.dart';
 import 'package:lol_rewarder/screens/main_screen.dart';
 import 'package:lol_rewarder/screens/my_rewards_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:lol_rewarder/globals.dart' as globals;
 
 class AppDrawer extends StatefulWidget {
 
@@ -170,6 +173,8 @@ class _AppDrawerState extends State<AppDrawer> {
                       ),
                       onTap: () async {
                         await _authProvider.logOutUser();
+                        var preferences = await SharedPreferences.getInstance();
+                        preferences.remove(globals.TIMESTAMP);
                         _summoner.clear();
                         _challenge.clear();
                         _currentSkinHolder.clear();

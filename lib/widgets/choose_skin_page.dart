@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/current_skin_holder.dart';
 import 'package:lol_rewarder/model/skin.dart';
@@ -235,6 +236,7 @@ class _ChooseSkinPageState extends State<ChooseSkinPage> {
     _summoner.setActiveChallenge(null);
     _challenge.clear();
     _currentSkinHolder.clear();
+    await DBHelperProvider().deleteGames();
     await _backendProvider.updateSummoner();
     _challengeProvider.addSkinFunctionCallback();
   }
