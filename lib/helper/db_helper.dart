@@ -63,7 +63,7 @@ class DBHelperProvider {
   String table = "games";
 
   void open() async {
-    table = _summoner.accountId;
+    table = _summoner.accountId.replaceAll(RegExp("[\\W_0-9]+"), "");
     db = await openDatabase(path,version: 1,
         onCreate: (Database db,int version) async {
           await db.execute('''

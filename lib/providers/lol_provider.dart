@@ -143,14 +143,16 @@ class LoLProvider with ChangeNotifier {
       if(result.statusCode == 200) {
         Map<String,dynamic> jsonResponse = json.decode(result.body);
         mList = jsonResponse["matches"];
-        if(mList[0]["timestamp"] == latestTimeStamp) {
-          // If timestamp found, then stop searching for more games.
-          loopStop = false;
-        }else{
-          // Timestamp not found yet, add current game to new match list, and go check next match
-          matchList.add(GameMain(mList[0]["gameId"], mList[0]["timestamp"]));
-          beginIndex++;
-          endIndex++;
+        if (mList.isNotEmpty) {
+          if(mList[0]["timestamp"] == latestTimeStamp) {
+            // If timestamp found, then stop searching for more games.
+            loopStop = false;
+          }else{
+            // Timestamp not found yet, add current game to new match list, and go check next match
+            matchList.add(GameMain(mList[0]["gameId"], mList[0]["timestamp"]));
+            beginIndex++;
+            endIndex++;
+          }
         }
       }
     }

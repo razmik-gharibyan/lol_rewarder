@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
+import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/model/challenge.dart';
 import 'package:lol_rewarder/model/current_skin_holder.dart';
 import 'package:lol_rewarder/model/summoner.dart';
@@ -31,6 +32,7 @@ class _AppDrawerState extends State<AppDrawer> {
   final _authProvider = AuthProvider();
   final _backendProvider = BackendProvider();
   final _ddragonProvider = DDragonProvider();
+  final _dbHelperProvider = DBHelperProvider();
   // Vars
   String _iconFinderUrl = "https://ddragon.leagueoflegends.com/cdn/10.19.1/img/profileicon/";
   Summoner _summoner = Summoner();
@@ -179,6 +181,8 @@ class _AppDrawerState extends State<AppDrawer> {
                         _challenge.clear();
                         _currentSkinHolder.clear();
                         _user.clear();
+                        _dbHelperProvider.close();
+                        await globals.bannerAd.dispose();
                         Navigator.of(context).pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);
                       },
                     ),

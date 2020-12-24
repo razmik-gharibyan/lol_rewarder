@@ -6,12 +6,11 @@ import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
-import 'package:lol_rewarder/screens/choose_champion_screen.dart';
 import 'package:lol_rewarder/widgets/app_drawer.dart';
 import 'package:lol_rewarder/widgets/main_menu_grid.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:lol_rewarder/globals.dart' as globals;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatefulWidget {
 
@@ -59,7 +58,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     _bannerAd?.dispose();
-    _dbHelperProvider.close();
     super.dispose();
   }
 
@@ -98,16 +96,16 @@ class _MainScreenState extends State<MainScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Spacer(
-                  flex: 1,
+                  flex: 2,
                 ),
-                Expanded(
-                  flex: 6,
+                Flexible(
+                  flex: 10,
                   child: Container(
                     child: MainMenuGrid()
                   ),
                 ),
                 Expanded(
-                  flex: 6,
+                  flex: 8,
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: _size.height * 5 / ConstraintHelper.screenHeightCoe),
                     child: Column(
@@ -127,21 +125,23 @@ class _MainScreenState extends State<MainScreen> {
                           ),
                         ),
                         Expanded(
-                          flex: 6,
-                          child: Text(
-                            "* When starting a new challenge all previous challenge games statuses will be lost, only the games you play after"
-                                " starting a challenge will be calculated\n"
-                            "* Each month will have limited amount of rewards (skins) available for players to get, but that amount is never"
-                                " less then 50\n"
-                            "* If you have finished a challenge but can't get your reward because this months skins have already ended, don't worry"
-                                " wait until next month and then claim your reward\n"
-                            "* You can chose any skin for any champion you want, just make sure that the skin you want is available for purchase"
-                                " in official League store (for example if it's Victorious skin it can't be purchased)\n"
-                            "* After claiming a skin, it will be gifted to you. Gift will be sent to an registered League summoner within 24 hours"
-                                ", so make sure you have connected right account on right server",
-                            style: TextStyle(
-                                fontSize: _size.height * 12 / ConstraintHelper.screenHeightCoe,
-                                color: Colors.black54
+                          flex: 10,
+                          child: SingleChildScrollView(
+                            child: Text(
+                              "* When starting a new challenge all previous challenge games statuses will be lost, only the games you play after"
+                                  " starting a challenge will be calculated\n"
+                              "* Each month will have limited amount of rewards (skins) available for players to get, but that amount is never"
+                                  " less then 50\n"
+                              "* If you have finished a challenge but can't get your reward because this months skins have already ended, don't worry"
+                                  " wait until next month and then claim your reward\n"
+                              "* You can chose any skin for any champion you want, just make sure that the skin you want is available for purchase"
+                                  " in official League store (for example if it's Victorious skin it can't be purchased)\n"
+                              "* After claiming a skin, it will be gifted to you. Gift will be sent to an registered League summoner within 24 hours"
+                                  ", so make sure you have connected right account on right server",
+                              style: TextStyle(
+                                  fontSize: _size.height * 12 / ConstraintHelper.screenHeightCoe,
+                                  color: Colors.black54
+                              ),
                             ),
                           ),
                         ),
@@ -172,6 +172,7 @@ class _MainScreenState extends State<MainScreen> {
     _bannerAd
       ..load()
       ..show(anchorType: AnchorType.top,anchorOffset: ConstraintHelper.appBarHeight);
+    globals.bannerAd = _bannerAd;
   }
 
   void _updateLatestTimestamp() async {
