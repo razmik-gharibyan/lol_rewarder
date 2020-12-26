@@ -6,6 +6,7 @@ import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/model/active_challenge.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/backend_provider.dart';
+import 'package:lol_rewarder/screens/choose_champion_screen.dart';
 import 'package:lol_rewarder/widgets/app_drawer.dart';
 import 'package:lol_rewarder/widgets/main_menu_grid.dart';
 
@@ -155,7 +156,7 @@ class _MainScreenState extends State<MainScreen> {
                               color: Colors.black54
                             ),
                           ),
-                        )
+                        ),
                       ],
                     )
                   ),

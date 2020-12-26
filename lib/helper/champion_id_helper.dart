@@ -1,5 +1,7 @@
 class ChampionIdHelper {
-
+  // http://ddragon.leagueoflegends.com/cdn/10.25.1/data/en_US/champion.json
+  // replace 10.25.1 with latest version
+  // check latest version with https://ddragon.leagueoflegends.com/api/versions.json
   static const Map<int,String> champions = {
     266: "Aatrox", 103: "Ahri", 84: "Akali", 12: "Alistar",
     32: "Amumu", 34: "Anivia", 1: "Annie", 523: "Aphelios",
@@ -24,8 +26,8 @@ class ChampionIdHelper {
     56: "Nocturne", 20: "Nunu", 2: "Olaf", 61: "Orianna",
     516: "Ornn", 80: "Pantheon", 78: "Poppy", 555: "Pyke",
     246: "Qiyana", 133: "Quinn", 497: "Rakan", 33: "Rammus",
-    421: "RekSai", 58: "Renekton", 107: "Rengar", 92: "Riven",
-    68: "Rumble", 13: "Ryze", 113: "Sejuani", 235: "Senna",
+    421: "RekSai", 526: "Rell", 58: "Renekton", 107: "Rengar", 92: "Riven",
+    68: "Rumble", 13: "Ryze", 360: "Samira", 113: "Sejuani", 235: "Senna", 147: "Seraphine",
     875: "Sett", 35: "Shaco", 98: "Shen", 102: "Shyvana",
     27: "Singed", 14: "Sion", 15: "Sivir", 72: "Skarner",
     37: "Sona", 16: "Soraka", 50: "Swain", 517: "Sylas",
