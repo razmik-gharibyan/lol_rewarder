@@ -4,12 +4,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lol_rewarder/extensions/hex_to_rgb.dart';
-import 'package:lol_rewarder/helper/calc_helper.dart';
 import 'package:lol_rewarder/helper/constraint_helper.dart';
 import 'package:lol_rewarder/helper/db_helper.dart';
 import 'package:lol_rewarder/model/challenge.dart';
-import 'package:lol_rewarder/model/game_main.dart';
-import 'package:lol_rewarder/model/lol_index.dart';
 import 'package:lol_rewarder/model/summoner.dart';
 import 'package:lol_rewarder/providers/challenge_provider.dart';
 import 'package:lol_rewarder/providers/lol_provider.dart';
@@ -131,15 +128,15 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                           ]
                       ),
                       child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: _size.height * 25 / ConstraintHelper.screenHeightCoe),
+                          padding: EdgeInsets.symmetric(horizontal: _size.height * 15 / ConstraintHelper.screenHeightCoe),
                           alignment: Alignment.centerLeft,
                           color: HexColor.fromHex("f0f0f0"),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
-                                flex: 5,
+                                flex: 6,
                                 child: Container(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -172,7 +169,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
                                       ),
                                     )
                                   : Flexible(
-                                      flex: 1,
+                                      flex: 2,
                                       child: Container(
                                         child: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,

@@ -182,7 +182,9 @@ class _AppDrawerState extends State<AppDrawer> {
                         _currentSkinHolder.clear();
                         _user.clear();
                         _dbHelperProvider.close();
-                        await globals.bannerAd.dispose();
+                        if (await globals.bannerAd.isLoaded()) {
+                          await globals.bannerAd.dispose();
+                        }
                         Navigator.of(context).pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);
                       },
                     ),
