@@ -32,6 +32,7 @@ class _MainScreenState extends State<MainScreen> {
   final BackendProvider _backendProvider = BackendProvider();
   Summoner _summoner = Summoner();
   SharedPreferences _preferences;
+  final _scrollController = ScrollController();
   // Vars
   bool _isInit = true;
 
@@ -127,21 +128,26 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                         Expanded(
                           flex: 10,
-                          child: SingleChildScrollView(
-                            child: Text(
-                              "* When starting a new challenge all previous challenge games statuses will be lost, only the games you play after"
-                                  " starting a challenge will be calculated\n"
-                              "* Each month will have limited amount of rewards (skins) available for players to get, but that amount is never"
-                                  " less then 50\n"
-                              "* If you have finished a challenge but can't get your reward because this months skins have already ended, don't worry"
-                                  " wait until next month and then claim your reward\n"
-                              "* You can chose any skin for any champion you want, just make sure that the skin you want is available for purchase"
-                                  " in official League store (for example if it's Victorious skin it can't be purchased)\n"
-                              "* After claiming a skin, it will be gifted to you. Gift will be sent to an registered League summoner within 24 hours"
-                                  ", so make sure you have connected right account on right server",
-                              style: TextStyle(
-                                  fontSize: _size.height * 12 / ConstraintHelper.screenHeightCoe,
-                                  color: Colors.black54
+                          child: Scrollbar(
+                            controller: _scrollController,
+                            isAlwaysShown: true,
+                            child: SingleChildScrollView(
+                              controller: _scrollController,
+                              child: Text(
+                                "* When starting a new challenge all previous challenge games statuses will be lost, only the games you play after"
+                                    " starting a challenge will be calculated\n"
+                                "* Each month will have limited amount of rewards (skins) available for players to get, but that amount is never"
+                                    " less then 50\n"
+                                "* If you have finished a challenge but can't get your reward because this months skins have already ended, don't worry"
+                                    " wait until next month and then claim your reward\n"
+                                "* You can chose any skin for any champion you want, just make sure that the skin you want is available for purchase"
+                                    " in official League store (for example if it's Victorious skin it can't be purchased)\n"
+                                "* After claiming a skin, it will be gifted to you. Gift will be sent to an registered League summoner within 24 hours"
+                                    ", so make sure you have connected right account on right server",
+                                style: TextStyle(
+                                    fontSize: _size.height * 12 / ConstraintHelper.screenHeightCoe,
+                                    color: Colors.black54
+                                ),
                               ),
                             ),
                           ),
