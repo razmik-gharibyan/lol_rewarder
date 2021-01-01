@@ -127,7 +127,7 @@ class LoLProvider with ChangeNotifier {
   }
 
   // Find matches that happened after last timestamp
-  Future<List<GameMain>> getNewMatchList(String accountId,String serverTag,int latestTimeStamp) async {
+  Future<List<GameMain>> getNewMatchList(String accountId,String serverTag,int latestTimeStamp, Sink<String> inController) async {
     int beginIndex = 0;
     int endIndex = 1;
     List<GameMain> matchList = List<GameMain>();
@@ -152,6 +152,7 @@ class LoLProvider with ChangeNotifier {
             matchList.add(GameMain(mList[0]["gameId"], mList[0]["timestamp"]));
             beginIndex++;
             endIndex++;
+            inController.add("Found $beginIndex unchecked matches");
           }
         }
       }

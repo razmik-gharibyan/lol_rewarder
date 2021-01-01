@@ -21,6 +21,8 @@ class ChallengeListView extends StatefulWidget {
 
 class _ChallengeListViewState extends State<ChallengeListView> {
 
+  // Constants
+  final String _initialText = "Wait while progress is being loaded, this may take a few minutes";
   // Singletons
   Challenge _challenge = Challenge();
   Summoner _summoner = Summoner();
@@ -40,26 +42,35 @@ class _ChallengeListViewState extends State<ChallengeListView> {
   bool _isLoading;
   bool _isAllChallengesComplete = false;
   bool _isDisposed = false;
+  bool _isChallengeStarted = false;
 
   @override
   void initState() {
     super.initState();
+    _showFoundMatchesSnackBar();
     if(_summoner.activeChallenge == null) {
       _isLoading = false;
+      _isChallengeStarted = false;
     }else{
       _isLoading = _challenge.data.documentID == _summoner.activeChallenge.activeChallengeId; // If opened challenge is already active
+      if (_isLoading) {
+        _isChallengeStarted = true;
+      }
     }
     WidgetsBinding.instance
         .addPostFrameCallback((_) {
           if(_isLoading) {
+            /*
             setState(() {
               Scaffold.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Wait while progress is being loaded, this may take a few minutes"),
-                    duration: Duration(seconds: 20),
+                    duration: Duration(seconds: 2),
                   )
               );
             });
+
+             */
           }
       });
   }
@@ -86,11 +97,11 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     }
   }
 
-
   @override
   void dispose() {
     _isDisposed = true;
     _controller.close();
+    _matchProvider.dispose();
     super.dispose();
   }
 
@@ -206,16 +217,61 @@ class _ChallengeListViewState extends State<ChallengeListView> {
               ),
               Flexible(
                 flex: 3,
-                child: Container(
-                  child: ButtonTheme(
-                    minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
-                    height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
-                    child: _summoner.activeChallenge == null
-                      ? StartChallengeButton(_size,_startChallengePressed)
-                      :_challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
-                        ? GetRewardButton(_size,_isAllChallengesComplete)
-                        : StartChallengeButton(_size,_startChallengePressed)
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      flex: 3,
+                      child: Container(
+                        child: ButtonTheme(
+                            minWidth: _size.height * 200 / ConstraintHelper.screenHeightCoe,
+                            height: _size.height * 60 / ConstraintHelper.screenHeightCoe,
+                            child: _summoner.activeChallenge == null
+                                ? StartChallengeButton(_size,_startChallengePressed)
+                                :_challenge.data.documentID == _summoner.activeChallenge.activeChallengeId // If opened challenge is already active
+                                ? GetRewardButton(_size,_isAllChallengesComplete)
+                                : StartChallengeButton(_size,_startChallengePressed)
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: _isChallengeStarted ? Container(
+                        color: Colors.black,
+                        width: double.infinity,
+                        child: StreamBuilder<String>(
+                            initialData: _initialText,
+                            stream: _matchProvider.streamController,
+                            builder: (cont, snapshot) {
+                              if (!snapshot.hasData) {
+                                return Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    _initialText,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                );
+                              }
+                              return Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  snapshot.data,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                              );
+                            }
+                        ),
+                      ) : Container(),
+                    )
+                  ],
                 ),
               ),
             ],
@@ -260,6 +316,7 @@ class _ChallengeListViewState extends State<ChallengeListView> {
     _progressCountMap["kill"] = killCount;
     _progressCountMap["assist"] = assistCount;
     _progressCountMap["time"] = timeCount;
+    _matchProvider.inStreamController.add("All matches have checked");
     for (var challenge in _challenge.challengeList) {
       _calculateProgress(challenge.type);
     }
@@ -333,11 +390,27 @@ class _ChallengeListViewState extends State<ChallengeListView> {
       Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text("A new challenge started, you previous matches will be ignored"),
-            duration: Duration(seconds: 20),
+            duration: Duration(seconds: 10),
           )
       );
       _isLoading = false;
     });
+  }
+
+  void _showFoundMatchesSnackBar() {
+    /*
+    _matchProvider.streamController.listen((String text) {
+      setState(() {
+        Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text(text),
+              duration: Duration(seconds: 1),
+            )
+        );
+      });
+    });
+
+     */
   }
 
 }
